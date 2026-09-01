@@ -47,7 +47,9 @@ border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;margin-top
 #sahne.elle{cursor:crosshair;touch-action:none}
 #sahne.elle img{pointer-events:none}
 .buton.aktif{background:var(--m);color:#fff}
-.kirpimlar{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+.kirpimlar{display:none}
+.grupIc .havuzOge select{width:64px;flex:0 0 auto}
+.ok{color:var(--s);font-weight:800}
 @media(min-width:640px){.kirpimlar{grid-template-columns:1fr 1fr}}
 .kirp{border:1.5px solid var(--c);border-radius:12px;overflow:hidden;background:var(--k)}
 .kirp img{display:block;width:100%;background:#fff}
@@ -164,12 +166,13 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
 <!-- ============ 3) HAVUZ ============ -->
 <div id="tabH" style="display:none">
   <div class="kart">
-    <h3>Oturum havuzu</h3>
-    <p class="acik">Bu oturumda standart kayda dönüşen sorular. JSON çıktısı, veritabanındaki <b>sorular</b> tablosunun birebir karşılığıdır.</p>
-    <div id="havuzListe"><div class="bos">Havuz boş — kaynak yükleyin ya da soru yazın.</div></div>
-    <button class="buton" id="bulut" style="width:100%;margin-top:8px" disabled>Buluta kaydet (Supabase)</button>
+    <h3>Bu oturumda eklenenler <span id="hOturum" style="color:var(--s);font-size:13px">(0)</span></h3>
+    <p class="acik">Önizlemeden havuza gönderdikleriniz burada bekler; buluta kaydedince aşağıdaki arşive iner.</p>
+    <div id="havuzListe" style="display:none"></div>
+    <button class="buton" id="bulut" style="width:100%" disabled>Buluta kaydet (Supabase)</button>
     <button class="buton gri" id="indir" style="width:100%;margin-top:8px" disabled>Standart kayıtları indir (JSON)</button>
   </div>
+  <div id="bulutHavuz"></div>
 </div>
 </div>
 
@@ -551,9 +554,7 @@ function kirpKart(no,b64,sNo=sayfa){
   <img src="data:image/jpeg;base64,${b64}">
   <div class="sira" style="padding-bottom:0"><span style="font-size:10.5px;color:var(--s);font-weight:800">CEVAP</span>
   ${'ABCD'.split('').map(h=>`<button class="cvp" data-h="${h}">${h}</button>`).join('')}</div>
-  <div class="sira"><button class="buton kucuk" style="flex:1">Dijitale çevir</button>
-  <button class="buton gri kucuk" style="flex:1">Kırpım olarak ekle</button></div>
-  <div class="duzen" style="display:none;padding:0 10px 10px"></div>`;
+  <div class="sira"><button class="buton gri kucuk" style="flex:1">Kırpım olarak ekle</button></div>`;
   const kayit={no,b64,el:d,eklendi:false,sNo,cevap:null};kirpKayit.push(kayit);
   d.querySelectorAll('.cvp').forEach(p=>p.onclick=()=>{
     const acik=p.classList.contains('on');
@@ -562,18 +563,7 @@ function kirpKart(no,b64,sNo=sayfa){
     if(!acik)p.classList.add('on');
   });
   guncelleSayac();
-  const [cevir,ekle]=d.querySelectorAll('.sira:last-of-type .buton, .sira .buton');
-  cevir.onclick=async()=>{
-    cevir.disabled=true;cevir.textContent='Çevriliyor…';
-    try{
-      const v=await api([
-        {type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}},
-        {type:"text",text:`Bu çoktan seçmeli bir sorudur. Yapılandır:
-{"metin":"soru kökü (numarasız, matematik $...$ LaTeX)","siklar":["A içeriği","B","C","D"],"gorsel":{"x":..,"y":..,"w":..,"h":..} ya da null}
-gorsel: soru şekil/grafik içeriyorsa saf görsel bölgenin yüzde koordinatları. YALNIZCA JSON döndür.`}]);
-      duzenAc(d,v,b64);
-    }catch(e){cevir.textContent='Hata — tekrar dene';cevir.disabled=false;}
-  };
+  const ekle=[...d.querySelectorAll('.buton')].pop();
   ekle.onclick=()=>{
     const sec=d.querySelector('.cvp.on');
     havuzaEkle({gosterim:'kirpim',kirpim:b64,metin:null,
@@ -639,21 +629,81 @@ $('eEkle').onclick=()=>{
 /* ---- havuz ---- */
 function havuzaEkle(k){havuz.push(k);$('hSay').textContent='('+havuz.length+')';$('indir').disabled=false;$('bulut').disabled=false;}
 function havuzCiz(){
-  const L=$('havuzListe');
-  if(!havuz.length){L.innerHTML='<div class="bos">Havuz boş — kaynak yükleyin ya da soru yazın.</div>';return;}
-  L.innerHTML='';
-  havuz.forEach((k,i)=>{
+  const b=havuz.filter(k=>!k._kayitli).length;
+  $('hOturum').textContent=`(${b} bekliyor · ${havuz.length} toplam)`;
+  bulutYukle();
+}
+
+/* ---- bulut havuzu: kaynak bazlı arşiv ---- */
+const resimCache={};
+async function resimAl(yol){
+  if(resimCache[yol])return resimCache[yol];
+  const y=await fetch(SUPA+'/storage/v1/object/soru-gorselleri/'+yol,
+    {headers:{apikey:KEY,Authorization:'Bearer '+token}});
+  if(!y.ok)return null;
+  return resimCache[yol]=URL.createObjectURL(await y.blob());
+}
+async function bulutYukle(){
+  const B=$('bulutHavuz');
+  if(!token){B.innerHTML='<div class="kart"><p class="acik">Bulut havuzunu görmek için giriş yapın.</p></div>';return;}
+  B.innerHTML='<div class="kart"><p class="acik">Bulut havuzu yükleniyor…</p></div>';
+  try{
+    const r=await rest('GET','sorular?select=id,kaynak,gosterim,dogru_cevap,konu,metin,kirpim_yolu&order=created_at');
+    if(!r.length){B.innerHTML='<div class="kart"><p class="acik">Bulutta henüz soru yok.</p></div>';return;}
+    const g={};r.forEach(q=>{const a=q.kaynak||'Diğer';(g[a]=g[a]||[]).push(q);});
+    B.innerHTML='';
+    Object.entries(g).forEach(([ad,list])=>{
+      const k=document.createElement('div');k.className='kart';
+      k.innerHTML=`<div class="sira grupBas" style="cursor:pointer">
+        <b style="flex:1;min-width:0">${ad.replace(/</g,'&lt;')}</b>
+        <span class="etiket">${list.length} soru</span>
+        <button class="buton kirmizi kucuk">Sınavı sil</button>
+        <span class="ok">▾</span></div>
+        <div class="grupIc" style="display:none;margin-top:8px"></div>`;
+      const bas2=k.querySelector('.grupBas'),ic=k.querySelector('.grupIc'),ok=k.querySelector('.ok');
+      bas2.onclick=e=>{
+        if(e.target.closest('.kirmizi'))return;
+        const acik=ic.style.display!=='none';
+        ic.style.display=acik?'none':'block';ok.textContent=acik?'▾':'▴';
+        if(!acik&&!ic.dataset.dolu){ic.dataset.dolu=1;grupDoldur(ic,list);}
+      };
+      k.querySelector('.kirmizi').onclick=async()=>{
+        if(!confirm(`"${ad}" grubundaki ${list.length} soru silinsin mi?`))return;
+        try{await rest('DELETE','sorular?kaynak=eq.'+encodeURIComponent(ad));bulutYukle();}
+        catch(e){alert('Silinemedi: '+e.message+'\n(Bu sorular bir sınavda kullanılıyor olabilir.)');}
+      };
+      B.appendChild(k);
+    });
+  }catch(e){B.innerHTML=`<div class="kart"><p class="acik">Hata: ${e.message}</p></div>`;}
+}
+function grupDoldur(ic,list){
+  list.forEach(q=>{
     const d=document.createElement('div');d.className='havuzOge';
-    d.innerHTML=`<div class="rozet">${i+1}</div><div style="flex:1;min-width:0">
-      <span class="etiket ${k.gosterim==='dijital'?'e-dij':'e-kir'}">${k.gosterim==='dijital'?'DİJİTAL':'KIRPIM'}</span>
-      <span class="etiket" style="background:var(--z);color:var(--s)">${k.lisans}</span>
-      ${k.konu?`<span class="etiket" style="background:var(--z);color:var(--s)">${k.konu}</span>`:''}
-      <div style="font-size:13.5px;margin-top:6px;line-height:1.5">${
-        k.gosterim==='dijital'?(k.metin||'').slice(0,120).replace(/</g,'&lt;')+'…'
-        :`<img src="data:image/jpeg;base64,${k.kirpim}" style="max-width:100%;border-radius:8px">`}</div></div>`;
-    L.appendChild(d);
+    d.innerHTML=`<div class="rozet">${q.dogru_cevap||'?'}</div>
+      <div style="flex:1;min-width:0">
+        <span class="etiket ${q.gosterim==='dijital'?'e-dij':'e-kir'}">${q.gosterim==='dijital'?'DİJİTAL':'KIRPIM'}</span>
+        ${q.konu?`<span class="etiket" style="background:var(--z);color:var(--s)">${q.konu}</span>`:''}
+        <div class="gorselAlan" style="margin-top:6px;font-size:13px;color:var(--s)">${
+          q.metin?q.metin.slice(0,100).replace(/</g,'&lt;'):'görsel yükleniyor…'}</div>
+      </div>
+      <select class="cSec"><option value="">—</option>${'ABCD'.split('').map(x=>`<option${q.dogru_cevap===x?' selected':''}>${x}</option>`).join('')}</select>
+      <button class="buton kirmizi kucuk">Sil</button>`;
+    d.querySelector('.cSec').onchange=async e=>{
+      try{await rest('PATCH','sorular?id=eq.'+q.id,{dogru_cevap:e.target.value||null});
+        d.querySelector('.rozet').textContent=e.target.value||'?';}
+      catch(err){alert('Kaydedilemedi: '+err.message);}
+    };
+    d.querySelector('.kirmizi').onclick=async()=>{
+      if(!confirm('Bu soru silinsin mi?'))return;
+      try{await rest('DELETE','sorular?id=eq.'+q.id);d.remove();}
+      catch(err){alert('Silinemedi: '+err.message+'\n(Bir sınavda kullanılıyor olabilir.)');}
+    };
+    ic.appendChild(d);
+    if(!q.metin&&q.kirpim_yolu)
+      resimAl(q.kirpim_yolu).then(u=>{if(u)d.querySelector('.gorselAlan').innerHTML=
+        `<img src="${u}" style="max-width:100%;border-radius:8px">`;});
   });
-  mat(L);
+  mat(ic);
 }
 $('indir').onclick=()=>{
   const b=new Blob([JSON.stringify(havuz,null,1)],{type:'application/json'});
