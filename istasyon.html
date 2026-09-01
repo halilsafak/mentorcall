@@ -33,8 +33,20 @@ border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;margin-top
 .nokta.yesil{background:var(--dg)}
 #sahne{position:relative;border-radius:10px;overflow:hidden;margin-top:10px;display:none}
 #sahne img{display:block;width:100%}
+#sahne.elle{cursor:crosshair;touch-action:none}
+#sahne.elle img{pointer-events:none}
+.secim{position:absolute;border:2px dashed var(--a);background:rgba(34,160,147,.15);border-radius:4px}
 .kutu{position:absolute;border:2px solid var(--yn);border-radius:4px}
 .kutu b{position:absolute;top:-1px;left:-1px;background:var(--yn);color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:0 0 5px 0}
+.kutu{cursor:pointer}
+.kutu.secili{border-color:var(--a);box-shadow:0 0 0 2px rgba(34,160,147,.4)}
+.kutu.secili b{background:var(--a)}
+.kutu .tut{position:absolute;right:-8px;bottom:-8px;width:18px;height:18px;border-radius:99px;background:var(--a);border:2.5px solid #fff;cursor:nwse-resize;touch-action:none}
+.kutu.taslak{border-style:dashed;border-color:var(--a);pointer-events:none}
+.secim{position:absolute;border:2px dashed var(--a);background:rgba(34,160,147,.12);border-radius:4px;pointer-events:none}
+#sahne.elle{cursor:crosshair;touch-action:none}
+#sahne.elle img{pointer-events:none}
+.buton.aktif{background:var(--m);color:#fff}
 .kirpimlar{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
 @media(min-width:640px){.kirpimlar{grid-template-columns:1fr 1fr}}
 .kirp{border:1.5px solid var(--c);border-radius:12px;overflow:hidden;background:var(--k)}
@@ -92,10 +104,18 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
       <button class="buton gri kucuk" id="pGeri" disabled>‹</button>
       <span id="pNo" style="font-size:13px;color:var(--s);min-width:56px;text-align:center">– / –</span>
       <button class="buton gri kucuk" id="pIleri" disabled>›</button>
-      <button class="buton" id="tara" disabled style="flex:1">Soruları bul</button>
+      <button class="buton" id="tara" disabled style="flex:1">Sayfayı tara</button>
+    </div>
+    <div class="sira" style="margin-top:8px">
+      <button class="buton" id="taraTum" disabled style="flex:1">Tüm belgeyi tara</button>
+      <button class="buton gri" id="elleKirp" disabled style="flex:1">Elle kırp: kapalı</button>
     </div>
     <div id="durum"></div>
     <div id="sahne"><img id="resim"></div>
+    <div class="sira" id="kutuArac" style="display:none;margin-top:8px">
+      <span style="font-size:12.5px;color:var(--s);font-weight:700;flex:1">Kutu seçildi — köşe topuzundan boyutlandırın</span>
+      <button class="buton kirmizi kucuk" id="kutuSil">Kutuyu sil</button>
+    </div>
     <div id="topluBar" style="display:none;margin-top:10px">
       <label>EKSPRES MOD — TOPLU CEVAP ANAHTARI (KIRPIM SIRASIYLA)</label>
       <div class="sira"><input id="topluAnahtar" placeholder="Örn: BACDBAC… (boş kalan soru cevapsız eklenir)">
@@ -234,7 +254,7 @@ $('dosya').onchange=async e=>{
     r.onload=()=>{sayfaImg[1]=r.result.split(',')[1];
       $('resim').src=r.result;$('sahne').style.display='block';
       $('teshis').innerHTML='<span class="rota"><span class="nokta"></span>Fotoğraf/görüntü — yapay zekâ görüntü motoru</span>';
-      $('pNo').textContent='1 / 1';$('tara').disabled=false;};
+      $('pNo').textContent='1 / 1';$('tara').disabled=false;$('elleKirp').disabled=false;};
     r.readAsDataURL(f);
   }
 };
@@ -248,7 +268,7 @@ async function goster(){
   $('resim').src=url;$('sahne').style.display='block';
   $('pNo').textContent=sayfa+' / '+pdf.numPages;
   $('pGeri').disabled=sayfa<=1;$('pIleri').disabled=sayfa>=pdf.numPages;
-  $('tara').disabled=false;kutuCiz();
+  $('tara').disabled=false;$('taraTum').disabled=false;$('elleKirp').disabled=false;kutuCiz();
 }
 $('pGeri').onclick=()=>{if(sayfa>1){sayfa--;goster()}};
 $('pIleri').onclick=()=>{if(pdf&&sayfa<pdf.numPages){sayfa++;goster()}};
@@ -276,28 +296,136 @@ async function api(content){
   const m=(d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
   return JSON.parse(m.replace(/```json|```/g,'').trim());
 }
+let seciliKutu=null;
 function kutuCiz(){
   document.querySelectorAll('.kutu').forEach(k=>k.remove());
+  $('kutuArac').style.display='none';seciliKutu=null;
   (kutular[sayfa]||[]).forEach(k=>{
     const d=document.createElement('div');d.className='kutu';
     d.style.cssText=`left:${k.x}%;top:${k.y}%;width:${k.w}%;height:${k.h}%`;
-    d.innerHTML=`<b>${k.soru}</b>`;$('sahne').appendChild(d);});
+    d.innerHTML=`<b>${k.soru}</b><i class="tut"></i>`;
+    d.onclick=e=>{
+      if(e.target.classList.contains('tut'))return;
+      document.querySelectorAll('.kutu').forEach(x=>x.classList.remove('secili'));
+      d.classList.add('secili');seciliKutu=k;
+      $('kutuArac').style.display='flex';
+    };
+    const t=d.querySelector('.tut');
+    t.addEventListener('pointerdown',e=>{
+      e.stopPropagation();e.preventDefault();
+      t.setPointerCapture(e.pointerId);
+      const r=$('sahne').getBoundingClientRect();
+      const hareket=ev=>{
+        k.w=Math.max(4,Math.min(100-k.x,(ev.clientX-r.left)/r.width*100-k.x));
+        k.h=Math.max(2,Math.min(100-k.y,(ev.clientY-r.top)/r.height*100-k.y));
+        d.style.width=k.w+'%';d.style.height=k.h+'%';
+      };
+      const birak=()=>{
+        t.removeEventListener('pointermove',hareket);
+        t.removeEventListener('pointerup',birak);
+        kartTazele(k);
+      };
+      t.addEventListener('pointermove',hareket);
+      t.addEventListener('pointerup',birak);
+    });
+    $('sahne').appendChild(d);
+  });
 }
+function kartSil(no){
+  const i=kirpKayit.findIndex(x=>x.no===no&&x.sNo===sayfa);
+  if(i>-1){kirpKayit[i].el.remove();kirpKayit.splice(i,1);}
+  $('topluBar').style.display=kirpKayit.length?'block':'none';
+}
+function kartTazele(k){kartSil(k.soru);k._islendi=false;kirpUret(sayfa);}
+$('kutuSil').onclick=()=>{
+  if(!seciliKutu)return;
+  kutular[sayfa]=(kutular[sayfa]||[]).filter(k=>k!==seciliKutu);
+  kartSil(seciliKutu.soru);kutuCiz();
+};
 
 /* ---- kırpım kartları ---- */
-function kirpUret(){
+function kirpUret(sNo=sayfa){
+  return new Promise(bitti=>{
+    const img=new Image();
+    img.onload=()=>{
+      (kutular[sNo]||[]).forEach(k=>{
+        if(k._islendi)return;k._islendi=true;
+        const c=document.createElement('canvas');
+        const x=img.width*k.x/100,y=img.height*k.y/100,w=img.width*k.w/100,h=img.height*k.h/100;
+        c.width=w;c.height=h;c.getContext('2d').drawImage(img,x,y,w,h,0,0,w,h);
+        kirpKart(k.soru,c.toDataURL('image/jpeg',0.88).split(',')[1],sNo);
+      });
+      $('topluBar').style.display=kirpKayit.length?'block':'none';
+      bitti();
+    };
+    img.src='data:image/jpeg;base64,'+sayfaImg[sNo];
+  });
+}
+
+/* ---- tüm belgeyi tara ---- */
+$('taraTum').onclick=async()=>{
+  if(!pdf)return;
+  $('taraTum').disabled=true;
+  for(let s=1;s<=pdf.numPages;s++){
+    sayfa=s;await goster();
+    $('durum').textContent=`Sayfa ${s}/${pdf.numPages} inceleniyor…`;
+    try{
+      kutular[s]=await api([
+        {type:"image",source:{type:"base64",media_type:"image/jpeg",data:sayfaImg[s]}},
+        {type:"text",text:`Bu bir Türkçe test sayfasıdır (basılı ya da taranmış olabilir). Sayfadaki her SORUYU tespit et.
+Soru; numarasıyla başlar, metni, varsa görseli ve tüm şıkları dahildir. Başlık, alt bilgi, çözüm/anahtar alanları soru değildir. Soru yoksa boş dizi döndür.
+YALNIZCA JSON dizisi döndür: [{"soru":1,"x":0,"y":4,"w":100,"h":22}] — değerler görüntünün yüzdesi (0-100).`}]);
+      kutuCiz();await kirpUret(s);
+    }catch(e){$('durum').textContent=`Sayfa ${s} hata: ${e.message} — devam ediliyor`;}
+  }
+  $('durum').textContent='Tüm belge tarandı — kırpımlar aşağıda, toplu cevap anahtarı hazır.';
+  $('taraTum').disabled=false;
+};
+
+/* ---- elle kırpma ---- */
+let elleAktif=false,secim=null,sBas=null,elleSayac=0;
+$('elleKirp').onclick=()=>{
+  elleAktif=!elleAktif;
+  $('elleKirp').textContent='Elle kırp: '+(elleAktif?'AÇIK':'kapalı');
+  $('elleKirp').classList.toggle('gri',!elleAktif);
+  $('sahne').classList.toggle('elle',elleAktif);
+};
+function oran(e){
+  const r=$('sahne').getBoundingClientRect();
+  return {x:Math.min(100,Math.max(0,(e.clientX-r.left)/r.width*100)),
+          y:Math.min(100,Math.max(0,(e.clientY-r.top)/r.height*100))};
+}
+$('sahne').addEventListener('pointerdown',e=>{
+  if(!elleAktif||e.target.closest('.kutu'))return;e.preventDefault();
+  $('sahne').setPointerCapture(e.pointerId);
+  sBas=oran(e);secim=document.createElement('div');secim.className='secim';
+  $('sahne').appendChild(secim);
+});
+$('sahne').addEventListener('pointermove',e=>{
+  if(!secim)return;const p=oran(e);
+  const x=Math.min(sBas.x,p.x),y=Math.min(sBas.y,p.y),
+        w=Math.abs(p.x-sBas.x),h=Math.abs(p.y-sBas.y);
+  secim.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${h}%`;
+});
+$('sahne').addEventListener('pointerup',e=>{
+  if(!secim)return;const p=oran(e);
+  const x=Math.min(sBas.x,p.x),y=Math.min(sBas.y,p.y),
+        w=Math.abs(p.x-sBas.x),h=Math.abs(p.y-sBas.y);
+  secim.remove();secim=null;
+  if(w<3||h<2)return;                      // yanlışlıkla tıklama
+  const kut={soru:'E'+(++elleSayac),x,y,w,h,_islendi:true};
+  (kutular[sayfa]=kutular[sayfa]||[]).push(kut);
+  kutuCiz();
   const img=new Image();
   img.onload=()=>{
-    (kutular[sayfa]||[]).forEach(k=>{
-      const c=document.createElement('canvas');
-      const x=img.width*k.x/100,y=img.height*k.y/100,w=img.width*k.w/100,h=img.height*k.h/100;
-      c.width=w;c.height=h;c.getContext('2d').drawImage(img,x,y,w,h,0,0,w,h);
-      kirpKart(k.soru,c.toDataURL('image/jpeg',0.88).split(',')[1]);
-    });
-    $('topluBar').style.display=kirpKayit.length?'block':'none';
+    const c=document.createElement('canvas');
+    const px=img.width*x/100,py=img.height*y/100,pw=img.width*w/100,ph=img.height*h/100;
+    c.width=pw;c.height=ph;c.getContext('2d').drawImage(img,px,py,pw,ph,0,0,pw,ph);
+    kirpKart(kut.soru,c.toDataURL('image/jpeg',0.9).split(',')[1],sayfa);
+    $('topluBar').style.display='block';
   };
   img.src='data:image/jpeg;base64,'+sayfaImg[sayfa];
-}
+});
 let kirpKayit=[];
 $('topluEkle').onclick=()=>{
   const h=$('topluAnahtar').value.toUpperCase().replace(/[^A-E]/g,'');
@@ -315,9 +443,9 @@ $('topluEkle').onclick=()=>{
   $('topluEkle').textContent=n+' soru eklendi ✓';
   setTimeout(()=>$('topluEkle').textContent='Tümünü ekle',1800);
 };
-function kirpKart(no,b64){
+function kirpKart(no,b64,sNo=sayfa){
   const d=document.createElement('div');d.className='kirp';
-  d.innerHTML=`<div class="kirpbas"><b>${no}</b><span>${kaynakAd.slice(0,26)} · s.${sayfa}</span></div>
+  d.innerHTML=`<div class="kirpbas"><b>${no}</b><span>${kaynakAd.slice(0,26)} · s.${sNo}</span></div>
   <img src="data:image/jpeg;base64,${b64}">
   <div class="sira" style="padding-bottom:0"><span style="font-size:10.5px;color:var(--s);font-weight:800">CEVAP</span>
   ${'ABCD'.split('').map(h=>`<button class="cvp" data-h="${h}">${h}</button>`).join('')}</div>
@@ -329,7 +457,7 @@ function kirpKart(no,b64){
     d.querySelectorAll('.cvp').forEach(x=>x.classList.remove('on'));
     if(!acik)p.classList.add('on');
   });
-  const kayit={no,b64,el:d,eklendi:false};kirpKayit.push(kayit);
+  const kayit={no,b64,el:d,eklendi:false,sNo};kirpKayit.push(kayit);
   const [cevir,ekle]=d.querySelectorAll('.sira:last-of-type .buton, .sira .buton');
   cevir.onclick=async()=>{
     cevir.disabled=true;cevir.textContent='Çevriliyor…';
