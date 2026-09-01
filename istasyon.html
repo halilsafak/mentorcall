@@ -99,6 +99,8 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
     <h3>Kaynak yükle</h3>
     <p class="acik">PDF (metinli ya da görüntü), tarama veya telefon fotoğrafı — hepsi kabul. Sistem türünü kendisi teşhis eder.</p>
     <input type="file" id="dosya" accept="application/pdf,image/*">
+    <label>KAYNAK BAŞLIĞI (havuzda arama için)</label>
+    <input id="kaynakBaslik" placeholder="Örn: KerimHoca LGS Deneme 1">
     <div id="teshis"></div>
     <div class="sira" style="margin-top:10px">
       <button class="buton gri kucuk" id="pGeri" disabled>‹</button>
@@ -109,6 +111,11 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
     <div class="sira" style="margin-top:8px">
       <button class="buton" id="taraTum" disabled style="flex:1">Tüm belgeyi tara</button>
       <button class="buton gri" id="elleKirp" disabled style="flex:1">Elle kırp: kapalı</button>
+    </div>
+    <div class="sira" style="margin-top:8px">
+      <button class="buton gri kucuk" id="geriAl" disabled>↶ Geri al</button>
+      <button class="buton gri kucuk" id="ileriAl" disabled>↷ İleri al</button>
+      <button class="buton kucuk" id="onizle" style="flex:1">Önizle &amp; Düzenle (0)</button>
     </div>
     <div id="durum"></div>
     <div id="sahne"><img id="resim"></div>
@@ -166,6 +173,20 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
 </div>
 </div>
 
+<div id="onizOrtu" style="position:fixed;inset:0;background:rgba(20,29,42,.78);display:none;z-index:30;overflow:auto;padding:14px">
+  <div style="max-width:720px;margin:0 auto">
+    <div class="kart">
+      <h3>Önizleme — bekleyen seçimler (<span id="onSay">0</span>)</h3>
+      <p class="acik">Cevapları burada işaretleyin, istemediğinizi çıkarın; sonra tek tuşla havuza gönderin.</p>
+      <div id="onListe"></div>
+      <label>TOPLU CEVAP ANAHTARI (İŞARETLENMEMİŞLER İÇİN, SIRAYLA)</label>
+      <div class="sira"><input id="onAnahtar" placeholder="Örn: BACD…">
+      <button class="buton kucuk" id="onEkle">Havuza ekle</button></div>
+      <button class="buton gri" id="onKapat" style="width:100%;margin-top:8px">Kapat</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
@@ -173,6 +194,38 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
 const $=i=>document.getElementById(i);
 const mat=el=>renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});
 let pdf=null,sayfa=1,sayfaImg={},kutular={},havuz=[],kaynakAd='';
+const kaynakAdi=()=>($('kaynakBaslik').value.trim()||kaynakAd||'kaynak');
+
+/* ---- geri al / ileri al ---- */
+let gecmis=[],gelecek=[];
+function tarihKaydet(){
+  gecmis.push(JSON.stringify({s:sayfa,k:(kutular[sayfa]||[]).map(q=>({...q}))}));
+  if(gecmis.length>40)gecmis.shift();
+  gelecek=[];tarihDugme();
+}
+function tarihDugme(){$('geriAl').disabled=!gecmis.length;$('ileriAl').disabled=!gelecek.length;}
+async function tarihYukle(anlik){
+  const v=JSON.parse(anlik);
+  if(pdf&&v.s!==sayfa){sayfa=v.s;await goster();}
+  kutular[v.s]=v.k.map(q=>({...q,_islendi:false}));
+  for(let i=kirpKayit.length-1;i>=0;i--)
+    if(kirpKayit[i].sNo===v.s&&!kirpKayit[i].eklendi){kirpKayit[i].el.remove();kirpKayit.splice(i,1);}
+  kutuCiz();await kirpUret(v.s);guncelleSayac();
+}
+$('geriAl').onclick=async()=>{
+  if(!gecmis.length)return;
+  gelecek.push(JSON.stringify({s:sayfa,k:(kutular[sayfa]||[]).map(q=>({...q}))}));
+  await tarihYukle(gecmis.pop());tarihDugme();
+};
+$('ileriAl').onclick=async()=>{
+  if(!gelecek.length)return;
+  gecmis.push(JSON.stringify({s:sayfa,k:(kutular[sayfa]||[]).map(q=>({...q}))}));
+  await tarihYukle(gelecek.pop());tarihDugme();
+};
+function guncelleSayac(){
+  const n=kirpKayit.filter(k=>!k.eklendi).length;
+  $('onizle').textContent=`Önizle & Düzenle (${n})`;
+}
 
 /* ---- Supabase bağlantısı ---- */
 const SUPA='https://mmcvpttkoxjfwczpckxq.supabase.co';
@@ -240,6 +293,8 @@ Object.keys(tablar).forEach(id=>$(id).onclick=()=>{
 $('dosya').onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
   kaynakAd=f.name;sayfaImg={};kutular={};kirpKayit=[];$('kirpAlan').innerHTML='';$('topluBar').style.display='none';
+  $('kaynakBaslik').value=f.name.replace(/\.[^.]+$/,'');
+  gecmis=[];gelecek=[];tarihDugme();guncelleSayac();
   if(f.type==='application/pdf'){
     pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
@@ -282,7 +337,7 @@ $('tara').onclick=async()=>{
       {type:"text",text:`Bu bir Türkçe test sayfasıdır (basılı ya da taranmış olabilir). Sayfadaki her SORUYU tespit et.
 Soru; numarasıyla başlar, metni, varsa görseli ve tüm şıkları dahildir. Başlık, alt bilgi, çözüm/anahtar alanları soru değildir.
 YALNIZCA JSON dizisi döndür: [{"soru":1,"x":0,"y":4,"w":100,"h":22}] — değerler görüntünün yüzdesi (0-100).`}]);
-    kutular[sayfa]=d;kutuCiz();
+    tarihKaydet();kutular[sayfa]=d;kutuCiz();
     $('durum').textContent=d.length+' soru bulundu — kırpımlar aşağıda.';
     kirpUret();
   }catch(e){$('durum').textContent='Hata: '+e.message;}
@@ -312,7 +367,7 @@ function kutuCiz(){
     };
     const t=d.querySelector('.tut');
     t.addEventListener('pointerdown',e=>{
-      e.stopPropagation();e.preventDefault();
+      e.stopPropagation();e.preventDefault();tarihKaydet();
       t.setPointerCapture(e.pointerId);
       const r=$('sahne').getBoundingClientRect();
       const hareket=ev=>{
@@ -334,11 +389,12 @@ function kutuCiz(){
 function kartSil(no){
   const i=kirpKayit.findIndex(x=>x.no===no&&x.sNo===sayfa);
   if(i>-1){kirpKayit[i].el.remove();kirpKayit.splice(i,1);}
-  $('topluBar').style.display=kirpKayit.length?'block':'none';
+  $('topluBar').style.display=kirpKayit.length?'block':'none';guncelleSayac();
 }
 function kartTazele(k){kartSil(k.soru);k._islendi=false;kirpUret(sayfa);}
 $('kutuSil').onclick=()=>{
   if(!seciliKutu)return;
+  tarihKaydet();
   kutular[sayfa]=(kutular[sayfa]||[]).filter(k=>k!==seciliKutu);
   kartSil(seciliKutu.soru);kutuCiz();
 };
@@ -349,7 +405,9 @@ function kirpUret(sNo=sayfa){
     const img=new Image();
     img.onload=()=>{
       (kutular[sNo]||[]).forEach(k=>{
-        if(k._islendi)return;k._islendi=true;
+        if(k._islendi)return;
+        if(kirpKayit.some(x=>x.sNo===sNo&&x.no===k.soru)){k._islendi=true;return;}
+        k._islendi=true;
         const c=document.createElement('canvas');
         const x=img.width*k.x/100,y=img.height*k.y/100,w=img.width*k.w/100,h=img.height*k.h/100;
         c.width=w;c.height=h;c.getContext('2d').drawImage(img,x,y,w,h,0,0,w,h);
@@ -370,7 +428,7 @@ $('taraTum').onclick=async()=>{
     sayfa=s;await goster();
     $('durum').textContent=`Sayfa ${s}/${pdf.numPages} inceleniyor…`;
     try{
-      kutular[s]=await api([
+      tarihKaydet();kutular[s]=await api([
         {type:"image",source:{type:"base64",media_type:"image/jpeg",data:sayfaImg[s]}},
         {type:"text",text:`Bu bir Türkçe test sayfasıdır (basılı ya da taranmış olabilir). Sayfadaki her SORUYU tespit et.
 Soru; numarasıyla başlar, metni, varsa görseli ve tüm şıkları dahildir. Başlık, alt bilgi, çözüm/anahtar alanları soru değildir. Soru yoksa boş dizi döndür.
@@ -413,6 +471,7 @@ $('sahne').addEventListener('pointerup',e=>{
         w=Math.abs(p.x-sBas.x),h=Math.abs(p.y-sBas.y);
   secim.remove();secim=null;
   if(w<3||h<2)return;                      // yanlışlıkla tıklama
+  tarihKaydet();
   const kut={soru:'E'+(++elleSayac),x,y,w,h,_islendi:true};
   (kutular[sayfa]=kutular[sayfa]||[]).push(kut);
   kutuCiz();
@@ -427,37 +486,82 @@ $('sahne').addEventListener('pointerup',e=>{
   img.src='data:image/jpeg;base64,'+sayfaImg[sayfa];
 });
 let kirpKayit=[];
-$('topluEkle').onclick=()=>{
-  const h=$('topluAnahtar').value.toUpperCase().replace(/[^A-E]/g,'');
+function aktar(h){
   let n=0;
   kirpKayit.forEach((k,i)=>{
     if(k.eklendi)return;
-    const sec=k.el.querySelector('.cvp.on');
-    const dc=sec?sec.dataset.h:(h[i]||null);
+    const dc=k.cevap||h[i]||null;
     havuzaEkle({gosterim:'kirpim',kirpim:k.b64,metin:null,siklar:['A','B','C','D'],
-      dogru_cevap:dc,ders:'',konu:'',zorluk:3,kaynak:kaynakAd,lisans:'lisansli'});
+      dogru_cevap:dc,ders:'',konu:'',zorluk:3,kaynak:kaynakAdi(),lisans:'lisansli'});
     k.eklendi=true;n++;
     const b=k.el.querySelectorAll('.buton')[1];
     if(b){b.textContent='Eklendi ✓';b.disabled=true;}
   });
+  guncelleSayac();return n;
+}
+$('topluEkle').onclick=()=>{
+  const h=$('topluAnahtar').value.toUpperCase().replace(/[^A-E]/g,'');
+  const n=aktar(h);
   $('topluEkle').textContent=n+' soru eklendi ✓';
   setTimeout(()=>$('topluEkle').textContent='Tümünü ekle',1800);
 };
+
+/* ---- önizleme & düzenleme ---- */
+$('onizle').onclick=()=>{
+  const L=$('onListe');L.innerHTML='';
+  const bek=kirpKayit.filter(k=>!k.eklendi);
+  $('onSay').textContent=bek.length;
+  if(!bek.length)L.innerHTML='<div class="bos">Bekleyen seçim yok — sayfalarda kutu çizin ya da tarayın.</div>';
+  bek.forEach(k=>{
+    const d=document.createElement('div');d.className='kirp';d.style.marginBottom='10px';
+    d.innerHTML=`<div class="kirpbas"><b>${k.no}</b><span>s.${k.sNo} · ${kaynakAdi().slice(0,24)}</span>
+      <button class="buton kirmizi kucuk" style="margin-left:auto">Çıkar</button></div>
+      <img src="data:image/jpeg;base64,${k.b64}">
+      <div class="sira"><span style="font-size:10.5px;color:var(--s);font-weight:800">CEVAP</span>
+      ${'ABCD'.split('').map(x=>`<button class="cvp${k.cevap===x?' on':''}" data-h="${x}">${x}</button>`).join('')}</div>`;
+    d.querySelector('.kirmizi').onclick=()=>{
+      const s=k.sNo;kutular[s]=(kutular[s]||[]).filter(q=>q.soru!==k.no);
+      const i=kirpKayit.indexOf(k);
+      if(i>-1){k.el.remove();kirpKayit.splice(i,1);}
+      if(s===sayfa)kutuCiz();
+      guncelleSayac();d.remove();
+      $('onSay').textContent=kirpKayit.filter(x=>!x.eklendi).length;
+    };
+    d.querySelectorAll('.cvp').forEach(p=>p.onclick=()=>{
+      const acik=p.classList.contains('on');
+      d.querySelectorAll('.cvp').forEach(x=>x.classList.remove('on'));
+      k.cevap=acik?null:p.dataset.h;
+      if(!acik)p.classList.add('on');
+      k.el.querySelectorAll('.cvp').forEach(x=>x.classList.toggle('on',x.dataset.h===k.cevap));
+    });
+    L.appendChild(d);
+  });
+  $('onizOrtu').style.display='block';
+};
+$('onKapat').onclick=()=>$('onizOrtu').style.display='none';
+$('onEkle').onclick=()=>{
+  const h=$('onAnahtar').value.toUpperCase().replace(/[^A-E]/g,'');
+  const n=aktar(h);
+  $('onizOrtu').style.display='none';
+  $('durum').textContent=n+' soru havuza eklendi ✓ — Havuz sekmesinden buluta kaydedin.';
+};
 function kirpKart(no,b64,sNo=sayfa){
   const d=document.createElement('div');d.className='kirp';
-  d.innerHTML=`<div class="kirpbas"><b>${no}</b><span>${kaynakAd.slice(0,26)} · s.${sNo}</span></div>
+  d.innerHTML=`<div class="kirpbas"><b>${no}</b><span>${kaynakAdi().slice(0,26)} · s.${sNo}</span></div>
   <img src="data:image/jpeg;base64,${b64}">
   <div class="sira" style="padding-bottom:0"><span style="font-size:10.5px;color:var(--s);font-weight:800">CEVAP</span>
   ${'ABCD'.split('').map(h=>`<button class="cvp" data-h="${h}">${h}</button>`).join('')}</div>
   <div class="sira"><button class="buton kucuk" style="flex:1">Dijitale çevir</button>
   <button class="buton gri kucuk" style="flex:1">Kırpım olarak ekle</button></div>
   <div class="duzen" style="display:none;padding:0 10px 10px"></div>`;
+  const kayit={no,b64,el:d,eklendi:false,sNo,cevap:null};kirpKayit.push(kayit);
   d.querySelectorAll('.cvp').forEach(p=>p.onclick=()=>{
     const acik=p.classList.contains('on');
     d.querySelectorAll('.cvp').forEach(x=>x.classList.remove('on'));
+    kayit.cevap=acik?null:p.dataset.h;
     if(!acik)p.classList.add('on');
   });
-  const kayit={no,b64,el:d,eklendi:false,sNo};kirpKayit.push(kayit);
+  guncelleSayac();
   const [cevir,ekle]=d.querySelectorAll('.sira:last-of-type .buton, .sira .buton');
   cevir.onclick=async()=>{
     cevir.disabled=true;cevir.textContent='Çevriliyor…';
@@ -474,7 +578,7 @@ gorsel: soru şekil/grafik içeriyorsa saf görsel bölgenin yüzde koordinatlar
     const sec=d.querySelector('.cvp.on');
     havuzaEkle({gosterim:'kirpim',kirpim:b64,metin:null,
       siklar:['A','B','C','D'],dogru_cevap:sec?sec.dataset.h:null,
-      ders:'',konu:'',zorluk:3,kaynak:kaynakAd,lisans:'lisansli'});
+      ders:'',konu:'',zorluk:3,kaynak:kaynakAdi(),lisans:'lisansli'});
     kayit.eklendi=true;
     ekle.textContent='Eklendi ✓';ekle.disabled=true;
   };
@@ -509,7 +613,7 @@ function duzenAc(kart,v,b64){
   btn.onclick=()=>{
     havuzaEkle({gosterim:'dijital',metin:ta.value,siklar:inputs.map(i=>i.value),
       dogru_cevap:sec.value,gorsel:v._fig||null,kirpim:b64,
-      ders:'',konu:konu.value,zorluk:3,kaynak:kaynakAd,lisans:'lisansli'});
+      ders:'',konu:konu.value,zorluk:3,kaynak:kaynakAdi(),lisans:'lisansli'});
     btn.textContent='Havuzda ✓';btn.disabled=true;
   };
 }
