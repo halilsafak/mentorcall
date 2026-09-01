@@ -177,28 +177,64 @@ function personelAna(){
 async function olusturCiz(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Havuz yükleniyor…</p></div>';
   const [sorular,siniflar]=await Promise.all([
-    rest('GET','sorular?select=id,metin,gosterim,ders,konu,dogru_cevap&order=created_at.desc&limit=150'),
+    rest('GET','sorular?select=id,metin,gosterim,ders,konu,dogru_cevap,kaynak&order=created_at&limit=500'),
     rest('GET','siniflar?select=id,ad&aktif=is.true')]);
-  T.innerHTML=`<div class="kart"><h3>Havuzdan sınav oluştur</h3>
+  const g={};sorular.forEach(q=>{const a=q.kaynak||'Diğer';(g[a]=g[a]||[]).push(q);});
+  let gi=0;
+  const gruplar=Object.entries(g).map(([ad,list])=>{gi++;return `
+    <div style="border:1.5px solid var(--c);border-radius:12px;margin-bottom:10px;overflow:hidden">
+      <div class="sinavBas" data-g="${gi}" style="display:flex;gap:8px;align-items:center;padding:10px;background:var(--z);cursor:pointer">
+        <input type="checkbox" class="gSec" data-g="${gi}" style="width:19px;height:19px;flex:0 0 auto">
+        <b style="flex:1;min-width:0;font-size:14px">${ad.replace(/</g,'&lt;')}</b>
+        <span class="etiket">${list.length} soru</span>
+        <button class="buton kucuk" data-sil="${ad.replace(/"/g,'&quot;')}" style="background:var(--yn);color:#fff">Sil</button>
+        <span class="gOk" style="color:var(--s);font-weight:800">▾</span>
+      </div>
+      <div class="gIc" data-g="${gi}" style="display:none;padding:4px 10px">
+        ${list.map(q=>`
+        <div class="soruSatir"><input type="checkbox" class="sSec" data-id="${q.id}" data-dc="${q.dogru_cevap||''}" ${q.dogru_cevap?'':'disabled'}>
+        <div class="oz"><span class="etiket ${q.gosterim==='dijital'?'e-dij':'e-kir'}">${q.gosterim==='dijital'?'DİJİTAL':'KIRPIM'}</span>
+        ${q.konu?`<span class="etiket">${q.konu}</span>`:''}
+        <div>${q.metin?q.metin.slice(0,80).replace(/</g,'&lt;')+'…':'<i style="color:var(--s)">görüntü soru</i>'}</div></div>
+        <select class="cSec" data-id="${q.id}" style="width:60px;flex:0 0 auto"><option value="">—</option>${'ABCD'.split('').map(x=>`<option${q.dogru_cevap===x?' selected':''}>${x}</option>`).join('')}</select>
+        </div>`).join('')}
+      </div>
+    </div>`;}).join('');
+  T.innerHTML=`<div class="kart"><h3>Sınav arşivinden oluştur</h3>
+    <p class="acik">Kaynağı açın, soruları seçin (başlık kutusu tümünü seçer); cevap düzeltme yandaki listeden.</p>
     <label>SINAV ADI</label><input id="oAd" placeholder="Örn: Kareköklü Sayılar Tarama 1">
     <div class="izgara2">
       <div><label>SÜRE (DK, 0=YOK)</label><input id="oSure" type="number" value="20"></div>
       <div><label>NET KATSAYISI</label><select id="oKat"><option value="3">3'e 1</option><option value="4">4'e 1</option><option value="0">Götürmez</option></select></div></div>
-    <label>SINIF</label><select id="oSinif">${siniflar.map(s=>`<option value="${s.id}">${s.ad}</option>`).join('')}</select>
+    <label>SINIF</label><select id="oSinif">${siniflar.map(x=>`<option value="${x.id}">${x.ad}</option>`).join('')}</select>
     <label>SORULAR (<span id="oSec">0</span> seçili)</label>
-    <div id="oListe">${sorular.map(s=>`
-      <div class="soruSatir"><input type="checkbox" data-id="${s.id}" data-dc="${s.dogru_cevap||''}" ${s.dogru_cevap?'':'disabled'}>
-      <div class="oz"><span class="etiket ${s.gosterim==='dijital'?'e-dij':'e-kir'}">${s.gosterim==='dijital'?'DİJİTAL':'KIRPIM'}</span>
-      ${s.konu?`<span class="etiket">${s.konu}</span>`:''}
-      ${s.dogru_cevap?'':'<span class="etiket" style="background:#FAECE7;color:#993C1D">cevapsız</span>'}
-      <div>${s.metin?s.metin.slice(0,90).replace(/</g,'&lt;')+'…':'<i style="color:var(--s)">görüntü soru</i>'}</div></div></div>`).join('')||'<p class="acik">Havuz boş — Soru İstasyonu ile soru ekleyin.</p>'}</div>
+    <div id="oListe">${gruplar||'<p class="acik">Arşiv boş — Soru İstasyonu ile sınav yükleyin.</p>'}</div>
     <button class="buton" id="oYayin" style="margin-top:10px">Sınavı oluştur ve yayınla</button>
     <div class="acik" id="oDurum" style="margin-top:8px"></div></div>`;
   mat($('oListe'));
-  const say=()=>{$('oSec').textContent=T.querySelectorAll('input[type=checkbox]:checked').length};
-  T.querySelectorAll('input[type=checkbox]').forEach(c=>c.onchange=say);
+  const say=()=>{$('oSec').textContent=T.querySelectorAll('.sSec:checked').length};
+  T.querySelectorAll('.sSec').forEach(c=>c.onchange=say);
+  T.querySelectorAll('.sinavBas').forEach(b=>b.onclick=e=>{
+    if(e.target.closest('button,input,select'))return;
+    const ic=T.querySelector('.gIc[data-g="'+b.dataset.g+'"]');
+    const acik=ic.style.display!=='none';
+    ic.style.display=acik?'none':'block';
+    b.querySelector('.gOk').textContent=acik?'▾':'▴';});
+  T.querySelectorAll('.gSec').forEach(c=>c.onchange=()=>{
+    const ic=T.querySelector('.gIc[data-g="'+c.dataset.g+'"]');
+    ic.querySelectorAll('.sSec:not(:disabled)').forEach(x=>x.checked=c.checked);
+    if(c.checked){ic.style.display='block';}say();});
+  T.querySelectorAll('[data-sil]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('"'+b.dataset.sil+'" kaynağındaki tüm sorular silinsin mi?'))return;
+    try{await rest('DELETE','sorular?kaynak=eq.'+encodeURIComponent(b.dataset.sil),null,'return=minimal');olusturCiz();}
+    catch(e){alert('Silinemedi: '+e.message+'\n(Bu sorular bir sınavda kullanılıyor olabilir.)');}});
+  T.querySelectorAll('.cSec').forEach(sec=>sec.onchange=async()=>{
+    try{await rest('PATCH','sorular?id=eq.'+sec.dataset.id,{dogru_cevap:sec.value||null},'return=minimal');
+      const cb=sec.closest('.soruSatir').querySelector('.sSec');
+      cb.disabled=!sec.value;cb.dataset.dc=sec.value;if(!sec.value)cb.checked=false;say();}
+    catch(e){alert('Kaydedilemedi: '+e.message);}});
   $('oYayin').onclick=async()=>{
-    const secili=[...T.querySelectorAll('input[type=checkbox]:checked')];
+    const secili=[...T.querySelectorAll('.sSec:checked')];
     if(!$('oAd').value.trim())return $('oDurum').textContent='Sınav adı girin.';
     if(!secili.length)return $('oDurum').textContent='En az bir soru seçin.';
     $('oYayin').disabled=true;$('oDurum').textContent='Oluşturuluyor…';
@@ -209,7 +245,7 @@ async function olusturCiz(){
       await rest('POST','sinav_sorular',secili.map((c,i)=>({sinav_id:sv.id,soru_id:c.dataset.id,sira:i+1})),'return=minimal');
       await rest('POST','cevap_anahtari',secili.map((c,i)=>({sinav_id:sv.id,soru_no:i+1,dogru_cevap:c.dataset.dc})),'return=minimal');
       await rest('POST','sinav_atamalari',{sinav_id:sv.id,sinif_id:$('oSinif').value},'return=minimal');
-      $('oDurum').textContent=`✓ "${sv.ad}" yayınlandı.`;
+      $('oDurum').textContent='✓ "'+sv.ad+'" yayınlandı.';
     }catch(e){$('oDurum').textContent='Hata: '+e.message;}
     $('oYayin').disabled=false;
   };
