@@ -9,12 +9,17 @@
 --g:#16304F;--yn:#D2402F;--dg:#3E9E6E;--am:#EF9F0A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
-body{background:var(--z);color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column}
+body{background:#EFE8D9;color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column;padding:0}
+#cerceve{flex:1;display:flex;flex-direction:column;min-height:0;background:#fff;overflow:hidden}
+@media(min-width:900px){.ust>svg,.ust>.logo{display:none}.ust{padding:16px 24px}
+#ustSelam b{font-size:17px}
+body{padding:16px}
+#cerceve{border-radius:24px;box-shadow:0 20px 60px rgba(60,48,20,.14);max-width:1280px;margin:0 auto;width:100%}}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
-.ust{background:var(--z);color:var(--m);padding:12px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto;border-bottom:1px solid var(--c)}
+.ust{background:#fff;color:var(--m);padding:12px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto;border-bottom:1px solid var(--c)}
 .logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--m)}.logo span{color:var(--a)}
 .ust small{color:var(--s);font-size:10.5px;font-weight:800;background:var(--k);border:1px solid var(--c);padding:5px 11px;border-radius:99px}
-#govde{flex:1;min-height:0;overflow:auto;padding:14px;max-width:880px;margin:0 auto;width:100%}
+#govde{flex:1;min-height:0;overflow:auto;padding:14px;width:100%;background:#fff}
 .kart{background:var(--k);border:1px solid var(--c);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
 h3{margin:0 0 4px;font-size:16px}
 .acik{color:var(--s);font-size:13px;margin:0 0 10px;line-height:1.5}
@@ -110,14 +115,20 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 .netRoz{margin-left:auto;background:#EAF6F0;color:#1E7A52;font-weight:900;font-size:13px;padding:5px 10px;border-radius:99px;font-variant-numeric:tabular-nums}
 .ornekEt{display:inline-block;background:#FFF3DA;color:#8A5A00;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;margin-left:8px;vertical-align:middle}
 @media(min-width:900px){
-  #govde{display:grid;grid-template-columns:218px minmax(0,1fr);gap:18px;align-items:start;max-width:1080px}
-  .sekme{flex-direction:column;position:sticky;top:14px;background:var(--k);border:1px solid var(--c);
-    border-radius:16px;padding:10px;gap:5px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
+  #govde{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0;align-items:stretch;padding:0}
+  .sekme{flex-direction:column;position:sticky;top:0;background:#fff;border:0;border-right:1.5px dashed var(--c);
+    border-radius:0;padding:18px 14px;gap:5px;box-shadow:none;margin-bottom:0;align-self:stretch;height:100%}
+  .yanLogo{display:flex;align-items:center;gap:9px;padding:2px 6px 14px}
+  .yanLogo b{font-size:16px;font-weight:900;color:var(--m)}.yanLogo b span{color:var(--a)}
+  .yanAra{margin:0 2px 12px;font-size:13px;padding:9px 12px}
+  #tab{padding:18px 22px;min-width:0}
   .sekme button{justify-content:flex-start;min-width:0;font-size:13.5px;padding:12px 12px}
   .rzt{position:static;margin-left:auto}
 }
 
 .grpEt{display:none}
+.yanLogo,.yanAra{display:none}
+@media(min-width:900px){.yanLogo{display:flex}.yanAra{display:block}}
 .ikB{width:34px;height:34px;border-radius:10px;background:var(--z);border:1.5px solid var(--c);display:flex;align-items:center;justify-content:center;color:var(--g);flex:0 0 auto}
 .ikB svg{width:16px;height:16px}
 .ikB.tehlike{color:var(--yn);border-color:#F3C9C2;background:#FCEFEC}
@@ -141,6 +152,7 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 .sekme button{border:0}}
 </style>
 
+<div id="cerceve">
 <div class="ust">
   <svg viewBox="0 0 140 116" width="26" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
   <div class="logo">mentor<span>call</span></div>
@@ -150,11 +162,13 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
   <button id="zil" style="display:none;position:relative;color:var(--m);margin-left:10px;background:var(--k);border:1px solid var(--c);width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center">
     <svg viewBox="0 0 24 24" width="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10.5 20a2 2 0 0 0 3 0"/></svg>
     <i id="zilNok" style="display:none;position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:99px;background:var(--yn)"></i></button>
-  <span id="avvUst" class="avv" style="display:none;background:#FBEED3;border-color:#F0DFB9"></span></div>
+  <span id="avvUst" class="avv" style="display:none;background:#FBEED3;border-color:#F0DFB9"></span>
+  <button class="buton kucuk" id="ustAksiyon" style="display:none;margin-left:10px;width:auto">＋ Yeni sınav</button></div>
 <div class="serit"><div id="dolum"></div></div>
 <div id="govde"></div>
 <div class="altbar" id="altbar">
   <button class="nav" id="geri">‹</button><div class="bals" id="bals"></div><button class="nav" id="ileri">›</button>
+</div>
 </div>
 
 <div class="ortu" id="giris" style="display:flex"><div class="panel girisPanel">
@@ -195,6 +209,12 @@ const mat=el=>renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:fa
 const bugun=()=>new Date().toISOString().slice(0,10);
 let token=null,uid=null,rol=null,ad=null;
 const resimCache={};
+document.addEventListener('input',e=>{
+  if(!e.target.classList.contains('yanAra'))return;
+  const q=e.target.value.toLocaleLowerCase('tr');
+  e.target.closest('.sekme').querySelectorAll('button').forEach(b=>
+    b.style.display=b.textContent.toLocaleLowerCase('tr').includes(q)?'':'none');
+});
 const IK={
  belge:'<path d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M13 3v6h6"/>',
  grafik:'<path d="M4 20h16M7 20v-6M12 20V8M17 20v-9"/>',
@@ -251,6 +271,8 @@ $('gBtn').onclick=async()=>{
     $('zil').style.display='flex';
     $('avvUst').style.display='flex';
     $('avvUst').textContent=ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+    if(rol==='ogretmen'||rol==='yonetici'){$('ustAksiyon').style.display='block';
+      $('ustAksiyon').onclick=()=>{$('tSl').click();setTimeout(()=>{const b=$('sYeni');if(b)b.click();},350);};}
     $('zil').onclick=()=>{const h=$('tD')||$('tDy')||$('tVd');if(h)h.click();};
     rol==='ogrenci'?ogrenciAna():rol==='veli'?veliAna():personelAna();
   }catch(e){$('gDurum').textContent='Hata: '+e.message;}
@@ -261,7 +283,7 @@ $('gBtn').onclick=async()=>{
 function personelAna(){
   $('altbar').style.display='none';
   const yTab=rol==='yonetici'?`<i class="grpEt">SİSTEM</i><button id="tY">${ikon('kisiler')}Yönetim</button>`:'';
-  $('govde').innerHTML=`<div class="sekme">
+  $('govde').innerHTML=`<div class="sekme"><div class="yanLogo"><svg viewBox="0 0 140 116" width="26"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div><input class="yanAra" placeholder="Menüde ara…">
     <i class="grpEt">ANA</i>
     <button id="tGb" class="on">${ikon('saat')}Genel Bakış</button>
     <button id="tSl">${ikon('belge')}Sınavlar</button>
@@ -718,7 +740,7 @@ async function bugunum(){
 /* ---- Veli paneli ---- */
 function veliAna(){
   $('altbar').style.display='none';
-  $('govde').innerHTML=`<div class="sekme">
+  $('govde').innerHTML=`<div class="sekme"><div class="yanLogo"><svg viewBox="0 0 140 116" width="26"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div><input class="yanAra" placeholder="Menüde ara…">
     <button id="tVo" class="on">${ikon('yukselis')}Özet</button>
     <button id="tVd">${ikon('megafon')}Duyurular</button></div><div id="tab"></div>`;
   const tablar={tVo:veliOzet,tVd:oDuyuruCiz};
@@ -815,7 +837,7 @@ let SIN=null,SOR=[],OT=null,n=1,cevap={},kalan=0,tik=null;
 function ogrenciAna(){
   $('altbar').style.display='none';clearInterval(tik);$('dolum').style.width='0%';
   $('kimlik').textContent=ad.toUpperCase()+' · ÖĞRENCİ';
-  $('govde').innerHTML=`<div class="sekme">
+  $('govde').innerHTML=`<div class="sekme"><div class="yanLogo"><svg viewBox="0 0 140 116" width="26"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div><input class="yanAra" placeholder="Menüde ara…">
     <i class="grpEt">ANA</i>
     <button id="tBg" class="on">${ikon('saat')}Bugünüm</button>
     <button id="tSv">${ikon('belge')}Sınavlar<span class="rzt" id="rzSv" style="display:none"></span></button>
