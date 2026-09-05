@@ -5,25 +5,26 @@
 <link rel="icon" type="image/png" href="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png">
 <link rel="apple-touch-icon" href="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png">
 <style>
-:root{--a:#EF9F0A;--m:#16304F;--z:#FBF6EE;--k:#FFF;--c:#EBE2D2;--t:#23293A;--s:#8A8577;
+:root{--a:#EF9F0A;--m:#16304F;--z:#F7F3EA;--k:#FFF;--c:#EBE3D1;--t:#23293A;--s:#8F8A7C;
 --g:#16304F;--yn:#D2402F;--dg:#3E9E6E;--am:#EF9F0A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 body{background:var(--z);color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
-.ust{background:var(--m);color:#E9EDE6;padding:11px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto}
-.logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--a)}.logo span{color:#fff}
-.ust small{color:#7E8794;font-size:11px;font-weight:700}
+.ust{background:var(--z);color:var(--m);padding:12px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto;border-bottom:1px solid var(--c)}
+.logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--m)}.logo span{color:var(--a)}
+.ust small{color:var(--s);font-size:10.5px;font-weight:800;background:var(--k);border:1px solid var(--c);padding:5px 11px;border-radius:99px}
 #govde{flex:1;min-height:0;overflow:auto;padding:14px;max-width:880px;margin:0 auto;width:100%}
 .kart{background:var(--k);border:1px solid var(--c);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
 h3{margin:0 0 4px;font-size:16px}
 .acik{color:var(--s);font-size:13px;margin:0 0 10px;line-height:1.5}
-input,select,textarea{width:100%;padding:10px 11px;border-radius:9px;border:1.5px solid var(--c);background:var(--z);font-size:14px;color:var(--t);font-family:inherit}
+input,select,textarea{width:100%;padding:10px 12px;border-radius:11px;border:1.5px solid var(--c);background:var(--k);font-size:14px;color:var(--t);font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(239,159,10,.15)}
 textarea{min-height:64px}
 label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spacing:.06em;margin:9px 0 4px}
 .buton{padding:12px 16px;border-radius:12px;background:var(--a);color:var(--m);font-weight:900;font-size:14px;width:100%;text-align:center;box-shadow:0 2px 0 rgba(22,48,79,.18)}
 .buton:active{transform:translateY(1px);box-shadow:none}
-.buton.gri{background:#E8EAE4;color:var(--t)}
+.buton.gri{background:var(--k);color:var(--t);border:1.5px solid var(--c);box-shadow:none}
 .buton.kucuk{padding:8px 12px;font-size:13px;width:auto}
 .buton:disabled{opacity:.4}
 .izgara2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -32,8 +33,8 @@ label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spaci
 .sekme svg{width:17px;height:17px;flex:0 0 auto}
 .rzt{position:absolute;top:2px;right:6px;min-width:17px;height:17px;border-radius:99px;background:var(--yn);color:#fff;
 font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-.sekme button{flex:1;min-width:92px;padding:11px 8px;border-radius:13px;background:#F1EADC;font-weight:800;font-size:12.8px;color:#6E6A5E;display:flex;align-items:center;justify-content:center;gap:7px;position:relative;transition:background .15s}
-.sekme button.on{background:var(--m);color:#fff}
+.sekme button{flex:1;min-width:92px;padding:11px 10px;border-radius:12px;background:transparent;border:1px solid var(--c);font-weight:800;font-size:12.8px;color:#77725F;display:flex;align-items:center;justify-content:center;gap:7px;position:relative;transition:background .15s}
+.sekme button.on{background:#FBEED3;border-color:#F0DFB9;color:var(--m)}
 .soruSatir{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid var(--c);padding:9px 2px}
 .soruSatir:last-child{border:0}
 .soruSatir input{width:20px;height:20px;margin-top:2px;flex:0 0 auto}
@@ -44,7 +45,7 @@ font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content
 .sinavKart .rozet{background:var(--a);color:var(--m);min-width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:800}
 .sinavKart b{display:block;font-size:15px}
 .sinavKart span{font-size:12.5px;color:var(--s)}
-.serit{height:3px;background:#243140;flex:0 0 auto}#dolum{height:100%;background:var(--a);width:0%}
+.serit{height:3px;background:#E9E1CF;flex:0 0 auto}#dolum{height:100%;background:var(--a);width:0%}
 .soruKart{background:var(--k);border-radius:18px;border:1px solid var(--c);box-shadow:0 12px 32px rgba(22,48,79,.10);overflow:hidden}
 .kb{display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid var(--c);position:sticky;top:54px;background:var(--k);z-index:4}
 .zaman{margin-left:auto;display:flex;gap:6px;align-items:center;background:var(--z);border:1.5px solid var(--c);
@@ -135,18 +136,21 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 .qnum.aktif{border-color:var(--a);box-shadow:0 0 0 2px rgba(239,159,10,.35)}
 .ilerle{height:7px;background:var(--z);border-radius:99px;overflow:hidden;margin-top:9px}
 .ilerle i{display:block;height:100%;background:var(--a);border-radius:99px}
-@media(min-width:900px){.grpEt{display:block;font-size:10px;font-weight:800;letter-spacing:.09em;color:var(--s);padding:8px 12px 2px}}
+@media(min-width:900px){.grpEt{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--s);padding:12px 12px 4px;border-top:1.5px dashed var(--c);margin-top:6px}
+.grpEt:first-child{border-top:0;margin-top:0;padding-top:4px}
+.sekme button{border:0}}
 </style>
 
 <div class="ust">
   <svg viewBox="0 0 140 116" width="26" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
   <div class="logo">mentor<span>call</span></div>
   <div id="ustSelam" style="display:none;margin-left:14px;min-width:0"><b style="font-size:13.5px"></b>
-    <div style="font-size:10.5px;color:#7E8794;font-weight:700"></div></div>
+    <div style="font-size:10.5px;color:var(--s);font-weight:700"></div></div>
   <small id="kimlik" style="margin-left:auto">GİRİŞ BEKLENİYOR</small>
-  <button id="zil" style="display:none;position:relative;color:#E9EDE6;margin-left:10px">
+  <button id="zil" style="display:none;position:relative;color:var(--m);margin-left:10px;background:var(--k);border:1px solid var(--c);width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center">
     <svg viewBox="0 0 24 24" width="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10.5 20a2 2 0 0 0 3 0"/></svg>
-    <i id="zilNok" style="display:none;position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:99px;background:var(--yn)"></i></button></div>
+    <i id="zilNok" style="display:none;position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:99px;background:var(--yn)"></i></button>
+  <span id="avvUst" class="avv" style="display:none;background:#FBEED3;border-color:#F0DFB9"></span></div>
 <div class="serit"><div id="dolum"></div></div>
 <div id="govde"></div>
 <div class="altbar" id="altbar">
@@ -244,7 +248,9 @@ $('gBtn').onclick=async()=>{
     $('ustSelam').style.display='block';
     $('ustSelam').querySelector('b').textContent=slm+', '+ad.split(' ')[0]+' 👋';
     $('ustSelam').querySelector('div').textContent=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
-    $('zil').style.display='block';
+    $('zil').style.display='flex';
+    $('avvUst').style.display='flex';
+    $('avvUst').textContent=ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
     $('zil').onclick=()=>{const h=$('tD')||$('tDy')||$('tVd');if(h)h.click();};
     rol==='ogrenci'?ogrenciAna():rol==='veli'?veliAna():personelAna();
   }catch(e){$('gDurum').textContent='Hata: '+e.message;}
