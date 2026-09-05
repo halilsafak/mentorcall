@@ -2,6 +2,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png">
+<link rel="apple-touch-icon" href="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png">
 <style>
 :root{--a:#EF9F0A;--m:#16304F;--z:#FBF6EE;--k:#FFF;--c:#EBE2D2;--t:#23293A;--s:#8A8577;
 --g:#16304F;--yn:#D2402F;--dg:#3E9E6E;--am:#EF9F0A}
@@ -91,6 +93,13 @@ th{color:var(--s);font-size:10.5px;letter-spacing:.06em}
 .cubuk{height:8px;background:var(--z);border-radius:99px;overflow:hidden}
 .cubuk i{display:block;height:100%;background:var(--yn)}
 .katex{font-size:1.04em}
+@media(min-width:900px){
+  #govde{display:grid;grid-template-columns:218px minmax(0,1fr);gap:18px;align-items:start;max-width:1080px}
+  .sekme{flex-direction:column;position:sticky;top:14px;background:var(--k);border:1px solid var(--c);
+    border-radius:16px;padding:10px;gap:5px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
+  .sekme button{justify-content:flex-start;min-width:0;font-size:13.5px;padding:12px 12px}
+  .rzt{position:static;margin-left:auto}
+}
 </style>
 
 <div class="ust">
@@ -104,9 +113,7 @@ th{color:var(--s);font-size:10.5px;letter-spacing:.06em}
 </div>
 
 <div class="ortu" id="giris" style="display:flex"><div class="panel girisPanel">
-  <svg class="logoBuyuk" viewBox="0 0 140 116" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="#fff" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/><polygon points="118,28 118,40 122,42 122,29" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
-  <div class="marka">mentorcall</div>
-  <div class="slogan">Kişisel Eğitim Danışmanınız</div>
+  <img class="logoBuyuk" src="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png" alt="mentorcall — Kişisel Eğitim Danışmanınız" style="width:210px;height:auto">
   <label>Telefon</label><input id="gTel" value="05000000002" inputmode="tel">
   <label>Şifre</label><input id="gSif" type="password" value="mentor123">
   <button class="buton" id="gBtn" style="margin-top:14px">Giriş yap</button>
@@ -190,7 +197,7 @@ $('gBtn').onclick=async()=>{
     rol=p[0].rol;ad=p[0].ad_soyad;
     $('kimlik').textContent=ad.toUpperCase()+' · '+rol.toUpperCase();
     $('giris').style.display='none';
-    rol==='ogrenci'?ogrenciAna():personelAna();
+    rol==='ogrenci'?ogrenciAna():rol==='veli'?veliAna():personelAna();
   }catch(e){$('gDurum').textContent='Hata: '+e.message;}
   $('gBtn').disabled=false;
 };
@@ -403,14 +410,15 @@ function gorevKart(g,koc){
 async function yonetimCiz(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
   const [kul,sin]=await Promise.all([
-    rest('GET','profiller?select=ad_soyad,telefon,rol&order=rol,ad_soyad'),
+    rest('GET','profiller?select=id,ad_soyad,telefon,rol&order=rol,ad_soyad'),
     rest('GET','siniflar?select=id,ad')]);
   T.innerHTML=`<div class="kart"><h3>Kullanıcı ekle</h3>
     <div class="izgara2"><div><label>AD SOYAD</label><input id="uAd"></div>
     <div><label>TELEFON</label><input id="uTel" placeholder="05xxxxxxxxx"></div></div>
     <div class="izgara2"><div><label>ŞİFRE</label><input id="uSif" value="mentor123"></div>
-    <div><label>ROL</label><select id="uRol"><option value="ogrenci">Öğrenci</option><option value="ogretmen">Öğretmen</option><option value="yonetici">Yönetici</option></select></div></div>
+    <div><label>ROL</label><select id="uRol"><option value="ogrenci">Öğrenci</option><option value="ogretmen">Öğretmen</option><option value="veli">Veli</option><option value="yonetici">Yönetici</option></select></div></div>
     <label>SINIF (isteğe bağlı)</label><select id="uSinif"><option value="">—</option>${sin.map(s=>`<option value="${s.id}">${s.ad}</option>`).join('')}</select>
+    <label>VELİSİ OLDUĞU ÖĞRENCİ (veli rolü için)</label><select id="uOgr"><option value="">—</option>${kul.filter(k=>k.rol==='ogrenci').map(k=>`<option value="${k.id}">${k.ad_soyad}</option>`).join('')}</select>
     <button class="buton kucuk" id="uEkle" style="margin-top:10px">Kullanıcıyı oluştur</button>
     <div class="acik" id="uDurum" style="margin-top:6px"></div></div>
     <div class="kart"><h3>Sınıf ekle</h3>
@@ -422,11 +430,48 @@ async function yonetimCiz(){
     if(!$('uAd').value.trim()||!$('uTel').value.trim())return $('uDurum').textContent='Ad ve telefon zorunlu.';
     $('uEkle').disabled=true;$('uDurum').textContent='Oluşturuluyor…';
     try{await rest('POST','rpc/kullanici_ekle',{p_ad:$('uAd').value.trim(),p_telefon:$('uTel').value.trim(),
-      p_sifre:$('uSif').value,p_rol:$('uRol').value,p_sinif:$('uSinif').value||null});
+      p_sifre:$('uSif').value,p_rol:$('uRol').value,p_sinif:$('uSinif').value||null,p_ogrenci:$('uOgr').value||null});
       $('uDurum').textContent='✓ Eklendi.';setTimeout(yonetimCiz,900);
     }catch(e){$('uDurum').textContent='Hata: '+e.message;}
     $('uEkle').disabled=false;};
   $('sEkle').onclick=async()=>{await rest('POST','siniflar',{ad:$('sAd').value.trim()},'return=minimal');yonetimCiz();};
+}
+
+/* ---- Veli paneli ---- */
+function veliAna(){
+  $('altbar').style.display='none';
+  $('govde').innerHTML=`<div class="sekme">
+    <button id="tVo" class="on">${ikon('yukselis')}Özet</button>
+    <button id="tVd">${ikon('megafon')}Duyurular</button></div><div id="tab"></div>`;
+  const tablar={tVo:veliOzet,tVd:oDuyuruCiz};
+  Object.keys(tablar).forEach(id=>$(id).onclick=()=>{
+    Object.keys(tablar).forEach(x=>$(x).classList.toggle('on',x===id));tablar[id]();});
+  veliOzet();
+}
+async function veliOzet(){
+  const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+  const c=await rest('POST','rpc/veli_cocuklar');
+  if(!c.length){T.innerHTML='<div class="kart"><h3>Hoş geldiniz</h3><p class="acik">Hesabınıza bağlı öğrenci bulunamadı. Kurum yöneticisiyle iletişime geçin.</p></div>';return;}
+  T.innerHTML=`<div class="kart"><label>ÖĞRENCİ</label>
+    <select id="vSec">${c.map(x=>`<option value="${x.id}">${x.ad_soyad}</option>`).join('')}</select></div><div id="vIc"></div>`;
+  $('vSec').onchange=vYukle;vYukle();
+  async function vYukle(){
+    $('vIc').innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+    const o=await rest('POST','rpc/veli_ozet',{p_ogrenci:$('vSec').value});
+    const g=o?.gorevler||[],sn=o?.sonuclar||[];
+    $('vIc').innerHTML=`<div class="kart"><h3>Bugünün görevleri</h3>${g.length?g.map(x=>`
+      <div class="havuzOge"><div style="flex:1;min-width:0"><b style="font-size:14px">${x.ders}</b>
+      <span style="color:var(--s);font-size:13px"> ${x.konu||''}</span>
+      <div style="color:var(--s);font-size:12.5px;margin-top:2px">hedef ${x.hedef} ${x.birim} · yapılan ${x.yapilan??'—'}</div></div>
+      <span class="etiket ${x.onay?'e-dij':''}">${x.onay?'Onaylı ✓':'Bekliyor'}</span></div>`).join('')
+      :'<p class="acik">Bugün için görev tanımlanmamış.</p>'}</div>
+      <div class="kart"><h3>Son sınav sonuçları</h3>${sn.length?`
+      <table><tr><th>Sınav</th><th class="sag">D</th><th class="sag">Y</th><th class="sag">B</th><th class="sag">Net</th></tr>
+      ${sn.map(x=>`<tr><td>${x.ad.slice(0,24)}</td><td class="sag" style="color:var(--dg)">${x.d}</td>
+      <td class="sag" style="color:var(--yn)">${x.y}</td><td class="sag">${x.b}</td>
+      <td class="sag"><b>${(+x.net).toFixed(2).replace('.',',')}</b></td></tr>`).join('')}</table>`
+      :'<p class="acik">Henüz tamamlanmış sınav yok.</p>'}</div>`;
+  }
 }
 
 /* ---- Duyurular ---- */
