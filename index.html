@@ -13,7 +13,7 @@ body{background:var(--z);color:var(--t);font-family:'Nunito',system-ui,sans-seri
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .ust{background:var(--m);color:#E9EDE6;padding:11px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto}
 .logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--a)}.logo span{color:#fff}
-.ust small{color:#7E8794;font-size:11px;font-weight:700;margin-left:auto}
+.ust small{color:#7E8794;font-size:11px;font-weight:700}
 #govde{flex:1;min-height:0;overflow:auto;padding:14px;max-width:880px;margin:0 auto;width:100%}
 .kart{background:var(--k);border:1px solid var(--c);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
 h3{margin:0 0 4px;font-size:16px}
@@ -115,12 +115,38 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
   .sekme button{justify-content:flex-start;min-width:0;font-size:13.5px;padding:12px 12px}
   .rzt{position:static;margin-left:auto}
 }
+
+.grpEt{display:none}
+.ikB{width:34px;height:34px;border-radius:10px;background:var(--z);border:1.5px solid var(--c);display:flex;align-items:center;justify-content:center;color:var(--g);flex:0 0 auto}
+.ikB svg{width:16px;height:16px}
+.ikB.tehlike{color:var(--yn);border-color:#F3C9C2;background:#FCEFEC}
+.cip{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;flex:0 0 auto}
+.cipY{background:#EAF6F0;color:#1E7A52}.cipK{background:#F1EADC;color:#8A8577}
+.arsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.arsKart{background:var(--k);border:1px solid var(--c);border-radius:16px;overflow:hidden;box-shadow:0 3px 12px rgba(22,48,79,.05)}
+.arsBant{height:64px;display:flex;align-items:center;justify-content:center;color:#fff}
+.arsBant svg{width:26px;height:26px;opacity:.9}
+.arsKart .ic2{padding:11px 12px}
+.arsKart b{font-size:14px;display:block;line-height:1.3}
+.arsKart small{color:var(--s);font-size:11.5px}
+.qmap{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.qnum{min-width:34px;height:34px;border-radius:10px;border:1.5px solid #D8D2C4;background:#fff;color:#79818F;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.qnum.dolu{background:var(--m);border-color:var(--m);color:#fff}
+.qnum.aktif{border-color:var(--a);box-shadow:0 0 0 2px rgba(239,159,10,.35)}
+.ilerle{height:7px;background:var(--z);border-radius:99px;overflow:hidden;margin-top:9px}
+.ilerle i{display:block;height:100%;background:var(--a);border-radius:99px}
+@media(min-width:900px){.grpEt{display:block;font-size:10px;font-weight:800;letter-spacing:.09em;color:var(--s);padding:8px 12px 2px}}
 </style>
 
 <div class="ust">
   <svg viewBox="0 0 140 116" width="26" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
   <div class="logo">mentor<span>call</span></div>
-  <small id="kimlik">GİRİŞ BEKLENİYOR</small></div>
+  <div id="ustSelam" style="display:none;margin-left:14px;min-width:0"><b style="font-size:13.5px"></b>
+    <div style="font-size:10.5px;color:#7E8794;font-weight:700"></div></div>
+  <small id="kimlik" style="margin-left:auto">GİRİŞ BEKLENİYOR</small>
+  <button id="zil" style="display:none;position:relative;color:#E9EDE6;margin-left:10px">
+    <svg viewBox="0 0 24 24" width="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10.5 20a2 2 0 0 0 3 0"/></svg>
+    <i id="zilNok" style="display:none;position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:99px;background:var(--yn)"></i></button></div>
 <div class="serit"><div id="dolum"></div></div>
 <div id="govde"></div>
 <div class="altbar" id="altbar">
@@ -174,6 +200,8 @@ const IK={
  kutu:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="m8.5 12.2 2.6 2.6 4.6-5.2"/>',
  yukselis:'<path d="m3 17 6-6 4 4 7-8"/><path d="M14 7h6v6"/>',
  saat:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+ cop:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',
+ arsiv:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4"/>',
  kalem:'<path d="m14 5 5 5L8 21H3v-5L14 5z"/><path d="m12.5 6.5 5 5"/>'
 };
 const ikon=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IK[n]}</svg>`;
@@ -212,6 +240,12 @@ $('gBtn').onclick=async()=>{
     rol=p[0].rol;ad=p[0].ad_soyad;
     $('kimlik').textContent=ad.toUpperCase()+' · '+rol.toUpperCase();
     $('giris').style.display='none';
+    const st=new Date().getHours(),slm=st<6?'İyi geceler':st<12?'Günaydın':st<18?'İyi günler':'İyi akşamlar';
+    $('ustSelam').style.display='block';
+    $('ustSelam').querySelector('b').textContent=slm+', '+ad.split(' ')[0]+' 👋';
+    $('ustSelam').querySelector('div').textContent=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
+    $('zil').style.display='block';
+    $('zil').onclick=()=>{const h=$('tD')||$('tDy')||$('tVd');if(h)h.click();};
     rol==='ogrenci'?ogrenciAna():rol==='veli'?veliAna():personelAna();
   }catch(e){$('gDurum').textContent='Hata: '+e.message;}
   $('gBtn').disabled=false;
@@ -220,13 +254,15 @@ $('gBtn').onclick=async()=>{
 /* ================= PERSONEL (öğretmen + yönetici) ================= */
 function personelAna(){
   $('altbar').style.display='none';
-  const yTab=rol==='yonetici'?`<button id="tY">${ikon('kisiler')}Yönetim</button>`:'';
+  const yTab=rol==='yonetici'?`<i class="grpEt">SİSTEM</i><button id="tY">${ikon('kisiler')}Yönetim</button>`:'';
   $('govde').innerHTML=`<div class="sekme">
+    <i class="grpEt">ANA</i>
     <button id="tGb" class="on">${ikon('saat')}Genel Bakış</button>
     <button id="tSl">${ikon('belge')}Sınavlar</button>
+    <button id="tK">${ikon('hedef')}Koçluk</button>
+    <i class="grpEt">YÖNETİM</i>
     <button id="tAr">${ikon('kutu')}Sınav Arşivi</button>
     <button id="tS">${ikon('grafik')}Sonuçlar<span class="rzt" id="rzS" style="display:none"></span></button>
-    <button id="tK">${ikon('hedef')}Koçluk</button>
     <button id="tD">${ikon('megafon')}Duyuru</button>${yTab}</div><div id="tab"></div>`;
   const tablar={tGb:genelBakis,tSl:sinavYonet,tAr:arsivCiz,tS:sonuclarCiz,tK:kocCiz,tD:duyuruCiz,tY:yonetimCiz};
   rozetler();
@@ -345,9 +381,18 @@ async function sonuclarCiz(){
   };
   $('aBtn').onclick=async()=>{
     $('aSonuc').innerHTML='<p class="acik">Hesaplanıyor…</p>';
-    const an=await rest('POST','rpc/soru_analiz',{p_sinav:$('aSinav').value});
+    const [an,snt]=await Promise.all([
+      rest('POST','rpc/soru_analiz',{p_sinav:$('aSinav').value}),
+      rest('GET','sonuclar?sinav_id=eq.'+$('aSinav').value+'&select=net').catch(()=>[])]);
     if(!an.length)return $('aSonuc').innerHTML='<p class="acik">Bu sınavda tamamlanmış oturum yok.</p>';
-    $('aSonuc').innerHTML='<table><tr><th>Soru</th><th class="sag">D</th><th class="sag">Y</th><th class="sag">B</th><th style="width:40%">Yanlış oranı</th></tr>'+
+    const netv=snt.map(x=>+x.net),ortN=netv.length?(netv.reduce((a,b)=>a+b,0)/netv.length):0;
+    const kutu3=(d,e,r)=>`<div style="flex:1;background:var(--z);border-radius:12px;padding:10px;text-align:center">
+      <div style="font-size:20px;font-weight:900;color:${r}">${d}</div>
+      <div style="font-size:10px;color:var(--s);font-weight:800">${e}</div></div>`;
+    $('aSonuc').innerHTML=`<div style="display:flex;gap:8px;margin:10px 0">
+      ${kutu3(netv.length,'KATILAN','var(--m)')}
+      ${kutu3(ortN.toFixed(2).replace('.',','),'ORT. NET','var(--dg)')}
+      ${kutu3(netv.length?Math.max(...netv).toFixed(2).replace('.',','):'—','EN YÜKSEK','var(--a)')}</div>`+'<table><tr><th>Soru</th><th class="sag">D</th><th class="sag">Y</th><th class="sag">B</th><th style="width:40%">Yanlış oranı</th></tr>'+
       an.map(q=>{const top=+q.dogru+ +q.yanlis+ +q.bos||1;const oran=Math.round(q.yanlis/top*100);
       return `<tr><td><b>${q.soru_no}</b></td><td class="sag" style="color:var(--dg)">${q.dogru}</td>
       <td class="sag" style="color:var(--yn)">${q.yanlis}</td><td class="sag">${q.bos}</td>
@@ -444,6 +489,7 @@ function gorevKart(g,koc){
     <span class="rozOnay ${g.onaylandi?'r-onay':'r-bekli'}">${g.onaylandi?'ONAYLI':'BEKLİYOR'}</span></div>
     <div class="izgara4">${alan('YAPILAN','yapilan',g.yapilan)}
     ${g.tur==='soru'?alan('DOĞRU','dogru',g.dogru)+alan('YANLIŞ','yanlis',g.yanlis)+alan('ÖĞRENDİĞİ','ogrenilen',g.ogrenilen):''}</div>
+    ${g.yapilan!=null&&g.hedef?`<div class="ilerle"><i style="width:${Math.min(100,Math.round(g.yapilan/g.hedef*100))}%"></i></div>`:''}
     ${koc?`<button class="buton kucuk" data-onay="${g.id}" style="margin-top:8px">${g.onaylandi?'Güncelle':'Onayla'}</button>`
         :`<div class="izgara2" style="margin-top:8px"><input type="file" accept="image/*" data-kanit="${g.id}">
           <button class="buton kucuk gri" data-kaydet="${g.id}">${g.onaylandi?'Onaylandı':'Kaydet'}</button></div>
@@ -519,7 +565,7 @@ async function genelBakis(){
   T.innerHTML=`
   <div class="hero">
     <div style="flex:1;min-width:0"><h2>${selam}, ${ad.split(' ')[0]} 👋</h2>
-    <div class="alt">${tarih} · kurumun bugünkü fotoğrafı${ornek?'<span class="ornekEt">örnek görünüm</span>':''}</div></div>
+    <div class="alt">${tarih} · bu hafta kurumda ${vHafta} sınav çözüldü 👏${ornek?'<span class="ornekEt">örnek görünüm</span>':''}</div></div>
     ${cizgi?`<svg width="136" height="48" viewBox="0 0 136 48">
       <polyline points="${cizgi}" fill="none" stroke="#EF9F0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="${cizgi.split(' ').pop().split(',')[0]}" cy="${cizgi.split(' ').pop().split(',')[1]}" r="4" fill="#EF9F0A"/></svg>`:''}
@@ -556,11 +602,12 @@ async function sinavYonet(){
     <div id="svListe">${sv.length?sv.map(x=>`
     <div class="havuzOge" data-id="${x.id}"><div class="rozet">${x.soru_sayisi}</div>
       <div style="flex:1;min-width:0"><b style="font-size:14.5px">${x.ad}</b>
-      <div style="font-size:12px;color:var(--s)">${x.created_at.slice(0,10)}${x.sure_dakika?' · '+x.sure_dakika+' dk':''} · ${x.yayinda?'yayında':'kapalı'}</div>
+      <div style="font-size:12px;color:var(--s)">${x.created_at.slice(0,10)}${x.sure_dakika?' · '+x.sure_dakika+' dk':''}</div>
       <div class="dzn" style="display:none;margin-top:8px"></div></div>
-      <button class="buton gri kucuk" data-e="d">Düzenle</button>
-      <button class="buton gri kucuk" data-e="a">Arşivle</button>
-      <button class="buton kucuk" data-e="s" style="background:var(--yn);color:#fff">Sil</button></div>`).join('')
+      <span class="cip ${x.yayinda?'cipY':'cipK'}">${x.yayinda?'Yayında':'Kapalı'}</span>
+      <button class="ikB" data-e="d" title="Düzenle">${ikon('kalem')}</button>
+      <button class="ikB" data-e="a" title="Arşivle">${ikon('arsiv')}</button>
+      <button class="ikB tehlike" data-e="s" title="Sil">${ikon('cop')}</button></div>`).join('')
     :'<p class="acik">Aktif sınav yok — yeni sınav oluşturun.</p>'}</div></div>`;
   $('sYeni').onclick=olusturCiz;
   T.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{
@@ -588,37 +635,57 @@ async function sinavYonet(){
 }
 async function arsivCiz(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
-  const sv=await rest('GET','sinavlar?select=id,ad,soru_sayisi,created_at&arsivde=is.true&order=created_at.desc');
-  T.innerHTML=`<div class="kart"><h3>Sınav arşivi</h3>
-    <p class="acik">Arşivdeki sınavlar öğrenciye görünmez; sonuçları ve soruları korunur.</p>
-    ${sv.length?sv.map(x=>`
-    <div class="havuzOge" data-id="${x.id}"><div class="rozet" style="background:var(--g);color:#fff">${x.soru_sayisi}</div>
-      <div style="flex:1"><b style="font-size:14px">${x.ad}</b>
-      <div style="font-size:12px;color:var(--s)">${x.created_at.slice(0,10)}</div></div>
-      <button class="buton gri kucuk" data-g="1">Arşivden çıkar</button>
-      <button class="buton kucuk" data-s="1" style="background:var(--yn);color:#fff">Sil</button></div>`).join('')
-    :'<p class="acik">Arşiv boş.</p>'}</div>`;
-  T.querySelectorAll('[data-g]').forEach(b=>b.onclick=async()=>{
+  let sv=await rest('GET','sinavlar?select=id,ad,soru_sayisi,created_at&arsivde=is.true&order=created_at.desc').catch(()=>[]);
+  let ornek=false;
+  if(!sv.length){ornek=true;sv=[
+    {id:null,ad:'TYT Deneme 3 — Mart',soru_sayisi:40,created_at:'2026-03-14'},
+    {id:null,ad:'Kareköklü Sayılar Tarama',soru_sayisi:20,created_at:'2026-02-02'},
+    {id:null,ad:'LGS Paragraf Kampı',soru_sayisi:25,created_at:'2026-01-18'},
+    {id:null,ad:'Yüzdeler Kazanım Testi',soru_sayisi:12,created_at:'2025-12-05'}];}
+  const renk=['var(--a)','var(--m)','var(--yn)','var(--dg)'];
+  T.innerHTML=`<div class="kart"><h3>Sınav arşivi${ornek?'<span class="ornekEt">örnek görünüm</span>':''}</h3>
+    <p class="acik">Arşivdeki sınavlar öğrenciye görünmez; soruları ve sonuçları korunur.</p>
+    <div class="arsGrid">${sv.map((x,i)=>`
+    <div class="arsKart" data-id="${x.id||''}">
+      <div class="arsBant" style="background:${renk[i%4]}">${ikon('belge')}</div>
+      <div class="ic2"><b>${x.ad}</b><small>${x.soru_sayisi} soru · ${x.created_at.slice(0,10)}</small>
+      <div class="sira" style="margin-top:9px">
+        <button class="buton gri kucuk" data-g="1" style="flex:1" ${x.id?'':'disabled'}>Geri al</button>
+        <button class="ikB tehlike" data-s="1" ${x.id?'':'disabled'}>${ikon('cop')}</button>
+      </div></div></div>`).join('')}</div></div>`;
+  T.querySelectorAll('[data-g]:not(:disabled)').forEach(b=>b.onclick=async()=>{
     await rest('PATCH','sinavlar?id=eq.'+b.closest('[data-id]').dataset.id,{arsivde:false,yayinda:true},'return=minimal');arsivCiz();});
-  T.querySelectorAll('[data-s]').forEach(b=>b.onclick=async()=>{
+  T.querySelectorAll('[data-s]:not(:disabled)').forEach(b=>b.onclick=async()=>{
     if(!confirm('Sınav TAMAMEN silinsin mi?'))return;
     try{await rest('DELETE','sinavlar?id=eq.'+b.closest('[data-id]').dataset.id,null,'return=minimal');arsivCiz();}
     catch(e){alert('Silinemedi: '+e.message);}});
 }
 
 /* ---- Öğrenci: Bugünüm ---- */
+function halka(p,renk){const r=15.5,c=2*Math.PI*r;
+  return `<svg width="52" height="52" viewBox="0 0 40 40"><circle cx="20" cy="20" r="${r}" fill="none" stroke="#EFE7D8" stroke-width="5"/>
+  <circle cx="20" cy="20" r="${r}" fill="none" stroke="${renk}" stroke-width="5" stroke-linecap="round"
+  stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c*(1-p/100)).toFixed(1)}" transform="rotate(-90 20 20)"/>
+  <text x="20" y="24" text-anchor="middle" font-size="10.5" font-weight="900" fill="#16304F">%${p}</text></svg>`;}
 async function bugunum(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Gününüz hazırlanıyor…</p></div>';
-  const [gorev,sv,ot,sonN,duy]=await Promise.allSettled([
+  const [gorev,sv,ot,sonN,duy,hft]=await Promise.allSettled([
     rest('GET','gorevler?ogrenci_id=eq.'+uid+'&tarih=eq.'+bugun()+'&order=created_at'),
     rest('GET','sinavlar?select=id,ad,soru_sayisi,sure_dakika,net_katsayi&yayinda=is.true&arsivde=is.false&order=created_at.desc'),
     rest('GET','oturumlar?select=sinav_id&ogrenci_id=eq.'+uid),
     rest('GET','sonuclar?select=net&ogrenci_id=eq.'+uid+'&order=hesaplama.desc&limit=1'),
-    rest('GET','duyurular?select=metin,created_at&order=created_at.desc&limit=1')])
+    rest('GET','duyurular?select=metin,created_at&order=created_at.desc&limit=1'),
+    rest('GET','sonuclar?select=id&ogrenci_id=eq.'+uid+'&hesaplama=gte.'+new Date(Date.now()-7*864e5).toISOString())])
     .then(r=>r.map(x=>x.status==='fulfilled'?x.value:[]));
   const coz=new Set(ot.map(x=>x.sinav_id));
   const yeni=sv.filter(x=>!coz.has(x.id));
-  T.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:12px">
+  const onayli=gorev.filter(g=>g.onaylandi).length;
+  const oran=gorev.length?Math.round(onayli/gorev.length*100):0;
+  T.innerHTML=`<div class="hero" style="margin-bottom:12px">
+    <div style="flex:1;min-width:0"><h2>Bu hafta ${hft.length} sınav çözdün${hft.length?' 💪':''}</h2>
+    <div class="alt">${gorev.length?`bugünkü ${gorev.length} görevin ${onayli} tanesi onaylandı`:'bugün görev yok — sınavlara göz at'}</div></div>
+    ${halka(oran,'#EF9F0A')}</div>
+  <div style="display:flex;gap:10px;margin-bottom:12px">
     <div style="flex:1;background:var(--k);border:1px solid var(--c);border-radius:16px;padding:13px;text-align:center">
       <div style="font-size:28px;font-weight:900;color:var(--yn)">${gorev.filter(g=>!g.onaylandi).length}</div>
       <div style="font-size:11px;color:var(--s);font-weight:800">BUGÜNKÜ GÖREV</div></div>
@@ -743,9 +810,11 @@ function ogrenciAna(){
   $('altbar').style.display='none';clearInterval(tik);$('dolum').style.width='0%';
   $('kimlik').textContent=ad.toUpperCase()+' · ÖĞRENCİ';
   $('govde').innerHTML=`<div class="sekme">
+    <i class="grpEt">ANA</i>
     <button id="tBg" class="on">${ikon('saat')}Bugünüm</button>
     <button id="tSv">${ikon('belge')}Sınavlar<span class="rzt" id="rzSv" style="display:none"></span></button>
     <button id="tG">${ikon('kutu')}Görevler<span class="rzt" id="rzG" style="display:none"></span></button>
+    <i class="grpEt">TAKİP</i>
     <button id="tGe">${ikon('yukselis')}Gelişim</button>
     <button id="tDy">${ikon('megafon')}Duyuru<span class="rzt" id="rzD" style="display:none"></span></button></div><div id="tab"></div>`;
   const tablar={tBg:bugunum,tSv:sinavListe,tG:gorevListe,tGe:gelisimCiz,tDy:oDuyuruCiz};
@@ -788,7 +857,9 @@ async function soruGoster(){
   $('tab').innerHTML=`<div class="soruKart"><div class="kb"><div class="rozet">${n}</div>
     <b>${SIN.ad.toUpperCase().slice(0,22)} · ${n}/${SOR.length}</b>
     ${SIN.sure_dakika?`<span class="zaman" id="zamanCip">${ikon('saat')}<span id="zamanYazi">--:--</span></span>`:''}</div><div class="ic" id="ic"></div></div>
+    <div class="qmap">${SOR.map((_,i)=>`<button class="qnum${cevap[i+1]?' dolu':''}${i+1===n?' aktif':''}" data-q="${i+1}">${i+1}</button>`).join('')}</div>
     <button class="buton" id="bitir" style="margin-top:12px">Sınavı bitir ve gönder</button>`;
+  $('tab').querySelectorAll('.qnum').forEach(b=>b.onclick=()=>{n=+b.dataset.q;soruGoster();});
   const ic=$('ic');
   if(v.gosterim==='dijital'){
     if(v.metin){const p=document.createElement('p');p.className='mt';p.textContent=v.metin;ic.appendChild(p);mat(p);}
