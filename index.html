@@ -93,6 +93,21 @@ th{color:var(--s);font-size:10.5px;letter-spacing:.06em}
 .cubuk{height:8px;background:var(--z);border-radius:99px;overflow:hidden}
 .cubuk i{display:block;height:100%;background:var(--yn)}
 .katex{font-size:1.04em}
+.hero{background:linear-gradient(135deg,#1E4067,#16304F 58%,#0F2440);border-radius:20px;padding:18px 20px;color:#EAF0F8;
+display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34px rgba(22,48,79,.22)}
+.hero h2{margin:0;font-size:19px;font-weight:900;letter-spacing:.01em}
+.hero .alt{color:#9DB2CC;font-size:12.5px;margin-top:4px;font-weight:600}
+.hero svg{flex:0 0 auto}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--k);border:1px solid var(--c);border-radius:16px;padding:13px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
+.tile .tik{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+.tile .tik svg{width:18px;height:18px}
+.tile b{font-size:24px;font-weight:900;display:block;line-height:1.05}
+.tile span{font-size:10.8px;color:var(--s);font-weight:800;letter-spacing:.04em}
+.avv{width:36px;height:36px;border-radius:12px;background:var(--z);border:1px solid var(--c);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12.5px;color:var(--m);flex:0 0 auto}
+.netRoz{margin-left:auto;background:#EAF6F0;color:#1E7A52;font-weight:900;font-size:13px;padding:5px 10px;border-radius:99px;font-variant-numeric:tabular-nums}
+.ornekEt{display:inline-block;background:#FFF3DA;color:#8A5A00;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;margin-left:8px;vertical-align:middle}
 @media(min-width:900px){
   #govde{display:grid;grid-template-columns:218px minmax(0,1fr);gap:18px;align-items:start;max-width:1080px}
   .sekme{flex-direction:column;position:sticky;top:14px;background:var(--k);border:1px solid var(--c);
@@ -470,31 +485,66 @@ async function yonetimCiz(){
 async function genelBakis(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Panel hazırlanıyor…</p></div>';
   const hafta=new Date(Date.now()-7*864e5).toISOString();
-  const [bek,haftaS,netler,sonlar,aktif]=await Promise.all([
+  const [bek,hFul,netler,sonlar,aktif]=await Promise.allSettled([
     rest('GET','gorevler?select=id&tarih=eq.'+bugun()+'&onaylandi=is.false'),
-    rest('GET','sonuclar?select=id&hesaplama=gte.'+hafta),
-    rest('GET','sonuclar?select=net&order=hesaplama.desc&limit=25'),
-    rest('GET','sonuclar?select=net,dogru,yanlis,profiller(ad_soyad),sinavlar(ad)&order=hesaplama.desc&limit=5'),
-    rest('GET','sinavlar?select=id&yayinda=is.true&arsivde=is.false')]);
-  const ort=netler.length?(netler.reduce((a,x)=>a+ +x.net,0)/netler.length).toFixed(2).replace('.',','):'—';
-  const kutu=(deger,etiket,renk)=>`<div style="flex:1;background:var(--k);border:1px solid var(--c);border-radius:16px;padding:14px;text-align:center;box-shadow:0 3px 12px rgba(22,48,79,.05)">
-    <div style="font-size:30px;font-weight:900;color:${renk}">${deger}</div>
-    <div style="font-size:11.5px;color:var(--s);font-weight:800;margin-top:2px">${etiket}</div></div>`;
-  T.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:12px">
-    ${kutu(bek.length,'ONAY BEKLEYEN GÖREV','var(--yn)')}
-    ${kutu(haftaS.length,'BU HAFTA ÇÖZÜLEN','var(--m)')}
-    ${kutu(ort,'SON DÖNEM NET ORT.','var(--dg)')}</div>
-    <div style="display:flex;gap:10px;margin-bottom:12px">
-    ${kutu(aktif.length,'YAYINDAKİ SINAV','var(--a)')}
-    <div style="flex:2.1;display:flex;gap:8px;align-items:stretch">
-      <button class="buton" id="gbYeni" style="flex:1">Yeni sınav</button>
-      <button class="buton gri" id="gbDuyuru" style="flex:1">Duyuru yaz</button></div></div>
-    <div class="kart"><h3>Son sonuçlar</h3>${sonlar.length?`<table>
-    ${sonlar.map(x=>`<tr><td>${x.profiller.ad_soyad}</td><td style="color:var(--s)">${x.sinavlar.ad.slice(0,18)}</td>
-    <td class="sag"><b>${(+x.net).toFixed(2).replace('.',',')}</b> net</td></tr>`).join('')}</table>`
-    :'<p class="acik">Henüz sonuç yok.</p>'}</div>`;
-  $('gbYeni').onclick=()=>{document.querySelector('#tSl').click();setTimeout(()=>{const b=$('sYeni');if(b)b.click();},400);};
-  $('gbDuyuru').onclick=()=>document.querySelector('#tD').click();
+    rest('GET','sonuclar?select=hesaplama&hesaplama=gte.'+hafta+'&limit=300'),
+    rest('GET','sonuclar?select=net&order=hesaplama.desc&limit=30'),
+    rest('GET','sonuclar?select=net,profiller(ad_soyad),sinavlar(ad)&order=hesaplama.desc&limit=6'),
+    rest('GET','sinavlar?select=id&yayinda=is.true&arsivde=is.false')
+  ]).then(r=>r.map(x=>x.status==='fulfilled'?x.value:null));
+  let ornek=false;
+  let vBek=bek?bek.length:0, vHafta=hFul?hFul.length:0, vAktif=aktif?aktif.length:0;
+  let nets=(netler||[]).map(x=>+x.net).reverse();
+  let akis=(sonlar||[]).map(x=>({ad:x.profiller?.ad_soyad||'Öğrenci',sv:x.sinavlar?.ad||'Sınav',net:+x.net}));
+  if(!akis.length){ // örnek görünüm
+    ornek=true;vBek=vBek||7;vHafta=vHafta||23;vAktif=vAktif||3;
+    nets=[6.2,7.1,6.8,8.4,7.9,9.2,8.8,10.1,9.6,11.3];
+    akis=[{ad:'Zeynep Yılmaz',sv:'TYT Deneme 4',net:12.25},{ad:'Emir Kaya',sv:'TYT Deneme 4',net:9.5},
+          {ad:'Elif Demir',sv:'Yüzdeler Tarama',net:11.0},{ad:'Ali Çetin',sv:'TYT Deneme 4',net:8.75},
+          {ad:'Sena Arslan',sv:'Kareköklü Sayılar',net:10.5}];
+  }
+  const ort=nets.length?(nets.reduce((a,b)=>a+b,0)/nets.length).toFixed(2).replace('.',','):'—';
+  // net trend çizgisi
+  let cizgi='';
+  if(nets.length>1){
+    const mn=Math.min(...nets),mx=Math.max(...nets)||1;
+    cizgi=nets.map((n,i)=>`${(i/(nets.length-1)*128+4).toFixed(1)},${(40-((n-mn)/((mx-mn)||1))*32+4).toFixed(1)}`).join(' ');
+  }
+  const saat=new Date().getHours();
+  const selam=saat<6?'İyi geceler':saat<12?'Günaydın':saat<18?'İyi günler':'İyi akşamlar';
+  const tarih=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
+  const tile=(ik,renkBg,renkIk,deger,etiket)=>`<div class="tile">
+    <div class="tik" style="background:${renkBg};color:${renkIk}">${ikon(ik)}</div>
+    <b>${deger}</b><span>${etiket}</span></div>`;
+  T.innerHTML=`
+  <div class="hero">
+    <div style="flex:1;min-width:0"><h2>${selam}, ${ad.split(' ')[0]} 👋</h2>
+    <div class="alt">${tarih} · kurumun bugünkü fotoğrafı${ornek?'<span class="ornekEt">örnek görünüm</span>':''}</div></div>
+    ${cizgi?`<svg width="136" height="48" viewBox="0 0 136 48">
+      <polyline points="${cizgi}" fill="none" stroke="#EF9F0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${cizgi.split(' ').pop().split(',')[0]}" cy="${cizgi.split(' ').pop().split(',')[1]}" r="4" fill="#EF9F0A"/></svg>`:''}
+  </div>
+  <div class="tiles">
+    ${tile('kutu','#FCEAE6','var(--yn)',vBek,'ONAY BEKLEYEN GÖREV')}
+    ${tile('grafik','#EAF0F8','var(--m)',vHafta,'BU HAFTA ÇÖZÜLEN')}
+    ${tile('yukselis','#EAF6F0','var(--dg)',ort,'NET ORTALAMASI')}
+    ${tile('belge','#FFF3DA','#B87A00',vAktif,'YAYINDAKİ SINAV')}
+  </div>
+  <div class="sira" style="margin-bottom:12px">
+    <button class="buton" id="gbYeni" style="flex:1">＋ Yeni sınav</button>
+    <button class="buton gri" id="gbKoc" style="flex:1">Koçluk günlüğü</button>
+    <button class="buton gri" id="gbDuyuru" style="flex:1">Duyuru yaz</button>
+  </div>
+  <div class="kart"><h3>Son sonuçlar</h3>
+    ${akis.map(x=>`<div class="havuzOge">
+      <div class="avv">${x.ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase()}</div>
+      <div style="flex:1;min-width:0"><b style="font-size:14px">${x.ad}</b>
+      <div style="font-size:12px;color:var(--s)">${x.sv}</div></div>
+      <span class="netRoz">${x.net.toFixed(2).replace('.',',')} net</span></div>`).join('')}
+  </div>`;
+  $('gbYeni').onclick=()=>{$('tSl').click();setTimeout(()=>{const b=$('sYeni');if(b)b.click();},350);};
+  $('gbKoc').onclick=()=>$('tK').click();
+  $('gbDuyuru').onclick=()=>$('tD').click();
 }
 
 /* ---- Sınavlar: yönet / düzenle / arşivle / sil ---- */
@@ -559,12 +609,13 @@ async function arsivCiz(){
 /* ---- Öğrenci: Bugünüm ---- */
 async function bugunum(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Gününüz hazırlanıyor…</p></div>';
-  const [gorev,sv,ot,sonN,duy]=await Promise.all([
+  const [gorev,sv,ot,sonN,duy]=await Promise.allSettled([
     rest('GET','gorevler?ogrenci_id=eq.'+uid+'&tarih=eq.'+bugun()+'&order=created_at'),
     rest('GET','sinavlar?select=id,ad,soru_sayisi,sure_dakika,net_katsayi&yayinda=is.true&arsivde=is.false&order=created_at.desc'),
     rest('GET','oturumlar?select=sinav_id&ogrenci_id=eq.'+uid),
     rest('GET','sonuclar?select=net&ogrenci_id=eq.'+uid+'&order=hesaplama.desc&limit=1'),
-    rest('GET','duyurular?select=metin,created_at&order=created_at.desc&limit=1')]);
+    rest('GET','duyurular?select=metin,created_at&order=created_at.desc&limit=1')])
+    .then(r=>r.map(x=>x.status==='fulfilled'?x.value:[]));
   const coz=new Set(ot.map(x=>x.sinav_id));
   const yeni=sv.filter(x=>!coz.has(x.id));
   T.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:12px">
