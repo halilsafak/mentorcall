@@ -1,13 +1,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--a:#22A093;--ak:#17756B;--m:#141D2A;--z:#F4F5F1;--k:#FFF;--c:#E3E6DF;--t:#1B2028;
---s:#8C95A2;--g:#39404C;--yn:#C8553D;--dg:#3E9E6E;--am:#E8A33D}
+:root{--a:#EF9F0A;--ak:#C98305;--m:#16304F;--z:#FBF6EE;--k:#FFF;--c:#EBE2D2;--t:#23293A;
+--s:#8A8577;--g:#16304F;--yn:#D2402F;--dg:#3E9E6E;--am:#EF9F0A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--z);color:var(--t);font-family:system-ui,sans-serif;font-size:15px;padding-bottom:30px}
+body{margin:0;background:var(--z);color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;padding-bottom:30px}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .ust{background:var(--m);color:#E9EDE6;padding:12px 16px;display:flex;align-items:center;gap:10px}
-.logo{font-weight:800;font-size:14px}.logo span{color:var(--a)}
+.logo{font-weight:900;font-size:15px;color:var(--a)}.logo span{color:#fff}
 .ust small{color:#7E8794;font-size:11px;font-weight:700;letter-spacing:.07em;margin-left:auto}
 .sekme{display:flex;gap:4px;background:#243140;padding:4px 16px 0}
 .sekme button{padding:10px 16px;border-radius:10px 10px 0 0;font-weight:700;font-size:14px;color:#8C95A2}
@@ -21,7 +23,8 @@ background:var(--z);color:var(--t);font-size:14px;font-family:inherit}
 textarea{min-height:74px;resize:vertical}
 label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spacing:.06em;margin:10px 0 4px}
 .sira{display:flex;gap:8px;align-items:center}
-.buton{padding:11px 16px;border-radius:10px;background:var(--a);color:#fff;font-weight:800;font-size:14px}
+.buton{padding:11px 16px;border-radius:12px;background:var(--a);color:var(--m);font-weight:900;font-size:14px;box-shadow:0 2px 0 rgba(22,48,79,.18)}
+.buton.kirmizi{color:#fff}
 .buton.gri{background:#E8EAE4;color:var(--t)}
 .buton.kucuk{padding:8px 12px;font-size:13px}
 .buton.kirmizi{background:var(--yn)}
@@ -76,7 +79,7 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
 .katex{font-size:1.04em}
 </style>
 
-<div class="ust"><div class="logo">MENTOR<span>CALL</span></div><small id="kimlik">GİRİŞ BEKLENİYOR</small></div>
+<div class="ust"><svg viewBox="0 0 140 116" width="24" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><div class="logo">mentor<span>call</span></div><small id="kimlik">GİRİŞ BEKLENİYOR</small></div>
 <div id="girisOrtu" style="position:fixed;inset:0;background:rgba(20,29,42,.7);display:flex;align-items:center;justify-content:center;z-index:20;padding:18px">
   <div class="kart" style="max-width:400px;width:100%">
     <h3>Öğretmen girişi</h3>

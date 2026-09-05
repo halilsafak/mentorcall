@@ -1,30 +1,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--a:#22A093;--m:#141D2A;--z:#F4F5F1;--k:#FFF;--c:#E3E6DF;--t:#1B2028;--s:#8C95A2;
---g:#39404C;--yn:#C8553D;--dg:#3E9E6E;--am:#E8A33D}
+:root{--a:#EF9F0A;--m:#16304F;--z:#FBF6EE;--k:#FFF;--c:#EBE2D2;--t:#23293A;--s:#8A8577;
+--g:#16304F;--yn:#D2402F;--dg:#3E9E6E;--am:#EF9F0A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
-body{background:var(--z);color:var(--t);font-family:system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column}
+body{background:var(--z);color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .ust{background:var(--m);color:#E9EDE6;padding:11px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto}
-.logo{font-weight:800;font-size:14px}.logo span{color:var(--a)}
+.logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--a)}.logo span{color:#fff}
 .ust small{color:#7E8794;font-size:11px;font-weight:700;margin-left:auto}
 #govde{flex:1;min-height:0;overflow:auto;padding:14px;max-width:880px;margin:0 auto;width:100%}
-.kart{background:var(--k);border:1px solid var(--c);border-radius:14px;padding:14px;margin-bottom:12px}
+.kart{background:var(--k);border:1px solid var(--c);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
 h3{margin:0 0 4px;font-size:16px}
 .acik{color:var(--s);font-size:13px;margin:0 0 10px;line-height:1.5}
 input,select,textarea{width:100%;padding:10px 11px;border-radius:9px;border:1.5px solid var(--c);background:var(--z);font-size:14px;color:var(--t);font-family:inherit}
 textarea{min-height:64px}
 label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spacing:.06em;margin:9px 0 4px}
-.buton{padding:12px 16px;border-radius:11px;background:var(--a);color:#fff;font-weight:800;font-size:14px;width:100%;text-align:center}
+.buton{padding:12px 16px;border-radius:12px;background:var(--a);color:var(--m);font-weight:900;font-size:14px;width:100%;text-align:center;box-shadow:0 2px 0 rgba(22,48,79,.18)}
+.buton:active{transform:translateY(1px);box-shadow:none}
 .buton.gri{background:#E8EAE4;color:var(--t)}
 .buton.kucuk{padding:8px 12px;font-size:13px;width:auto}
 .buton:disabled{opacity:.4}
 .izgara2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .izgara4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.sekme{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.sekme button{flex:1;min-width:90px;padding:10px;border-radius:10px;background:#E8EAE4;font-weight:700;font-size:13px;color:var(--s)}
+.sekme{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;position:sticky;top:0;z-index:6;background:var(--z);padding:6px 0}
+.sekme svg{width:17px;height:17px;flex:0 0 auto}
+.rzt{position:absolute;top:2px;right:6px;min-width:17px;height:17px;border-radius:99px;background:var(--yn);color:#fff;
+font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sekme button{flex:1;min-width:92px;padding:11px 8px;border-radius:13px;background:#F1EADC;font-weight:800;font-size:12.8px;color:#6E6A5E;display:flex;align-items:center;justify-content:center;gap:7px;position:relative;transition:background .15s}
 .sekme button.on{background:var(--m);color:#fff}
 .soruSatir{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid var(--c);padding:9px 2px}
 .soruSatir:last-child{border:0}
@@ -33,13 +39,17 @@ label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spaci
 .etiket{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;background:var(--z);color:var(--s);margin-right:4px}
 .e-dij{background:#DFF2ED;color:#0F6E56}.e-kir{background:#FAECE7;color:#993C1D}
 .sinavKart{display:flex;align-items:center;gap:12px}
-.sinavKart .rozet{background:var(--a);color:#fff;min-width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:800}
+.sinavKart .rozet{background:var(--a);color:var(--m);min-width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:800}
 .sinavKart b{display:block;font-size:15px}
 .sinavKart span{font-size:12.5px;color:var(--s)}
 .serit{height:3px;background:#243140;flex:0 0 auto}#dolum{height:100%;background:var(--a);width:0%}
-.soruKart{background:var(--k);border-radius:16px;box-shadow:0 4px 16px rgba(20,29,42,.1);overflow:hidden}
-.kb{display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid var(--c)}
-.kb .rozet{background:var(--a);color:#fff;min-width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800}
+.soruKart{background:var(--k);border-radius:18px;border:1px solid var(--c);box-shadow:0 12px 32px rgba(22,48,79,.10);overflow:hidden}
+.kb{display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid var(--c);position:sticky;top:54px;background:var(--k);z-index:4}
+.zaman{margin-left:auto;display:flex;gap:6px;align-items:center;background:var(--z);border:1.5px solid var(--c);
+padding:6px 11px;border-radius:99px;font-weight:900;font-size:13.5px;font-variant-numeric:tabular-nums;color:var(--m)}
+.zaman svg{width:15px;height:15px}
+.zaman.kritik{background:#FCEAE6;border-color:var(--yn);color:var(--yn)}
+.kb .rozet{background:var(--a);color:var(--m);min-width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800}
 .kb b{font-size:11px;letter-spacing:.08em;color:var(--s)}
 .ic{padding:15px}
 .mt{font-size:15.5px;line-height:1.7;white-space:pre-line;margin:0 0 12px}
@@ -47,13 +57,22 @@ label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spaci
 .krp{display:block;width:100%;border-radius:10px;border:1px solid var(--c)}
 .sikG{display:flex;gap:9px;background:#fff;border:1.5px solid #DDE0D8;border-radius:11px;padding:9px 11px;margin-bottom:7px;font-size:14.5px;line-height:1.5}
 .sikG b{min-width:23px;height:23px;border-radius:99px;border:1.5px solid #A7AEA4;display:flex;align-items:center;justify-content:center;font-size:11px;color:#79818F;flex:0 0 auto}
-.altbar{flex:0 0 auto;background:var(--k);border-top:1px solid var(--c);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:none;gap:8px;align-items:center}
+.altbar{flex:0 0 auto;background:var(--k);border-top:1px solid var(--c);box-shadow:0 -8px 22px rgba(22,48,79,.07);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:none;gap:8px;align-items:center}
 .nav{background:var(--z);color:var(--g);font-weight:800;padding:12px 15px;border-radius:12px}
 .nav:disabled{opacity:.3}
 .bals{display:flex;gap:8px;flex:1}
-.bal{flex:1;padding:13px 0;border:1.5px solid #C9CEC5;border-radius:999px;background:#fff;color:#79818F;font-weight:800;text-align:center}
+.bal{flex:1;padding:15px 0;border:2px solid #D8D2C4;border-radius:999px;background:#fff;color:#79818F;font-weight:900;font-size:15.5px;text-align:center;transition:transform .08s}
+.bal:active{transform:scale(.95)}
 .bal.dolu{background:var(--g);border-color:var(--g);color:#fff}
-.ortu{position:fixed;inset:0;background:rgba(20,29,42,.7);display:none;align-items:center;justify-content:center;z-index:20;padding:18px}
+.ortu{position:fixed;inset:0;background:rgba(22,48,79,.72);display:none;align-items:center;justify-content:center;z-index:20;padding:18px}
+#giris{background:radial-gradient(130% 100% at 50% -20%,#24476F 0%,#16304F 52%,#0E2138 100%)}
+.girisPanel{max-width:380px;padding:28px 24px;border-radius:24px;box-shadow:0 24px 60px rgba(9,20,36,.45)}
+.logoBuyuk{display:block;width:92px;margin:0 auto 6px}
+.marka{font-weight:900;font-size:34px;text-align:center;color:var(--a);letter-spacing:.01em;line-height:1}
+.slogan{text-align:center;color:var(--yn);font-weight:700;font-size:13px;margin:4px 0 14px}
+.girisPanel label{margin-top:12px}
+.girisPanel input{background:#FBF6EE}
+.demoNot{margin-top:14px;padding-top:12px;border-top:1px dashed var(--c);color:var(--s);font-size:11.5px;line-height:1.6;text-align:center}
 .panel{background:var(--k);border-radius:20px;padding:20px;max-width:430px;width:100%;max-height:88vh;overflow:auto}
 .netb{font-size:50px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
 .uclu{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
@@ -74,20 +93,25 @@ th{color:var(--s);font-size:10.5px;letter-spacing:.06em}
 .katex{font-size:1.04em}
 </style>
 
-<div class="ust"><div class="logo">MENTOR<span>CALL</span></div><small id="kimlik">GİRİŞ BEKLENİYOR</small></div>
+<div class="ust">
+  <svg viewBox="0 0 140 116" width="26" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
+  <div class="logo">mentor<span>call</span></div>
+  <small id="kimlik">GİRİŞ BEKLENİYOR</small></div>
 <div class="serit"><div id="dolum"></div></div>
 <div id="govde"></div>
 <div class="altbar" id="altbar">
   <button class="nav" id="geri">‹</button><div class="bals" id="bals"></div><button class="nav" id="ileri">›</button>
 </div>
 
-<div class="ortu" id="giris" style="display:flex"><div class="panel">
-  <h3>MENTORCALL girişi</h3>
-  <p class="acik">Yönetici: 05000000001 · Öğretmen: 05000000002 · Öğrenci: 05000000011 (şifre: mentor123)</p>
-  <label>TELEFON</label><input id="gTel" value="05000000002">
-  <label>ŞİFRE</label><input id="gSif" type="password" value="mentor123">
-  <button class="buton" id="gBtn" style="margin-top:12px">Giriş yap</button>
-  <div class="acik" id="gDurum" style="margin-top:8px"></div>
+<div class="ortu" id="giris" style="display:flex"><div class="panel girisPanel">
+  <svg class="logoBuyuk" viewBox="0 0 140 116" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="#fff" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/><polygon points="118,28 118,40 122,42 122,29" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
+  <div class="marka">mentorcall</div>
+  <div class="slogan">Kişisel Eğitim Danışmanınız</div>
+  <label>Telefon</label><input id="gTel" value="05000000002" inputmode="tel">
+  <label>Şifre</label><input id="gSif" type="password" value="mentor123">
+  <button class="buton" id="gBtn" style="margin-top:14px">Giriş yap</button>
+  <div class="acik" id="gDurum" style="margin-top:8px;text-align:center"></div>
+  <div class="demoNot">Demo hesaplar — yönetici 05000000001 · öğretmen 05000000002 · öğrenci 05000000011 · şifre mentor123</div>
 </div></div>
 
 <div class="ortu" id="sonucOrtu"><div class="panel">
@@ -119,6 +143,18 @@ const mat=el=>renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:fa
 const bugun=()=>new Date().toISOString().slice(0,10);
 let token=null,uid=null,rol=null,ad=null;
 const resimCache={};
+const IK={
+ belge:'<path d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M13 3v6h6"/>',
+ grafik:'<path d="M4 20h16M7 20v-6M12 20V8M17 20v-9"/>',
+ hedef:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/>',
+ megafon:'<path d="m4 10 12-5v14L4 14v-4z"/><path d="M4 10H3a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h1M16 9a4 4 0 0 1 0 6"/>',
+ kisiler:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c.4-3.2 2.7-5 5.5-5s5.1 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 20c.3-2.3 1.8-3.8 4-3.8.5 0 1 .1 1.5.3"/>',
+ kutu:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="m8.5 12.2 2.6 2.6 4.6-5.2"/>',
+ yukselis:'<path d="m3 17 6-6 4 4 7-8"/><path d="M14 7h6v6"/>',
+ saat:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+ kalem:'<path d="m14 5 5 5L8 21H3v-5L14 5z"/><path d="m12.5 6.5 5 5"/>'
+};
+const ikon=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IK[n]}</svg>`;
 
 async function rest(m,yol,g,pref){
   const y=await fetch(SUPA+'/rest/v1/'+yol,{method:m,
@@ -162,11 +198,14 @@ $('gBtn').onclick=async()=>{
 /* ================= PERSONEL (öğretmen + yönetici) ================= */
 function personelAna(){
   $('altbar').style.display='none';
-  const yTab=rol==='yonetici'?'<button id="tY">Yönetim</button>':'';
+  const yTab=rol==='yonetici'?`<button id="tY">${ikon('kisiler')}Yönetim</button>`:'';
   $('govde').innerHTML=`<div class="sekme">
-    <button id="tO" class="on">Sınav oluştur</button><button id="tS">Sonuçlar</button>
-    <button id="tK">Koçluk</button>${yTab}</div><div id="tab"></div>`;
-  const tablar={tO:olusturCiz,tS:sonuclarCiz,tK:kocCiz,tY:yonetimCiz};
+    <button id="tO" class="on">${ikon('belge')}Sınav</button>
+    <button id="tS">${ikon('grafik')}Sonuçlar<span class="rzt" id="rzS" style="display:none"></span></button>
+    <button id="tK">${ikon('hedef')}Koçluk</button>
+    <button id="tD">${ikon('megafon')}Duyuru</button>${yTab}</div><div id="tab"></div>`;
+  const tablar={tO:olusturCiz,tS:sonuclarCiz,tK:kocCiz,tD:duyuruCiz,tY:yonetimCiz};
+  rozetler();
   Object.keys(tablar).forEach(id=>{const b=$(id);if(b)b.onclick=()=>{
     Object.keys(tablar).forEach(x=>{const e=$(x);if(e)e.classList.toggle('on',x===id)});
     tablar[id]();};});
@@ -390,14 +429,76 @@ async function yonetimCiz(){
   $('sEkle').onclick=async()=>{await rest('POST','siniflar',{ad:$('sAd').value.trim()},'return=minimal');yonetimCiz();};
 }
 
+/* ---- Duyurular ---- */
+async function duyuruCiz(){
+  const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+  const [sin,liste]=await Promise.all([
+    rest('GET','siniflar?select=id,ad&aktif=is.true'),
+    rest('GET','duyurular?select=id,metin,sinif_id,created_at,profiller(ad_soyad),siniflar(ad)&order=created_at.desc&limit=30')]);
+  T.innerHTML=`<div class="kart"><h3>Duyuru yayınla</h3>
+    <label>METİN</label><textarea id="dMetin" placeholder="Örn: Cumartesi TYT denemesi 10:00'da başlayacaktır."></textarea>
+    <label>HEDEF</label><select id="dSinif"><option value="">Tüm kurum</option>${sin.map(x=>`<option value="${x.id}">${x.ad}</option>`).join('')}</select>
+    <button class="buton" id="dGonder" style="margin-top:10px">Duyuruyu yayınla</button></div>
+    <div class="kart"><h3>Yayında olanlar</h3><div id="dListe">${liste.map(d=>`
+      <div class="havuzOge" data-id="${d.id}"><div style="flex:1;min-width:0">
+        <span class="etiket">${d.sinif_id?(d.siniflar?.ad||'Sınıf'):'Tüm kurum'}</span>
+        <span class="etiket" style="background:var(--z);color:var(--s)">${d.created_at.slice(0,10)} · ${(d.profiller?.ad_soyad||'')}</span>
+        <div style="margin-top:6px;font-size:14px;line-height:1.55">${d.metin.replace(/</g,'&lt;')}</div></div>
+        <button class="buton kucuk" style="background:var(--yn);color:#fff">Sil</button></div>`).join('')||'<p class="acik">Henüz duyuru yok.</p>'}</div></div>`;
+  $('dGonder').onclick=async()=>{
+    if(!$('dMetin').value.trim())return;
+    $('dGonder').disabled=true;
+    await rest('POST','duyurular',{metin:$('dMetin').value.trim(),sinif_id:$('dSinif').value||null,yazan_id:uid},'return=minimal');
+    duyuruCiz();};
+  T.querySelectorAll('[data-id] .buton').forEach(b=>b.onclick=async()=>{
+    if(!confirm('Duyuru silinsin mi?'))return;
+    await rest('DELETE','duyurular?id=eq.'+b.closest('[data-id]').dataset.id,null,'return=minimal');duyuruCiz();});
+}
+async function oDuyuruCiz(){
+  const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+  const liste=await rest('GET','duyurular?select=metin,sinif_id,created_at,siniflar(ad)&order=created_at.desc&limit=30');
+  T.innerHTML=`<div class="kart"><h3>Duyurular</h3>${liste.map(d=>`
+    <div class="havuzOge"><div style="flex:1">
+      <span class="etiket">${d.sinif_id?(d.siniflar?.ad||'Sınıfınız'):'Tüm kurum'}</span>
+      <span class="etiket" style="background:var(--z);color:var(--s)">${d.created_at.slice(0,10)}</span>
+      <div style="margin-top:6px;font-size:14.5px;line-height:1.6">${d.metin.replace(/</g,'&lt;')}</div></div></div>`).join('')||'<p class="acik">Duyuru yok.</p>'}</div>`;
+  const r=$('rzD');if(r)r.style.display='none';
+}
+
+/* ---- bildirim rozetleri ---- */
+async function rozetler(){
+  const koy=(id,n)=>{const e=$(id);if(!e)return;if(n>0){e.textContent=n>9?'9+':n;e.style.display='flex';}else e.style.display='none';};
+  const dun=new Date(Date.now()-48*3600e3).toISOString();
+  try{
+    if(rol==='ogrenci'){
+      const [duy,sv,ot,gr]=await Promise.all([
+        rest('GET','duyurular?select=id&created_at=gte.'+dun),
+        rest('GET','sinavlar?select=id&yayinda=is.true'),
+        rest('GET','oturumlar?select=sinav_id&ogrenci_id=eq.'+uid),
+        rest('GET','gorevler?select=id&ogrenci_id=eq.'+uid+'&tarih=eq.'+bugun()+'&onaylandi=is.false')]);
+      const coz=new Set(ot.map(x=>x.sinav_id));
+      koy('rzD',duy.length);
+      koy('rzSv',sv.filter(x=>!coz.has(x.id)).length);
+      koy('rzG',gr.length);
+    }else{
+      const son=await rest('GET','sonuclar?select=id&hesaplama=gte.'+new Date(Date.now()-24*3600e3).toISOString());
+      koy('rzS',son.length);
+    }
+  }catch(e){}
+}
+
 /* ================= ÖĞRENCİ ================= */
 let SIN=null,SOR=[],OT=null,n=1,cevap={},kalan=0,tik=null;
 function ogrenciAna(){
   $('altbar').style.display='none';clearInterval(tik);$('dolum').style.width='0%';
   $('kimlik').textContent=ad.toUpperCase()+' · ÖĞRENCİ';
   $('govde').innerHTML=`<div class="sekme">
-    <button id="tSv" class="on">Sınavlarım</button><button id="tG">Görevlerim</button><button id="tGe">Gelişimim</button></div><div id="tab"></div>`;
-  const tablar={tSv:sinavListe,tG:gorevListe,tGe:gelisimCiz};
+    <button id="tSv" class="on">${ikon('belge')}Sınavlar<span class="rzt" id="rzSv" style="display:none"></span></button>
+    <button id="tG">${ikon('kutu')}Görevler<span class="rzt" id="rzG" style="display:none"></span></button>
+    <button id="tGe">${ikon('yukselis')}Gelişim</button>
+    <button id="tDy">${ikon('megafon')}Duyuru<span class="rzt" id="rzD" style="display:none"></span></button></div><div id="tab"></div>`;
+  const tablar={tSv:sinavListe,tG:gorevListe,tGe:gelisimCiz,tDy:oDuyuruCiz};
+  rozetler();
   Object.keys(tablar).forEach(id=>$(id).onclick=()=>{
     Object.keys(tablar).forEach(x=>$(x).classList.toggle('on',x===id));tablar[id]();});
   sinavListe();
@@ -422,7 +523,10 @@ async function sinavBasla(sv){
     cevap={};n=1;
     if(sv.sure_dakika){kalan=sv.sure_dakika*60;
       tik=setInterval(()=>{kalan--;
-        $('kimlik').textContent=String(Math.floor(kalan/60)).padStart(2,'0')+':'+String(kalan%60).padStart(2,'0');
+        const t=String(Math.floor(kalan/60)).padStart(2,'0')+':'+String(kalan%60).padStart(2,'0');
+        $('kimlik').textContent=t;
+        const z=$('zamanYazi');if(z){z.textContent=t;
+          $('zamanCip').classList.toggle('kritik',kalan<=60);}
         if(kalan<=0){clearInterval(tik);teslim();}},1000);}
     $('altbar').style.display='flex';soruGoster();
   }catch(e){$('tab').innerHTML=`<div class="kart"><p class="acik">Hata: ${e.message}</p></div>`;}
@@ -431,7 +535,8 @@ async function soruGoster(){
   const v=SOR[n-1];
   $('dolum').style.width=(Object.values(cevap).filter(Boolean).length/SOR.length*100)+'%';
   $('tab').innerHTML=`<div class="soruKart"><div class="kb"><div class="rozet">${n}</div>
-    <b>${SIN.ad.toUpperCase().slice(0,32)} · ${n}/${SOR.length}</b></div><div class="ic" id="ic"></div></div>
+    <b>${SIN.ad.toUpperCase().slice(0,22)} · ${n}/${SOR.length}</b>
+    ${SIN.sure_dakika?`<span class="zaman" id="zamanCip">${ikon('saat')}<span id="zamanYazi">--:--</span></span>`:''}</div><div class="ic" id="ic"></div></div>
     <button class="buton" id="bitir" style="margin-top:12px">Sınavı bitir ve gönder</button>`;
   const ic=$('ic');
   if(v.gosterim==='dijital'){
