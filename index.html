@@ -9,12 +9,12 @@
 --g:#16304F;--yn:#D2402F;--dg:#3E9E6E;--am:#EF9F0A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
-body{background:#EFE8D9;color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column;padding:0}
+body{background:#B7BDD9;color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column;padding:0}
 #cerceve{flex:1;display:flex;flex-direction:column;min-height:0;background:#fff;overflow:hidden}
 @media(min-width:900px){.ust>svg,.ust>.logo{display:none}.ust{padding:16px 24px}
 #ustSelam b{font-size:17px}
 body{padding:16px}
-#cerceve{border-radius:24px;box-shadow:0 20px 60px rgba(60,48,20,.14);max-width:1280px;margin:0 auto;width:100%}}
+#cerceve{border-radius:22px;box-shadow:0 24px 70px rgba(40,45,80,.28);max-width:1360px;margin:0 auto;width:100%}}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .ust{background:#fff;color:var(--m);padding:12px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto;border-bottom:1px solid var(--c)}
 .logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--m)}.logo span{color:var(--a)}
@@ -27,9 +27,9 @@ input,select,textarea{width:100%;padding:10px 12px;border-radius:11px;border:1.5
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(239,159,10,.15)}
 textarea{min-height:64px}
 label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spacing:.06em;margin:9px 0 4px}
-.buton{padding:12px 16px;border-radius:12px;background:var(--a);color:var(--m);font-weight:900;font-size:14px;width:100%;text-align:center;box-shadow:0 2px 0 rgba(22,48,79,.18)}
+.buton{padding:12px 18px;border-radius:999px;background:#1E2433;color:#fff;font-weight:800;font-size:13.5px;width:100%;text-align:center;box-shadow:none}
 .buton:active{transform:translateY(1px);box-shadow:none}
-.buton.gri{background:var(--k);color:var(--t);border:1.5px solid var(--c);box-shadow:none}
+.buton.gri{background:#fff;color:#1E2433;border:1.5px solid #E2E2E6;box-shadow:none}
 .buton.kucuk{padding:8px 12px;font-size:13px;width:auto}
 .buton:disabled{opacity:.4}
 .izgara2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -38,8 +38,8 @@ label{display:block;font-size:10.5px;color:var(--s);font-weight:800;letter-spaci
 .sekme svg{width:17px;height:17px;flex:0 0 auto}
 .rzt{position:absolute;top:2px;right:6px;min-width:17px;height:17px;border-radius:99px;background:var(--yn);color:#fff;
 font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-.sekme button{flex:1;min-width:92px;padding:11px 10px;border-radius:12px;background:transparent;border:1px solid var(--c);font-weight:800;font-size:12.8px;color:#77725F;display:flex;align-items:center;justify-content:center;gap:7px;position:relative;transition:background .15s}
-.sekme button.on{background:#FBEED3;border-color:#F0DFB9;color:var(--m)}
+.sekme button{flex:1;min-width:92px;padding:12px 10px;border-radius:12px;background:transparent;border:1px solid var(--c);font-weight:700;font-size:13.5px;color:#5A5F6E;display:flex;align-items:center;justify-content:center;gap:11px;position:relative;transition:color .15s}
+.sekme button.on{background:#F5F1E6;border-color:#EDE5CF;color:#1E2433;font-weight:900}
 .soruSatir{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid var(--c);padding:9px 2px}
 .soruSatir:last-child{border:0}
 .soruSatir input{width:20px;height:20px;margin-top:2px;flex:0 0 auto}
@@ -116,11 +116,11 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 .ornekEt{display:inline-block;background:#FFF3DA;color:#8A5A00;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;margin-left:8px;vertical-align:middle}
 @media(min-width:900px){
   #govde{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0;align-items:stretch;padding:0}
-  .sekme{flex-direction:column;position:sticky;top:0;background:#fff;border:0;border-right:1.5px dashed var(--c);
-    border-radius:0;padding:18px 14px;gap:5px;box-shadow:none;margin-bottom:0;align-self:stretch;height:100%}
+  .sekme{flex-direction:column;position:sticky;top:0;background:#fff;border:0;border-right:1px solid #ECECEF;
+    border-radius:0;padding:22px 16px;gap:2px;box-shadow:none;margin-bottom:0;align-self:stretch;height:100%}
   .yanLogo{display:flex;align-items:center;gap:9px;padding:2px 6px 14px}
   .yanLogo b{font-size:16px;font-weight:900;color:var(--m)}.yanLogo b span{color:var(--a)}
-  .yanAra{margin:0 2px 12px;font-size:13px;padding:9px 12px}
+  .sekme .yanAra{display:none!important}
   #tab{padding:18px 22px;min-width:0}
   .sekme button{justify-content:flex-start;min-width:0;font-size:13.5px;padding:12px 12px}
   .rzt{position:static;margin-left:auto}
@@ -147,17 +147,49 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 .qnum.aktif{border-color:var(--a);box-shadow:0 0 0 2px rgba(239,159,10,.35)}
 .ilerle{height:7px;background:var(--z);border-radius:99px;overflow:hidden;margin-top:9px}
 .ilerle i{display:block;height:100%;background:var(--a);border-radius:99px}
-@media(min-width:900px){.grpEt{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--s);padding:12px 12px 4px;border-top:1.5px dashed var(--c);margin-top:6px}
+@media(min-width:901px) and (max-width:0px){.grpEt{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--s);padding:12px 12px 4px;border-top:1.5px dashed var(--c);margin-top:6px}
 .grpEt:first-child{border-top:0;margin-top:0;padding-top:4px}
-.sekme button{border:0}}
+.sekme button{border:0;justify-content:flex-start;padding:12px 14px}
+.sekme button.on{background:transparent;color:#1E2433}
+.sekme button.on::before{content:'';position:absolute;left:-16px;top:9px;bottom:9px;width:5px;border-radius:0 6px 6px 0;background:#1E2433}
+.sekme .rzt{position:static;margin-left:auto}}
+
+.cap-baslik{font-size:19px;font-weight:900;color:#1E2433;margin:4px 0 14px}
+.cap-hero{background:#211F33;border-radius:24px;padding:26px;display:flex;gap:18px;align-items:stretch;color:#fff;flex-wrap:wrap}
+.cap-hero .sol{flex:1;min-width:230px;display:flex;flex-direction:column;justify-content:center}
+.cap-hero h2{margin:0 0 18px;font-size:clamp(21px,3vw,30px);font-weight:900;line-height:1.25}
+.cap-hero .hi{color:#B9BCD0;font-size:14px;font-weight:700;margin-bottom:8px}
+.cap-hero .beyaz{background:#fff;color:#1E2433;width:auto;align-self:flex-start;padding:11px 20px}
+.cap-mini{width:196px;border-radius:18px;padding:16px;color:#1E2433;display:flex;flex-direction:column;gap:8px}
+.cap-mini .no{display:flex;justify-content:space-between;font-weight:800;font-size:13px;opacity:.75}
+.cap-mini b{font-size:15.5px;line-height:1.3;font-weight:900}
+.cap-mini small{font-size:11.5px;font-weight:700;opacity:.75}
+.cap-mini .cubuk2{height:5px;background:rgba(30,36,51,.18);border-radius:99px;overflow:hidden;margin-top:auto}
+.cap-mini .cubuk2 i{display:block;height:100%;background:#1E2433;border-radius:99px}
+.cap-izgara{display:grid;grid-template-columns:1fr;gap:22px;margin-top:20px}
+@media(min-width:1020px){.cap-izgara{grid-template-columns:minmax(0,1fr) 300px}}
+.cap-stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.cap-stat>div{background:#fff;border:1px solid #EDEDEF;border-radius:18px;padding:16px;box-shadow:0 2px 10px rgba(30,36,51,.04)}
+.cap-stat b{font-size:30px;font-weight:900;color:#1E2433;display:block}
+.cap-stat span{font-size:12px;color:#8A8FA0;font-weight:700}
+.cap-liste .satir{display:flex;align-items:center;gap:13px;padding:11px 0}
+.cap-liste .kutu2{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#1E2433}
+.cap-liste b{font-size:14.5px;color:#1E2433}
+.cap-liste small{display:block;color:#8A8FA0;font-size:12px;font-weight:600}
+.takvim{background:#fff;border:1px solid #EDEDEF;border-radius:18px;padding:16px}
+.takvim .ay{font-weight:900;font-size:15px;color:#1E2433;margin-bottom:10px}
+.takvim table{width:100%;border-collapse:collapse}
+.takvim th{font-size:10.5px;color:#9AA0AF;font-weight:800;padding:4px 0;border:0;text-align:center}
+.takvim td{text-align:center;font-size:12.5px;font-weight:700;color:#3A4152;padding:6px 0;border:0}
+.takvim td.sonuk{color:#C6CAD4}
+.takvim td.bugun span{background:#211F33;color:#fff;border-radius:99px;padding:5px 9px}
 </style>
 
 <div id="cerceve">
 <div class="ust">
   <svg viewBox="0 0 140 116" width="26" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
   <div class="logo">mentor<span>call</span></div>
-  <div id="ustSelam" style="display:none;margin-left:14px;min-width:0"><b style="font-size:13.5px"></b>
-    <div style="font-size:10.5px;color:var(--s);font-weight:700"></div></div>
+  <input id="ustAra" class="yanAra" placeholder="Ara: menü, ekran…" style="display:none;flex:1;max-width:520px;margin:0 18px;border-radius:999px;background:#F4F4F6;border:0;padding:11px 18px">
   <small id="kimlik" style="margin-left:auto">GİRİŞ BEKLENİYOR</small>
   <button id="zil" style="display:none;position:relative;color:var(--m);margin-left:10px;background:var(--k);border:1px solid var(--c);width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center">
     <svg viewBox="0 0 24 24" width="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10.5 20a2 2 0 0 0 3 0"/></svg>
@@ -212,7 +244,7 @@ const resimCache={};
 document.addEventListener('input',e=>{
   if(!e.target.classList.contains('yanAra'))return;
   const q=e.target.value.toLocaleLowerCase('tr');
-  e.target.closest('.sekme').querySelectorAll('button').forEach(b=>
+  (e.target.closest('.sekme')||document.querySelector('.sekme')||document).querySelectorAll('.sekme button').forEach(b=>
     b.style.display=b.textContent.toLocaleLowerCase('tr').includes(q)?'':'none');
 });
 const IK={
@@ -264,10 +296,7 @@ $('gBtn').onclick=async()=>{
     rol=p[0].rol;ad=p[0].ad_soyad;
     $('kimlik').textContent=ad.toUpperCase()+' · '+rol.toUpperCase();
     $('giris').style.display='none';
-    const st=new Date().getHours(),slm=st<6?'İyi geceler':st<12?'Günaydın':st<18?'İyi günler':'İyi akşamlar';
-    $('ustSelam').style.display='block';
-    $('ustSelam').querySelector('b').textContent=slm+', '+ad.split(' ')[0]+' 👋';
-    $('ustSelam').querySelector('div').textContent=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
+    if(window.innerWidth>900)$('ustAra').style.display='block';
     $('zil').style.display='flex';
     $('avvUst').style.display='flex';
     $('avvUst').textContent=ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
@@ -556,69 +585,88 @@ async function yonetimCiz(){
 }
 
 /* ---- Genel Bakış (personel) ---- */
+function takvimHTML(){
+  const ay=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const g=['Pt','Sa','Ça','Pe','Cu','Ct','Pa'];
+  const b=new Date(),y=b.getFullYear(),m=b.getMonth();
+  const ilk=(new Date(y,m,1).getDay()+6)%7, gun=new Date(y,m+1,0).getDate(), onceki=new Date(y,m,0).getDate();
+  let h='',c=0;
+  for(let r=0;r<6;r++){h+='<tr>';
+    for(let k=0;k<7;k++){const i=r*7+k;
+      let d,cls='';
+      if(i<ilk){d=onceki-ilk+1+i;cls='sonuk';}
+      else if(i-ilk+1>gun){d=i-ilk-gun+1;cls='sonuk';}
+      else{d=i-ilk+1;if(d===b.getDate())cls='bugun';}
+      h+=`<td class="${cls}"><span>${d}</span></td>`;}
+    h+='</tr>';if((r+1)*7-ilk>=gun)break;}
+  return `<div class="takvim"><div class="ay">${ay[m]} ${y}</div>
+  <table><tr>${g.map(x=>`<th>${x}</th>`).join('')}</tr>${h}</table></div>`;
+}
 async function genelBakis(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Panel hazırlanıyor…</p></div>';
-  const hafta=new Date(Date.now()-7*864e5).toISOString();
-  const [bek,hFul,netler,sonlar,aktif]=await Promise.allSettled([
+  const [bek,sonAll,svler,duy]=await Promise.allSettled([
     rest('GET','gorevler?select=id&tarih=eq.'+bugun()+'&onaylandi=is.false'),
-    rest('GET','sonuclar?select=hesaplama&hesaplama=gte.'+hafta+'&limit=300'),
-    rest('GET','sonuclar?select=net&order=hesaplama.desc&limit=30'),
-    rest('GET','sonuclar?select=net,profiller(ad_soyad),sinavlar(ad)&order=hesaplama.desc&limit=6'),
-    rest('GET','sinavlar?select=id&yayinda=is.true&arsivde=is.false')
-  ]).then(r=>r.map(x=>x.status==='fulfilled'?x.value:null));
+    rest('GET','sonuclar?select=net,sinav_id,hesaplama,profiller(ad_soyad),sinavlar(ad)&order=hesaplama.desc&limit=150'),
+    rest('GET','sinavlar?select=id,ad,soru_sayisi&arsivde=is.false&order=created_at.desc&limit=3'),
+    rest('GET','duyurular?select=metin,created_at&order=created_at.desc&limit=1')
+  ]).then(r=>r.map(x=>x.status==='fulfilled'?x.value:[]));
+  const hafta=Date.now()-7*864e5;
+  let vHafta=sonAll.filter(x=>new Date(x.hesaplama)>hafta).length;
+  let vBek=bek.length, ort=sonAll.length?(sonAll.reduce((a,x)=>a+ +x.net,0)/sonAll.length):0;
+  let kartlar=svler.map(sv=>{
+    const st=sonAll.filter(x=>x.sinav_id===sv.id);
+    const o=st.length?st.reduce((a,x)=>a+ +x.net,0)/st.length:0;
+    return {ad:sv.ad,alt:`${st.length} çözüm | ort ${o.toFixed(1).replace('.',',')} net`,
+            p:sv.soru_sayisi?Math.min(100,Math.round(o/sv.soru_sayisi*100)):0};});
+  let akis=sonAll.slice(0,5).map(x=>({ad:x.profiller?.ad_soyad||'Öğrenci',sv:x.sinavlar?.ad||'Sınav',net:+x.net}));
   let ornek=false;
-  let vBek=bek?bek.length:0, vHafta=hFul?hFul.length:0, vAktif=aktif?aktif.length:0;
-  let nets=(netler||[]).map(x=>+x.net).reverse();
-  let akis=(sonlar||[]).map(x=>({ad:x.profiller?.ad_soyad||'Öğrenci',sv:x.sinavlar?.ad||'Sınav',net:+x.net}));
-  if(!akis.length){ // örnek görünüm
-    ornek=true;vBek=vBek||7;vHafta=vHafta||23;vAktif=vAktif||3;
-    nets=[6.2,7.1,6.8,8.4,7.9,9.2,8.8,10.1,9.6,11.3];
+  if(!akis.length){ornek=true;vHafta=vHafta||23;vBek=vBek||7;ort=ort||9.4;
+    kartlar=[{ad:'TYT Deneme 4',alt:'12 çözüm | ort 11,2 net',p:56},
+             {ad:'Yüzdeler Tarama',alt:'9 çözüm | ort 8,4 net',p:70},
+             {ad:'Paragraf Kampı',alt:'14 çözüm | ort 17,1 net',p:68}];
     akis=[{ad:'Zeynep Yılmaz',sv:'TYT Deneme 4',net:12.25},{ad:'Emir Kaya',sv:'TYT Deneme 4',net:9.5},
-          {ad:'Elif Demir',sv:'Yüzdeler Tarama',net:11.0},{ad:'Ali Çetin',sv:'TYT Deneme 4',net:8.75},
-          {ad:'Sena Arslan',sv:'Kareköklü Sayılar',net:10.5}];
-  }
-  const ort=nets.length?(nets.reduce((a,b)=>a+b,0)/nets.length).toFixed(2).replace('.',','):'—';
-  // net trend çizgisi
-  let cizgi='';
-  if(nets.length>1){
-    const mn=Math.min(...nets),mx=Math.max(...nets)||1;
-    cizgi=nets.map((n,i)=>`${(i/(nets.length-1)*128+4).toFixed(1)},${(40-((n-mn)/((mx-mn)||1))*32+4).toFixed(1)}`).join(' ');
-  }
-  const saat=new Date().getHours();
-  const selam=saat<6?'İyi geceler':saat<12?'Günaydın':saat<18?'İyi günler':'İyi akşamlar';
-  const tarih=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
-  const tile=(ik,renkBg,renkIk,deger,etiket)=>`<div class="tile">
-    <div class="tik" style="background:${renkBg};color:${renkIk}">${ikon(ik)}</div>
-    <b>${deger}</b><span>${etiket}</span></div>`;
+          {ad:'Elif Demir',sv:'Yüzdeler Tarama',net:11},{ad:'Ali Çetin',sv:'Paragraf Kampı',net:18.5},
+          {ad:'Sena Arslan',sv:'Yüzdeler Tarama',net:10.5}];}
+  while(kartlar.length<3)kartlar.push({ad:'Yeni sınav yükleyin',alt:'istasyondan ekleyin',p:0});
+  const renk=['#C9B9F6','#F8DCB4','#E4F222'];
+  const pastel=['#F8DCB4','#C9B9F6','#D7F2E3','#F6C6C0','#E4F222'];
+  const dalga='<svg width="90" height="34" viewBox="0 0 90 34"><path d="M2 26 Q14 8 26 18 T50 14 T74 22 T88 12" fill="none" stroke="#B9A7F0" stroke-width="3" stroke-linecap="round"/></svg>';
   T.innerHTML=`
-  <div class="hero">
-    <div style="flex:1;min-width:0"><h2>${selam}, ${ad.split(' ')[0]} 👋</h2>
-    <div class="alt">${tarih} · bu hafta kurumda ${vHafta} sınav çözüldü 👏${ornek?'<span class="ornekEt">örnek görünüm</span>':''}</div></div>
-    ${cizgi?`<svg width="136" height="48" viewBox="0 0 136 48">
-      <polyline points="${cizgi}" fill="none" stroke="#EF9F0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="${cizgi.split(' ').pop().split(',')[0]}" cy="${cizgi.split(' ').pop().split(',')[1]}" r="4" fill="#EF9F0A"/></svg>`:''}
+  <div class="cap-baslik">Genel durum${ornek?'<span class="ornekEt">örnek görünüm</span>':''}</div>
+  <div class="cap-hero">
+    <div class="sol"><div class="hi">Merhaba, ${ad.split(' ')[0]}!</div>
+      <h2>Bu hafta kurumda<br>${vHafta} sınav çözüldü!</h2>
+      <button class="buton beyaz" id="ghTum">TÜMÜNÜ GÖR ↗</button></div>
+    ${kartlar.map((k,i)=>`<div class="cap-mini" style="background:${renk[i%3]}">
+      <div class="no"><span>0${i+1}</span><span>⋮</span></div>
+      <b>${k.ad.slice(0,34)}</b><small>${k.alt}</small>
+      <div class="cubuk2"><i style="width:${k.p}%"></i></div></div>`).join('')}
   </div>
-  <div class="tiles">
-    ${tile('kutu','#FCEAE6','var(--yn)',vBek,'ONAY BEKLEYEN GÖREV')}
-    ${tile('grafik','#EAF0F8','var(--m)',vHafta,'BU HAFTA ÇÖZÜLEN')}
-    ${tile('yukselis','#EAF6F0','var(--dg)',ort,'NET ORTALAMASI')}
-    ${tile('belge','#FFF3DA','#B87A00',vAktif,'YAYINDAKİ SINAV')}
-  </div>
-  <div class="sira" style="margin-bottom:12px">
-    <button class="buton" id="gbYeni" style="flex:1">＋ Yeni sınav</button>
-    <button class="buton gri" id="gbKoc" style="flex:1">Koçluk günlüğü</button>
-    <button class="buton gri" id="gbDuyuru" style="flex:1">Duyuru yaz</button>
-  </div>
-  <div class="kart"><h3>Son sonuçlar</h3>
-    ${akis.map(x=>`<div class="havuzOge">
-      <div class="avv">${x.ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase()}</div>
-      <div style="flex:1;min-width:0"><b style="font-size:14px">${x.ad}</b>
-      <div style="font-size:12px;color:var(--s)">${x.sv}</div></div>
-      <span class="netRoz">${x.net.toFixed(2).replace('.',',')} net</span></div>`).join('')}
+  <div class="cap-izgara">
+    <div>
+      <div class="cap-baslik" style="margin-top:6px">İstatistikler</div>
+      <div class="cap-stat">
+        <div><b>${vBek}</b><span>Onay bekleyen görev</span></div>
+        <div><b>${vHafta}</b><span>Bu hafta çözülen sınav</span></div>
+        <div style="display:flex;align-items:center;gap:10px"><div><b>${ort.toFixed(1).replace('.',',')}</b><span>Net ortalaması</span></div>${dalga}</div>
+      </div>
+      <div class="cap-baslik" style="margin-top:22px">Son sonuçlar <span style="float:right;font-size:12.5px;color:#8A8FA0;cursor:pointer" id="ghSon">Tümü</span></div>
+      <div class="cap-liste">${akis.map((x,i)=>`
+        <div class="satir"><div class="kutu2" style="background:${pastel[i%5]}">${x.ad.split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+        <div style="flex:1;min-width:0"><b>${x.ad}</b><small>${x.sv}</small></div>
+        <b style="font-variant-numeric:tabular-nums">${x.net.toFixed(2).replace('.',',')} net</b></div>`).join('')}
+      </div>
+    </div>
+    <div>
+      ${takvimHTML()}
+      <div class="cap-baslik" style="margin-top:20px">Duyuru <span style="float:right;font-size:12.5px;color:#8A8FA0;cursor:pointer" id="ghDuy">Tümü</span></div>
+      <div class="takvim" style="display:flex;gap:12px;align-items:flex-start">
+        <div class="kutu2" style="width:44px;height:44px;border-radius:14px;background:#211F33;color:#E4F222;display:flex;align-items:center;justify-content:center;flex:0 0 auto">${ikon('megafon')}</div>
+        <div style="font-size:13px;line-height:1.55;color:#3A4152;font-weight:600">${(duy[0]?.metin||'Cumartesi TYT denemesi 10:00’da başlayacaktır — örnek duyuru.').replace(/</g,'&lt;').slice(0,120)}</div>
+      </div>
+    </div>
   </div>`;
-  $('gbYeni').onclick=()=>{$('tSl').click();setTimeout(()=>{const b=$('sYeni');if(b)b.click();},350);};
-  $('gbKoc').onclick=()=>$('tK').click();
-  $('gbDuyuru').onclick=()=>$('tD').click();
+  $('ghTum').onclick=()=>$('tS').click();$('ghSon').onclick=()=>$('tS').click();$('ghDuy').onclick=()=>$('tD').click();
 }
 
 /* ---- Sınavlar: yönet / düzenle / arşivle / sil ---- */
