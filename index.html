@@ -12,9 +12,8 @@ html,body{margin:0;height:100%}
 body{background:#B7BDD9;color:var(--t);font-family:'Nunito',system-ui,sans-serif;font-size:15px;display:flex;flex-direction:column;padding:0}
 #cerceve{flex:1;display:flex;flex-direction:column;min-height:0;background:#fff;overflow:hidden}
 @media(min-width:900px){.ust>svg,.ust>.logo{display:none}.ust{padding:16px 24px}
-#ustSelam b{font-size:17px}
-body{padding:16px}
-#cerceve{border-radius:22px;box-shadow:0 24px 70px rgba(40,45,80,.28);max-width:1360px;margin:0 auto;width:100%}}
+body{padding:0}
+#cerceve{border-radius:0;box-shadow:none;max-width:none;margin:0;width:100%;min-height:100vh}}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .ust{background:#fff;color:var(--m);padding:12px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto;border-bottom:1px solid var(--c)}
 .logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--m)}.logo span{color:var(--a)}
@@ -240,7 +239,40 @@ const $=i=>document.getElementById(i);
 const mat=el=>renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});
 const bugun=()=>new Date().toISOString().slice(0,10);
 let token=null,uid=null,rol=null,ad=null;
+function oturumKaydet(a,r){try{localStorage.setItem('mc_oturum',JSON.stringify({a,r}))}catch(e){}}
+function cikisYap(){try{localStorage.removeItem('mc_oturum')}catch(e){};location.reload();}
+function hazirla(pr){
+  rol=pr.rol;ad=pr.ad_soyad;
+  $('kimlik').textContent=ad.toUpperCase()+' · '+rol.toUpperCase();
+  $('giris').style.display='none';
+  if(window.innerWidth>900)$('ustAra').style.display='block';
+  $('zil').style.display='flex';
+  $('avvUst').style.display='flex';
+  $('avvUst').textContent=ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+  if(rol==='ogretmen'||rol==='yonetici'){$('ustAksiyon').style.display='block';
+    $('ustAksiyon').onclick=()=>{$('tSl').click();setTimeout(()=>{const b=$('sYeni');if(b)b.click();},350);};}
+  $('zil').onclick=()=>{const h=$('tD')||$('tDy')||$('tVd');if(h)h.click();};
+  rol==='ogrenci'?ogrenciAna():rol==='veli'?veliAna():personelAna();
+}
+(async function otoGiris(){
+  let k=null;try{k=JSON.parse(localStorage.getItem('mc_oturum')||'null')}catch(e){}
+  if(!k||!k.a)return;
+  const dene=async()=>{token=k.a;uid=JSON.parse(atob(k.a.split('.')[1])).sub;
+    const p=await rest('GET','profiller?select=rol,ad_soyad&id=eq.'+uid);return p[0];};
+  try{hazirla(await dene());}
+  catch(e){
+    if(!k.r)return cikisYap();
+    try{
+      const y=await fetch(SUPA+'/auth/v1/token?grant_type=refresh_token',{method:'POST',
+        headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:k.r})});
+      const d=await y.json();if(!d.access_token)throw 0;
+      k={a:d.access_token,r:d.refresh_token};oturumKaydet(k.a,k.r);
+      hazirla(await dene());
+    }catch(e2){try{localStorage.removeItem('mc_oturum')}catch(_){}}
+  }
+})();
 const resimCache={};
+document.addEventListener('click',e=>{if(e.target.closest('.cikisB'))cikisYap();});
 document.addEventListener('input',e=>{
   if(!e.target.classList.contains('yanAra'))return;
   const q=e.target.value.toLocaleLowerCase('tr');
@@ -256,6 +288,7 @@ const IK={
  kutu:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="m8.5 12.2 2.6 2.6 4.6-5.2"/>',
  yukselis:'<path d="m3 17 6-6 4 4 7-8"/><path d="M14 7h6v6"/>',
  saat:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+ ayar:'<circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2L14.2 3h-4l-.4 2.7a7 7 0 0 0-2 1.2l-2.3-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1c.6.5 1.3.9 2 1.2l.4 2.7h4l.4-2.7a7 7 0 0 0 2-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/>',
  cop:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',
  arsiv:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4"/>',
  kalem:'<path d="m14 5 5 5L8 21H3v-5L14 5z"/><path d="m12.5 6.5 5 5"/>'
@@ -291,19 +324,9 @@ $('gBtn').onclick=async()=>{
       body:JSON.stringify({email:$('gTel').value.trim()+'@mentorcall.local',password:$('gSif').value})});
     const d=await y.json();
     if(!d.access_token)throw new Error(d.error_description||d.msg||'başarısız');
-    token=d.access_token;uid=d.user.id;
+    token=d.access_token;uid=d.user.id;oturumKaydet(d.access_token,d.refresh_token);
     const p=await rest('GET',`profiller?id=eq.${uid}&select=rol,ad_soyad`);
-    rol=p[0].rol;ad=p[0].ad_soyad;
-    $('kimlik').textContent=ad.toUpperCase()+' · '+rol.toUpperCase();
-    $('giris').style.display='none';
-    if(window.innerWidth>900)$('ustAra').style.display='block';
-    $('zil').style.display='flex';
-    $('avvUst').style.display='flex';
-    $('avvUst').textContent=ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
-    if(rol==='ogretmen'||rol==='yonetici'){$('ustAksiyon').style.display='block';
-      $('ustAksiyon').onclick=()=>{$('tSl').click();setTimeout(()=>{const b=$('sYeni');if(b)b.click();},350);};}
-    $('zil').onclick=()=>{const h=$('tD')||$('tDy')||$('tVd');if(h)h.click();};
-    rol==='ogrenci'?ogrenciAna():rol==='veli'?veliAna():personelAna();
+    hazirla(p[0]);
   }catch(e){$('gDurum').textContent='Hata: '+e.message;}
   $('gBtn').disabled=false;
 };
@@ -311,21 +334,25 @@ $('gBtn').onclick=async()=>{
 /* ================= PERSONEL (öğretmen + yönetici) ================= */
 function personelAna(){
   $('altbar').style.display='none';
-  const yTab=rol==='yonetici'?`<i class="grpEt">SİSTEM</i><button id="tY">${ikon('kisiler')}Yönetim</button>`:'';
-  $('govde').innerHTML=`<div class="sekme"><div class="yanLogo"><svg viewBox="0 0 140 116" width="26"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div><input class="yanAra" placeholder="Menüde ara…">
-    <i class="grpEt">ANA</i>
+  $('govde').innerHTML=`<div class="sekme">
+    <div class="yanLogo"><svg viewBox="0 0 140 116" width="26"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div>
     <button id="tGb" class="on">${ikon('saat')}Genel Bakış</button>
     <button id="tSl">${ikon('belge')}Sınavlar</button>
     <button id="tK">${ikon('hedef')}Koçluk</button>
-    <i class="grpEt">YÖNETİM</i>
-    <button id="tAr">${ikon('kutu')}Sınav Arşivi</button>
+    <button id="tSn">${ikon('kutu')}Sınıflar</button>
+    <button id="tOg">${ikon('kisiler')}Öğrenciler</button>
     <button id="tS">${ikon('grafik')}Sonuçlar<span class="rzt" id="rzS" style="display:none"></span></button>
-    <button id="tD">${ikon('megafon')}Duyuru</button>${yTab}</div><div id="tab"></div>`;
-  const tablar={tGb:genelBakis,tSl:sinavYonet,tAr:arsivCiz,tS:sonuclarCiz,tK:kocCiz,tD:duyuruCiz,tY:yonetimCiz};
-  rozetler();
+    <button id="tD">${ikon('megafon')}Duyurular</button>
+    <button id="tR">${ikon('yukselis')}Raporlar</button>
+    <button id="tA">${ikon('ayar')}Ayarlar</button>
+    <div style="flex:1"></div>
+    <button id="cikis" style="color:#8A8FA0">⎋ Çıkış</button></div><div id="tab"></div>`;
+  const tablar={tGb:genelBakis,tSl:sinavYonet,tK:kocCiz,tSn:sinifCiz,tOg:ogrencilerCiz,tS:sonuclarCiz,tD:duyuruCiz,tR:raporCiz,tA:ayarCiz};
   Object.keys(tablar).forEach(id=>{const b=$(id);if(b)b.onclick=()=>{
     Object.keys(tablar).forEach(x=>{const e=$(x);if(e)e.classList.toggle('on',x===id)});
     tablar[id]();};});
+  $('cikis').onclick=cikisYap;
+  rozetler();
   genelBakis();
 }
 
@@ -357,7 +384,7 @@ async function olusturCiz(){
         </div>`).join('')}
       </div>
     </div>`;}).join('');
-  T.innerHTML=`<div class="kart"><h3>Sınav arşivinden oluştur</h3>
+  T.innerHTML=`<div class="kart"><div class="sira"><h3 style="flex:1">Sınav arşivi</h3><button class="buton gri kucuk" style="width:auto" onclick="sinavYonet()">‹ Sınavlar</button></div><h3 style="display:none">nden oluştur</h3>
     <p class="acik">Kaynağı açın, soruları seçin (başlık kutusu tümünü seçer); cevap düzeltme yandaki listeden.</p>
     <label>SINAV ADI</label><input id="oAd" placeholder="Örn: Kareköklü Sayılar Tarama 1">
     <div class="izgara2">
@@ -554,8 +581,8 @@ function gorevKart(g,koc){
 }
 
 /* ---- Yönetim ---- */
-async function yonetimCiz(){
-  const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+async function yonetimCiz(hedefEl){
+  const T=hedefEl||$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
   const [kul,sin]=await Promise.all([
     rest('GET','profiller?select=id,ad_soyad,telefon,rol&order=rol,ad_soyad'),
     rest('GET','siniflar?select=id,ad')]);
@@ -578,10 +605,10 @@ async function yonetimCiz(){
     $('uEkle').disabled=true;$('uDurum').textContent='Oluşturuluyor…';
     try{await rest('POST','rpc/kullanici_ekle',{p_ad:$('uAd').value.trim(),p_telefon:$('uTel').value.trim(),
       p_sifre:$('uSif').value,p_rol:$('uRol').value,p_sinif:$('uSinif').value||null,p_ogrenci:$('uOgr').value||null});
-      $('uDurum').textContent='✓ Eklendi.';setTimeout(yonetimCiz,900);
+      $('uDurum').textContent='✓ Eklendi.';setTimeout(()=>yonetimCiz(T),900);
     }catch(e){$('uDurum').textContent='Hata: '+e.message;}
     $('uEkle').disabled=false;};
-  $('sEkle').onclick=async()=>{await rest('POST','siniflar',{ad:$('sAd').value.trim()},'return=minimal');yonetimCiz();};
+  $('sEkle').onclick=async()=>{await rest('POST','siniflar',{ad:$('sAd').value.trim()},'return=minimal');yonetimCiz(T);};
 }
 
 /* ---- Genel Bakış (personel) ---- */
@@ -674,7 +701,8 @@ async function sinavYonet(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
   const sv=await rest('GET','sinavlar?select=id,ad,soru_sayisi,sure_dakika,yayinda,created_at&arsivde=is.false&order=created_at.desc');
   T.innerHTML=`<div class="kart"><div class="sira"><h3 style="flex:1">Sınavlar</h3>
-    <button class="buton kucuk" id="sYeni">+ Yeni sınav</button></div>
+    <button class="buton gri kucuk" id="sArs" style="width:auto">Arşiv</button>
+    <button class="buton kucuk" id="sYeni" style="width:auto">+ Yeni sınav</button></div>
     <div id="svListe">${sv.length?sv.map(x=>`
     <div class="havuzOge" data-id="${x.id}"><div class="rozet">${x.soru_sayisi}</div>
       <div style="flex:1;min-width:0"><b style="font-size:14.5px">${x.ad}</b>
@@ -685,7 +713,7 @@ async function sinavYonet(){
       <button class="ikB" data-e="a" title="Arşivle">${ikon('arsiv')}</button>
       <button class="ikB tehlike" data-e="s" title="Sil">${ikon('cop')}</button></div>`).join('')
     :'<p class="acik">Aktif sınav yok — yeni sınav oluşturun.</p>'}</div></div>`;
-  $('sYeni').onclick=olusturCiz;
+  $('sYeni').onclick=olusturCiz;$('sArs').onclick=arsivCiz;
   T.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{
     const kart=b.closest('[data-id]'),id=kart.dataset.id;
     if(b.dataset.e==='a'){
@@ -735,6 +763,111 @@ async function arsivCiz(){
     if(!confirm('Sınav TAMAMEN silinsin mi?'))return;
     try{await rest('DELETE','sinavlar?id=eq.'+b.closest('[data-id]').dataset.id,null,'return=minimal');arsivCiz();}
     catch(e){alert('Silinemedi: '+e.message);}});
+}
+
+/* ---- Sınıflar ---- */
+async function sinifCiz(){
+  const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+  const [sin,uy]=await Promise.all([
+    rest('GET','siniflar?select=id,ad&order=ad'),
+    rest('GET','sinif_ogrenciler?select=sinif_id')]);
+  const say={};uy.forEach(u=>say[u.sinif_id]=(say[u.sinif_id]||0)+1);
+  T.innerHTML=`<div class="cap-baslik">Sınıflar</div>
+    <div class="kart"><div class="sira"><input id="snAd" placeholder="Yeni sınıf adı (örn. LGS Hazırlık B)">
+    <button class="buton kucuk" id="snEkle" style="width:auto">Ekle</button></div></div>
+    ${sin.map((x,i)=>`<div class="kart" data-id="${x.id}">
+      <div class="sira sinifBas" style="cursor:pointer">
+      <div class="kutu2" style="width:42px;height:42px;border-radius:13px;background:${['#C9B9F6','#F8DCB4','#D7F2E3','#F6C6C0'][i%4]};display:flex;align-items:center;justify-content:center;font-weight:900">${x.ad.slice(0,2).toUpperCase()}</div>
+      <b style="flex:1;font-size:15px">${x.ad}</b>
+      <span class="etiket">${say[x.id]||0} öğrenci</span><span class="gOk" style="color:var(--s);font-weight:800">▾</span></div>
+      <div class="sIc" style="display:none;margin-top:10px"></div></div>`).join('')||'<p class="acik">Sınıf yok.</p>'}`;
+  $('snEkle').onclick=async()=>{if(!$('snAd').value.trim())return;
+    await rest('POST','siniflar',{ad:$('snAd').value.trim()},'return=minimal');sinifCiz();};
+  T.querySelectorAll('.sinifBas').forEach(b=>b.onclick=async()=>{
+    const kart=b.closest('[data-id]'),ic=kart.querySelector('.sIc');
+    const acik=ic.style.display!=='none';
+    ic.style.display=acik?'none':'block';b.querySelector('.gOk').textContent=acik?'▾':'▴';
+    if(!acik&&!ic.dataset.d){ic.dataset.d=1;
+      const o=await rest('GET','sinif_ogrenciler?select=profiller!sinif_ogrenciler_ogrenci_id_fkey(ad_soyad,telefon)&sinif_id=eq.'+kart.dataset.id).catch(()=>[]);
+      ic.innerHTML=o.length?o.map(x=>`<div class="havuzOge"><div class="avv">${(x.profiller?.ad_soyad||'?').split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+        <div style="flex:1"><b style="font-size:13.5px">${x.profiller?.ad_soyad||''}</b><small style="display:block;color:var(--s)">${x.profiller?.telefon||''}</small></div></div>`).join('')
+        :'<p class="acik">Bu sınıfta öğrenci yok — Ayarlar > Kullanıcı ekle ile atayın.</p>';}});
+}
+
+/* ---- Öğrenciler ---- */
+async function ogrencilerCiz(){
+  const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+  const ogr=await rest('GET','profiller?rol=eq.ogrenci&select=id,ad_soyad,telefon&order=ad_soyad');
+  T.innerHTML=`<div class="cap-baslik">Öğrenciler <span style="font-size:13px;color:var(--s)">(${ogr.length})</span></div>
+    <div class="kart"><input id="oAra2" placeholder="Öğrenci ara…"></div>
+    <div id="oListe2">${ogr.map((x,i)=>`<div class="kart oSat" data-id="${x.id}" data-ad="${x.ad_soyad.toLocaleLowerCase('tr')}">
+      <div class="sira" style="cursor:pointer">
+      <div class="kutu2" style="width:42px;height:42px;border-radius:13px;background:${['#F8DCB4','#C9B9F6','#D7F2E3','#F6C6C0','#E4F222'][i%5]};display:flex;align-items:center;justify-content:center;font-weight:900">${x.ad_soyad.split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+      <div style="flex:1"><b style="font-size:14.5px">${x.ad_soyad}</b><small style="display:block;color:var(--s)">${x.telefon||''}</small></div>
+      <span class="gOk" style="color:var(--s);font-weight:800">▾</span></div>
+      <div class="oIc" style="display:none;margin-top:10px"></div></div>`).join('')||'<p class="acik">Öğrenci yok.</p>'}</div>`;
+  $('oAra2').oninput=()=>{const q=$('oAra2').value.toLocaleLowerCase('tr');
+    T.querySelectorAll('.oSat').forEach(k=>k.style.display=k.dataset.ad.includes(q)?'':'none');};
+  T.querySelectorAll('.oSat .sira').forEach(b=>b.onclick=async()=>{
+    const kart=b.closest('.oSat'),ic=kart.querySelector('.oIc');
+    const acik=ic.style.display!=='none';
+    ic.style.display=acik?'none':'block';b.querySelector('.gOk').textContent=acik?'▾':'▴';
+    if(!acik&&!ic.dataset.d){ic.dataset.d=1;ic.innerHTML='<p class="acik">Yükleniyor…</p>';
+      const o=await rest('POST','rpc/veli_ozet',{p_ogrenci:kart.dataset.id}).catch(()=>null);
+      const sn=o?.sonuclar||[],g=o?.gorevler||[];
+      ic.innerHTML=`<div class="izgara2"><div><label>SON SINAVLAR</label>${sn.length?sn.slice(0,5).map(x=>
+        `<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>${x.ad.slice(0,20)}</span><b>${(+x.net).toFixed(1).replace('.',',')}</b></div>`).join(''):'<p class="acik">Sonuç yok.</p>'}</div>
+        <div><label>BUGÜNKÜ GÖREVLER</label>${g.length?g.map(x=>
+        `<div style="font-size:13px;padding:4px 0">${x.ders} · ${x.hedef} ${x.birim} ${x.onay?'✓':''}</div>`).join(''):'<p class="acik">Görev yok.</p>'}</div></div>`;}});
+}
+
+/* ---- Raporlar ---- */
+function csvIndir(ad,metin){const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+metin],{type:'text/csv;charset=utf-8'}));
+  a.download=ad;a.click();}
+async function raporCiz(){
+  const T=$('tab');
+  T.innerHTML=`<div class="cap-baslik">Raporlar</div>
+  <div class="kart"><h3>Dışa aktarım</h3>
+    <p class="acik">Veriler Excel'de açılmaya hazır CSV olarak iner (Türkçe ayraçlı).</p>
+    <div class="sira" style="flex-wrap:wrap">
+    <button class="buton gri kucuk" id="rSonuc" style="width:auto">Sınav sonuçları</button>
+    <button class="buton gri kucuk" id="rOgr" style="width:auto">Öğrenci listesi</button>
+    <button class="buton gri kucuk" id="rGorev" style="width:auto">Görevler (son 30 gün)</button></div></div>
+  <div class="kart"><h3>Haftalık özet</h3><div id="rOzet" class="acik">Hazırlanıyor…</div></div>`;
+  $('rSonuc').onclick=async()=>{const r=await rest('GET','sonuclar?select=dogru,yanlis,bos,net,hesaplama,profiller(ad_soyad),sinavlar(ad)&order=hesaplama.desc&limit=500');
+    csvIndir('sonuclar.csv','Öğrenci;Sınav;D;Y;B;Net;Tarih\n'+r.map(x=>[x.profiller?.ad_soyad,x.sinavlar?.ad,x.dogru,x.yanlis,x.bos,(''+x.net).replace('.',','),x.hesaplama.slice(0,10)].join(';')).join('\n'));};
+  $('rOgr').onclick=async()=>{const r=await rest('GET','profiller?rol=eq.ogrenci&select=ad_soyad,telefon&order=ad_soyad');
+    csvIndir('ogrenciler.csv','Ad Soyad;Telefon\n'+r.map(x=>x.ad_soyad+';'+(x.telefon||'')).join('\n'));};
+  $('rGorev').onclick=async()=>{const t=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
+    const r=await rest('GET','gorevler?select=tarih,ders,konu,hedef,birim,yapilan,dogru,yanlis,onaylandi,profiller!gorevler_ogrenci_id_fkey(ad_soyad)&tarih=gte.'+t+'&order=tarih.desc&limit=800');
+    csvIndir('gorevler.csv','Tarih;Öğrenci;Ders;Konu;Hedef;Yapılan;D;Y;Onay\n'+r.map(x=>[x.tarih,x.profiller?.ad_soyad,x.ders,x.konu||'',x.hedef+' '+x.birim,x.yapilan??'',x.dogru??'',x.yanlis??'',x.onaylandi?'✓':''].join(';')).join('\n'));};
+  try{
+    const hft=new Date(Date.now()-7*864e5).toISOString();
+    const [sn,gv]=await Promise.all([
+      rest('GET','sonuclar?select=net&hesaplama=gte.'+hft),
+      rest('GET','gorevler?select=onaylandi&tarih=gte.'+hft.slice(0,10))]);
+    const o=sn.length?(sn.reduce((a,x)=>a+ +x.net,0)/sn.length).toFixed(2).replace('.',','):'—';
+    $('rOzet').textContent=`Son 7 gün: ${sn.length} sınav çözümü · net ort. ${o} · ${gv.length} görev (${gv.filter(x=>x.onaylandi).length} onaylı).`;
+  }catch(e){$('rOzet').textContent='Özet alınamadı.';}
+}
+
+/* ---- Ayarlar ---- */
+async function ayarCiz(){
+  const T=$('tab');
+  T.innerHTML=`<div class="cap-baslik">Ayarlar</div>
+  <div class="kart"><h3>Şifre değiştir</h3>
+    <div class="sira"><input id="aySif" type="password" placeholder="Yeni şifre (en az 6 karakter)">
+    <button class="buton kucuk" id="aySifBtn" style="width:auto">Güncelle</button></div>
+    <div class="acik" id="aySifDurum" style="margin-top:6px"></div></div>
+  <div id="yKap"></div>`;
+  $('aySifBtn').onclick=async()=>{
+    const v=$('aySif').value;if(v.length<6)return $('aySifDurum').textContent='En az 6 karakter.';
+    const y=await fetch(SUPA+'/auth/v1/user',{method:'PUT',
+      headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({password:v})});
+    $('aySifDurum').textContent=y.ok?'✓ Şifreniz güncellendi.':'Hata: '+(await y.text()).slice(0,80);};
+  if(rol==='yonetici')yonetimCiz($('yKap'));
 }
 
 /* ---- Öğrenci: Bugünüm ---- */
@@ -790,7 +923,8 @@ function veliAna(){
   $('altbar').style.display='none';
   $('govde').innerHTML=`<div class="sekme"><div class="yanLogo"><svg viewBox="0 0 140 116" width="26"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div><input class="yanAra" placeholder="Menüde ara…">
     <button id="tVo" class="on">${ikon('yukselis')}Özet</button>
-    <button id="tVd">${ikon('megafon')}Duyurular</button></div><div id="tab"></div>`;
+    <button id="tVd">${ikon('megafon')}Duyurular</button>
+    <div style="flex:1"></div><button class="cikisB" style="color:#8A8FA0">⎋ Çıkış</button></div><div id="tab"></div>`;
   const tablar={tVo:veliOzet,tVd:oDuyuruCiz};
   Object.keys(tablar).forEach(id=>$(id).onclick=()=>{
     Object.keys(tablar).forEach(x=>$(x).classList.toggle('on',x===id));tablar[id]();});
@@ -892,7 +1026,8 @@ function ogrenciAna(){
     <button id="tG">${ikon('kutu')}Görevler<span class="rzt" id="rzG" style="display:none"></span></button>
     <i class="grpEt">TAKİP</i>
     <button id="tGe">${ikon('yukselis')}Gelişim</button>
-    <button id="tDy">${ikon('megafon')}Duyuru<span class="rzt" id="rzD" style="display:none"></span></button></div><div id="tab"></div>`;
+    <button id="tDy">${ikon('megafon')}Duyuru<span class="rzt" id="rzD" style="display:none"></span></button>
+    <div style="flex:1"></div><button class="cikisB" style="color:#8A8FA0">⎋ Çıkış</button></div><div id="tab"></div>`;
   const tablar={tBg:bugunum,tSv:sinavListe,tG:gorevListe,tGe:gelisimCiz,tDy:oDuyuruCiz};
   rozetler();
   Object.keys(tablar).forEach(id=>$(id).onclick=()=>{
