@@ -50,9 +50,9 @@ font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content
 .sinavKart b{display:block;font-size:15px}
 .sinavKart span{font-size:12.5px;color:var(--s)}
 .serit{height:3px;background:#E9E1CF;flex:0 0 auto}#dolum{height:100%;background:var(--a);width:0%}
-.soruKart{background:var(--k);border-radius:18px;border:1px solid var(--c);box-shadow:0 12px 32px rgba(22,48,79,.10);overflow:hidden}
-.kb{display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid var(--c);position:sticky;top:54px;background:var(--k);z-index:4}
-.zaman{margin-left:auto;display:flex;gap:6px;align-items:center;background:var(--z);border:1.5px solid var(--c);
+.soruKart{background:var(--k);border-radius:22px;border:1px solid #ECECEF;box-shadow:0 14px 36px rgba(33,31,51,.12);overflow:hidden}
+.kb{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:0;position:sticky;top:0;background:#211F33;color:#fff;z-index:4}
+.zaman{margin-left:auto;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.14);border:0;color:#fff;
 padding:6px 11px;border-radius:99px;font-weight:900;font-size:13.5px;font-variant-numeric:tabular-nums;color:var(--m)}
 .zaman svg{width:15px;height:15px}
 .zaman.kritik{background:#FCEAE6;border-color:var(--yn);color:var(--yn)}
@@ -117,8 +117,8 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
   #govde{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0;align-items:stretch;padding:0}
   .sekme{flex-direction:column;position:sticky;top:0;background:#fff;border:0;border-right:1px solid #ECECEF;
     border-radius:0;padding:22px 16px;gap:2px;box-shadow:none;margin-bottom:0;align-self:stretch;height:100%}
-  .yanLogo{display:flex;align-items:center;gap:9px;padding:2px 6px 14px}
-  .yanLogo b{font-size:16px;font-weight:900;color:var(--m)}.yanLogo b span{color:var(--a)}
+  .yanLogo{display:flex;align-items:center;gap:10px;padding:2px 6px 20px}
+  .yanLogo b{font-size:20px;font-weight:900;color:var(--m)}.yanLogo b span{color:var(--a)}
   .sekme .yanAra{display:none!important}
   #tab{padding:18px 22px;min-width:0}
   .sekme button{justify-content:flex-start;min-width:0;font-size:13.5px;padding:12px 12px}
@@ -182,6 +182,17 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 .takvim td{text-align:center;font-size:12.5px;font-weight:700;color:#3A4152;padding:6px 0;border:0}
 .takvim td.sonuk{color:#C6CAD4}
 .takvim td.bugun span{background:#211F33;color:#fff;border-radius:99px;padding:5px 9px}
+
+.svSatir{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #F0EDE4}
+.svSatir:last-child{border-bottom:0}
+.svM,.svBas{display:none}
+.svIslem{display:flex;gap:6px;justify-content:flex-end}
+@media(min-width:900px){
+  .svSatir{grid-template-columns:44px minmax(0,1fr) 104px 76px 92px 128px}
+  .svM{display:block;font-size:12.5px;color:var(--s);font-weight:700}
+  .svAlt{display:none!important}
+  .svBas{display:grid;font-size:10px;font-weight:800;letter-spacing:.07em;color:var(--s);border-bottom:1.5px solid #EAE6DA;padding:4px 0 8px}
+}
 </style>
 
 <div id="cerceve">
@@ -250,7 +261,7 @@ function hazirla(pr){
   $('avvUst').style.display='flex';
   $('avvUst').textContent=ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
   if(rol==='ogretmen'||rol==='yonetici'){$('ustAksiyon').style.display='block';
-    $('ustAksiyon').onclick=()=>{$('tSl').click();setTimeout(()=>{const b=$('sYeni');if(b)b.click();},350);};}
+    $('ustAksiyon').onclick=()=>window.open('istasyon.html','_blank');}
   $('zil').onclick=()=>{const h=$('tD')||$('tDy')||$('tVd');if(h)h.click();};
   rol==='ogrenci'?ogrenciAna():rol==='veli'?veliAna():personelAna();
 }
@@ -335,7 +346,7 @@ $('gBtn').onclick=async()=>{
 function personelAna(){
   $('altbar').style.display='none';
   $('govde').innerHTML=`<div class="sekme">
-    <div class="yanLogo"><svg viewBox="0 0 140 116" width="26"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div>
+    <div class="yanLogo"><svg viewBox="0 0 140 116" width="36"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg><b>mentor<span>call</span></b></div>
     <button id="tGb" class="on">${ikon('saat')}Genel Bakış</button>
     <button id="tSl">${ikon('belge')}Sınavlar</button>
     <button id="tK">${ikon('hedef')}Koçluk</button>
@@ -584,7 +595,7 @@ function gorevKart(g,koc){
 async function yonetimCiz(hedefEl){
   const T=hedefEl||$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
   const [kul,sin]=await Promise.all([
-    rest('GET','profiller?select=id,ad_soyad,telefon,rol&order=rol,ad_soyad'),
+    rest('GET','profiller?select=id,ad_soyad,telefon,rol,aktif&order=rol,ad_soyad'),
     rest('GET','siniflar?select=id,ad')]);
   T.innerHTML=`<div class="kart"><h3>Kullanıcı ekle</h3>
     <div class="izgara2"><div><label>AD SOYAD</label><input id="uAd"></div>
@@ -598,8 +609,25 @@ async function yonetimCiz(hedefEl){
     <div class="kart"><h3>Sınıf ekle</h3>
     <div class="izgara2"><input id="sAd" placeholder="Örn: LGS Hazırlık B"><button class="buton kucuk" id="sEkle">Ekle</button></div></div>
     <div class="kart"><h3>Kullanıcılar (${kul.length})</h3>
-    <table><tr><th>Ad</th><th>Telefon</th><th>Rol</th></tr>
-    ${kul.map(k=>`<tr><td>${k.ad_soyad}</td><td>${k.telefon||''}</td><td>${k.rol}</td></tr>`).join('')}</table></div>`;
+    <div class="kListe">${kul.map(k=>`<div class="havuzOge" data-uid="${k.id}">
+      <div class="avv">${k.ad_soyad.split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+      <div style="flex:1;min-width:0"><b style="font-size:13.5px">${k.ad_soyad}</b>
+      <small style="display:block;color:var(--s)">${k.telefon||''} · ${k.rol}${k.aktif===false?' · <b style=color:var(--yn)>PASİF</b>':''}</small></div>
+      <button class="buton gri kucuk" data-sf="1" style="width:auto">Şifre</button>
+      <button class="buton gri kucuk" data-ak="${k.aktif===false?1:0}" style="width:auto">${k.aktif===false?'Aktifleştir':'Pasifleştir'}</button>
+    </div>`).join('')}</div></div>`;
+  const rpcCagir=async(yol,govde)=>{
+    const y=await fetch(SUPA+'/rest/v1/rpc/'+yol,{method:'POST',
+      headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify(govde)});
+    if(!y.ok)throw new Error((await y.text()).slice(0,120));};
+  T.querySelectorAll('[data-sf]').forEach(b=>b.onclick=async()=>{
+    const v=prompt('Yeni şifre (en az 6 karakter):');if(!v)return;
+    try{await rpcCagir('sifre_sifirla',{p_kullanici:b.closest('[data-uid]').dataset.uid,p_yeni:v});
+      alert('Şifre güncellendi ✓');}catch(e){alert('Hata: '+e.message);}});
+  T.querySelectorAll('[data-ak]').forEach(b=>b.onclick=async()=>{
+    try{await rpcCagir('kullanici_durum',{p_kullanici:b.closest('[data-uid]').dataset.uid,p_aktif:b.dataset.ak==='1'});
+      yonetimCiz(T);}catch(e){alert('Hata: '+e.message);}});
   $('uEkle').onclick=async()=>{
     if(!$('uAd').value.trim()||!$('uTel').value.trim())return $('uDurum').textContent='Ad ve telefon zorunlu.';
     $('uEkle').disabled=true;$('uDurum').textContent='Oluşturuluyor…';
@@ -700,22 +728,35 @@ async function genelBakis(){
 async function sinavYonet(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
   const sv=await rest('GET','sinavlar?select=id,ad,soru_sayisi,sure_dakika,yayinda,created_at&arsivde=is.false&order=created_at.desc');
-  T.innerHTML=`<div class="kart"><div class="sira"><h3 style="flex:1">Sınavlar</h3>
-    <button class="buton gri kucuk" id="sArs" style="width:auto">Arşiv</button>
-    <button class="buton kucuk" id="sYeni" style="width:auto">+ Yeni sınav</button></div>
+  T.innerHTML=`<div class="cap-baslik">Sınavlar</div>
+  <div class="kart">
+    <div class="sira" style="margin-bottom:8px;flex-wrap:wrap">
+      <input id="svAra" placeholder="Sınav ara…" style="max-width:240px">
+      <div style="flex:1"></div>
+      <button class="buton gri kucuk" id="sArs" style="width:auto">Arşiv</button>
+      <button class="buton gri kucuk" id="sHavuz" style="width:auto">Arşivden oluştur</button>
+      <button class="buton kucuk" id="sYeni" style="width:auto">＋ Sınav yükle</button></div>
+    <div class="svSatir svBas"><span></span><span>SINAV</span><span>TARİH</span><span>SÜRE</span><span>DURUM</span><span style="text-align:right">İŞLEM</span></div>
     <div id="svListe">${sv.length?sv.map(x=>`
-    <div class="havuzOge" data-id="${x.id}"><div class="rozet">${x.soru_sayisi}</div>
-      <div style="flex:1;min-width:0"><b style="font-size:14.5px">${x.ad}</b>
-      <div style="font-size:12px;color:var(--s)">${x.created_at.slice(0,10)}${x.sure_dakika?' · '+x.sure_dakika+' dk':''}</div>
-      <div class="dzn" style="display:none;margin-top:8px"></div></div>
-      <span class="cip ${x.yayinda?'cipY':'cipK'}">${x.yayinda?'Yayında':'Kapalı'}</span>
-      <button class="ikB" data-e="d" title="Düzenle">${ikon('kalem')}</button>
-      <button class="ikB" data-e="a" title="Arşivle">${ikon('arsiv')}</button>
-      <button class="ikB tehlike" data-e="s" title="Sil">${ikon('cop')}</button></div>`).join('')
-    :'<p class="acik">Aktif sınav yok — yeni sınav oluşturun.</p>'}</div></div>`;
-  $('sYeni').onclick=olusturCiz;$('sArs').onclick=arsivCiz;
+      <div class="svSatir" data-id="${x.id}" data-ad="${x.ad.toLocaleLowerCase('tr')}">
+        <div class="rozet">${x.soru_sayisi}</div>
+        <div style="min-width:0"><b style="font-size:14px">${x.ad}</b>
+          <small class="svAlt" style="display:block;color:var(--s);font-size:11.5px">${x.created_at.slice(0,10)}${x.sure_dakika?' · '+x.sure_dakika+' dk':''}</small></div>
+        <span class="svM">${x.created_at.slice(0,10)}</span>
+        <span class="svM">${x.sure_dakika?x.sure_dakika+' dk':'—'}</span>
+        <span class="cip ${x.yayinda?'cipY':'cipK'}">${x.yayinda?'Yayında':'Kapalı'}</span>
+        <div class="svIslem">
+          <button class="ikB" data-e="d" title="Düzenle">${ikon('kalem')}</button>
+          <button class="ikB" data-e="a" title="Arşivle">${ikon('arsiv')}</button>
+          <button class="ikB tehlike" data-e="s" title="Sil">${ikon('cop')}</button></div>
+        <div class="dzn" style="display:none;grid-column:1/-1"></div>
+      </div>`).join(''):'<p class="acik">Aktif sınav yok — "Sınav yükle" ile başlayın.</p>'}</div></div>`;
+  $('svAra').oninput=()=>{const q=$('svAra').value.toLocaleLowerCase('tr');
+    T.querySelectorAll('.svSatir:not(.svBas)').forEach(k=>k.style.display=k.dataset.ad.includes(q)?'':'none');};
+  $('sYeni').onclick=()=>window.open('istasyon.html','_blank');
+  $('sHavuz').onclick=olusturCiz;$('sArs').onclick=arsivCiz;
   T.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{
-    const kart=b.closest('[data-id]'),id=kart.dataset.id;
+    const kart=b.closest('.svSatir'),id=kart.dataset.id;
     if(b.dataset.e==='a'){
       if(!confirm('Sınav arşive kaldırılsın mı? (Öğrenci listesinden kalkar, sonuçlar korunur)'))return;
       await rest('PATCH','sinavlar?id=eq.'+id,{arsivde:true,yayinda:false},'return=minimal');sinavYonet();
@@ -727,7 +768,7 @@ async function sinavYonet(){
       const dz=kart.querySelector('.dzn');
       if(dz.style.display==='block'){dz.style.display='none';return;}
       dz.style.display='block';
-      dz.innerHTML=`<div class="izgara2"><input class="dAd" value="${kart.querySelector('b').textContent.replace(/"/g,'&quot;')}">
+      dz.innerHTML=`<div class="izgara2" style="margin-top:8px"><input class="dAd" value="${kart.querySelector('b').textContent.replace(/"/g,'&quot;')}">
         <div class="sira"><input class="dSure" type="number" placeholder="süre dk" style="width:80px">
         <button class="buton kucuk dKaydet" style="flex:1">Kaydet</button></div></div>`;
       dz.querySelector('.dKaydet').onclick=async()=>{
