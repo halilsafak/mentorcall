@@ -222,7 +222,7 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
   <label>Şifre</label><input id="gSif" type="password" value="mentor123">
   <button class="buton" id="gBtn" style="margin-top:14px">Giriş yap</button>
   <div class="acik" id="gDurum" style="margin-top:8px;text-align:center"></div>
-  <div class="demoNot">Demo hesaplar — yönetici 05000000001 · öğretmen 05000000002 · öğrenci 05000000011 · şifre mentor123</div>
+  <div style="text-align:center;color:#C9C5B9;font-size:10px;font-weight:800;margin-top:8px">sürüm v10</div><div class="demoNot">Demo hesaplar — yönetici 05000000001 · öğretmen 05000000002 · öğrenci 05000000011 · şifre mentor123</div>
 </div></div>
 
 <div class="ortu" id="sonucOrtu"><div class="panel">
@@ -249,6 +249,14 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 <script>
 const SUPA='https://mmcvpttkoxjfwczpckxq.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tY3ZwdHRrb3hqZndjenBja3hxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1ODYzNDQsImV4cCI6MjEwMzE2MjM0NH0.ISqD-nOW5ef85W-sdedYrliCekOXilwDn7zyU-4Mt5o';
+window.addEventListener('error',e=>hataAfis(e.message));
+window.addEventListener('unhandledrejection',e=>hataAfis((e.reason&&e.reason.message)||e.reason));
+function hataAfis(m){
+  let a=document.getElementById('hataAfis');
+  if(!a){a=document.createElement('div');a.id='hataAfis';
+    a.style.cssText='position:fixed;left:10px;right:10px;bottom:10px;z-index:99;background:#D2402F;color:#fff;padding:10px 14px;border-radius:12px;font-size:12.5px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.3)';
+    document.body.appendChild(a);}
+  a.textContent='⚠️ Hata: '+m;}
 const $=i=>document.getElementById(i);
 const mat=el=>renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});
 const bugun=()=>new Date().toISOString().slice(0,10);
@@ -373,7 +381,8 @@ function personelAna(){
     <button id="tR">${ikon('yukselis')}Raporlar</button>
     <button id="tA">${ikon('ayar')}Ayarlar</button>
     <div style="flex:1"></div>
-    <button id="cikis" style="color:#8A8FA0">⎋ Çıkış</button></div><div id="tab"></div>`;
+    <button id="cikis" style="color:#8A8FA0">⎋ Çıkış</button>
+    <small style="text-align:center;color:#C2BEB2;font-size:10px;font-weight:800;padding-top:6px">v10</small></div><div id="tab"></div>`;
   const tablar={tGb:genelBakis,tSl:sinavYonet,tK:kocCiz,tSn:sinifCiz,tOg:ogrencilerCiz,tS:sonuclarCiz,tD:duyuruCiz,tR:raporCiz,tA:ayarCiz};
   Object.keys(tablar).forEach(id=>{const b=$(id);if(b)b.onclick=()=>{
     Object.keys(tablar).forEach(x=>{const e=$(x);if(e)e.classList.toggle('on',x===id)});
