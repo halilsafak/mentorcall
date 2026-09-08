@@ -193,6 +193,9 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
   .svAlt{display:none!important}
   .svBas{display:grid;font-size:10px;font-weight:800;letter-spacing:.07em;color:var(--s);border-bottom:1.5px solid #EAE6DA;padding:4px 0 8px}
 }
+.avv{overflow:hidden}
+.avv img,.kutu2 img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
+.kutu2{overflow:hidden}
 </style>
 
 <div id="cerceve">
@@ -249,7 +252,7 @@ const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6
 const $=i=>document.getElementById(i);
 const mat=el=>renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});
 const bugun=()=>new Date().toISOString().slice(0,10);
-let token=null,uid=null,rol=null,ad=null;
+let token=null,uid=null,rol=null,ad=null,benimFoto=null;
 function oturumKaydet(a,r){try{localStorage.setItem('mc_oturum',JSON.stringify({a,r}))}catch(e){}}
 function cikisYap(){try{localStorage.removeItem('mc_oturum')}catch(e){};location.reload();}
 function hazirla(pr){
@@ -259,7 +262,7 @@ function hazirla(pr){
   if(window.innerWidth>900)$('ustAra').style.display='block';
   $('zil').style.display='flex';
   $('avvUst').style.display='flex';
-  $('avvUst').textContent=ad.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+  $('avvUst').innerHTML=avvIc(ad,pr.foto_yolu);benimFoto=pr.foto_yolu||null;
   if(rol==='ogretmen'||rol==='yonetici'){$('ustAksiyon').style.display='block';
     $('ustAksiyon').onclick=()=>window.open('istasyon.html','_blank');}
   $('zil').onclick=()=>{const h=$('tD')||$('tDy')||$('tVd');if(h)h.click();};
@@ -269,7 +272,7 @@ function hazirla(pr){
   let k=null;try{k=JSON.parse(localStorage.getItem('mc_oturum')||'null')}catch(e){}
   if(!k||!k.a)return;
   const dene=async()=>{token=k.a;uid=JSON.parse(atob(k.a.split('.')[1])).sub;
-    const p=await rest('GET','profiller?select=rol,ad_soyad&id=eq.'+uid);return p[0];};
+    const p=await rest('GET','profiller?select=rol,ad_soyad,foto_yolu&id=eq.'+uid);return p[0];};
   try{hazirla(await dene());}
   catch(e){
     if(!k.r)return cikisYap();
@@ -282,6 +285,14 @@ function hazirla(pr){
     }catch(e2){try{localStorage.removeItem('mc_oturum')}catch(_){}}
   }
 })();
+const fotoUrl=y=>SUPA+'/storage/v1/object/public/profil-foto/'+y+'?v='+Date.now();
+const avvIc=(ad,foto)=>foto?`<img src="${fotoUrl(foto)}" alt="">`
+  :(ad||'?').split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+async function rpcGonder(yol,govde){
+  const y=await fetch(SUPA+'/rest/v1/rpc/'+yol,{method:'POST',
+    headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify(govde)});
+  if(!y.ok)throw new Error((await y.text()).slice(0,120));}
 const resimCache={};
 document.addEventListener('click',e=>{if(e.target.closest('.cikisB'))cikisYap();});
 document.addEventListener('input',e=>{
@@ -336,7 +347,7 @@ $('gBtn').onclick=async()=>{
     const d=await y.json();
     if(!d.access_token)throw new Error(d.error_description||d.msg||'başarısız');
     token=d.access_token;uid=d.user.id;oturumKaydet(d.access_token,d.refresh_token);
-    const p=await rest('GET',`profiller?id=eq.${uid}&select=rol,ad_soyad`);
+    const p=await rest('GET',`profiller?id=eq.${uid}&select=rol,ad_soyad,foto_yolu`);
     hazirla(p[0]);
   }catch(e){$('gDurum').textContent='Hata: '+e.message;}
   $('gBtn').disabled=false;
@@ -595,7 +606,7 @@ function gorevKart(g,koc){
 async function yonetimCiz(hedefEl){
   const T=hedefEl||$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
   const [kul,sin]=await Promise.all([
-    rest('GET','profiller?select=id,ad_soyad,telefon,rol,aktif&order=rol,ad_soyad'),
+    rest('GET','profiller?select=id,ad_soyad,telefon,rol,aktif,foto_yolu&order=rol,ad_soyad'),
     rest('GET','siniflar?select=id,ad')]);
   T.innerHTML=`<div class="kart"><h3>Kullanıcı ekle</h3>
     <div class="izgara2"><div><label>AD SOYAD</label><input id="uAd"></div>
@@ -610,17 +621,31 @@ async function yonetimCiz(hedefEl){
     <div class="izgara2"><input id="sAd" placeholder="Örn: LGS Hazırlık B"><button class="buton kucuk" id="sEkle">Ekle</button></div></div>
     <div class="kart"><h3>Kullanıcılar (${kul.length})</h3>
     <div class="kListe">${kul.map(k=>`<div class="havuzOge" data-uid="${k.id}">
-      <div class="avv">${k.ad_soyad.split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+      <div class="avv">${avvIc(k.ad_soyad,k.foto_yolu)}</div>
       <div style="flex:1;min-width:0"><b style="font-size:13.5px">${k.ad_soyad}</b>
       <small style="display:block;color:var(--s)">${k.telefon||''} · ${k.rol}${k.aktif===false?' · <b style=color:var(--yn)>PASİF</b>':''}</small></div>
+      <button class="buton gri kucuk" data-dz="1" style="width:auto">Düzenle</button>
       <button class="buton gri kucuk" data-sf="1" style="width:auto">Şifre</button>
       <button class="buton gri kucuk" data-ak="${k.aktif===false?1:0}" style="width:auto">${k.aktif===false?'Aktifleştir':'Pasifleştir'}</button>
-    </div>`).join('')}</div></div>`;
+    <div class="kDzn" style="display:none;flex-basis:100%;margin-top:8px"></div></div>`).join('')}</div></div>`;
   const rpcCagir=async(yol,govde)=>{
     const y=await fetch(SUPA+'/rest/v1/rpc/'+yol,{method:'POST',
       headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
       body:JSON.stringify(govde)});
     if(!y.ok)throw new Error((await y.text()).slice(0,120));};
+  T.querySelectorAll('[data-dz]').forEach(b=>b.onclick=()=>{
+    const kart=b.closest('[data-uid]'),dz=kart.querySelector('.kDzn');
+    if(dz.style.display==='block'){dz.style.display='none';return;}
+    dz.style.display='block';kart.style.flexWrap='wrap';
+    const adE=kart.querySelector('b').textContent,telE=(kart.querySelector('small').textContent.split('·')[0]||'').trim();
+    dz.innerHTML=`<div class="izgara2"><input class="dzAd" value="${adE.replace(/"/g,'&quot;')}" placeholder="Ad Soyad">
+      <div class="sira"><input class="dzTel" value="${telE}" placeholder="Telefon">
+      <button class="buton kucuk dzKay" style="width:auto">Kaydet</button></div></div>
+      <p class="acik" style="margin:6px 0 0">Telefon değişirse giriş de yeni numarayla yapılır.</p>`;
+    dz.querySelector('.dzKay').onclick=async()=>{
+      try{await rpcGonder('kullanici_duzenle',{p_id:kart.dataset.uid,
+        p_ad:dz.querySelector('.dzAd').value,p_telefon:dz.querySelector('.dzTel').value});
+        yonetimCiz(T);}catch(e){alert('Hata: '+e.message);}};});
   T.querySelectorAll('[data-sf]').forEach(b=>b.onclick=async()=>{
     const v=prompt('Yeni şifre (en az 6 karakter):');if(!v)return;
     try{await rpcCagir('sifre_sifirla',{p_kullanici:b.closest('[data-uid]').dataset.uid,p_yeni:v});
@@ -661,7 +686,7 @@ async function genelBakis(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Panel hazırlanıyor…</p></div>';
   const [bek,sonAll,svler,duy]=await Promise.allSettled([
     rest('GET','gorevler?select=id&tarih=eq.'+bugun()+'&onaylandi=is.false'),
-    rest('GET','sonuclar?select=net,sinav_id,hesaplama,profiller(ad_soyad),sinavlar(ad)&order=hesaplama.desc&limit=150'),
+    rest('GET','sonuclar?select=net,sinav_id,hesaplama,profiller(ad_soyad,foto_yolu),sinavlar(ad)&order=hesaplama.desc&limit=150'),
     rest('GET','sinavlar?select=id,ad,soru_sayisi&arsivde=is.false&order=created_at.desc&limit=3'),
     rest('GET','duyurular?select=metin,created_at&order=created_at.desc&limit=1')
   ]).then(r=>r.map(x=>x.status==='fulfilled'?x.value:[]));
@@ -673,7 +698,7 @@ async function genelBakis(){
     const o=st.length?st.reduce((a,x)=>a+ +x.net,0)/st.length:0;
     return {ad:sv.ad,alt:`${st.length} çözüm | ort ${o.toFixed(1).replace('.',',')} net`,
             p:sv.soru_sayisi?Math.min(100,Math.round(o/sv.soru_sayisi*100)):0};});
-  let akis=sonAll.slice(0,5).map(x=>({ad:x.profiller?.ad_soyad||'Öğrenci',sv:x.sinavlar?.ad||'Sınav',net:+x.net}));
+  let akis=sonAll.slice(0,5).map(x=>({ad:x.profiller?.ad_soyad||'Öğrenci',foto:x.profiller?.foto_yolu,sv:x.sinavlar?.ad||'Sınav',net:+x.net}));
   let ornek=false;
   if(!akis.length){ornek=true;vHafta=vHafta||23;vBek=vBek||7;ort=ort||9.4;
     kartlar=[{ad:'TYT Deneme 4',alt:'12 çözüm | ort 11,2 net',p:56},
@@ -707,7 +732,7 @@ async function genelBakis(){
       </div>
       <div class="cap-baslik" style="margin-top:22px">Son sonuçlar <span style="float:right;font-size:12.5px;color:#8A8FA0;cursor:pointer" id="ghSon">Tümü</span></div>
       <div class="cap-liste">${akis.map((x,i)=>`
-        <div class="satir"><div class="kutu2" style="background:${pastel[i%5]}">${x.ad.split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+        <div class="satir"><div class="kutu2" style="width:44px;height:44px;border-radius:14px;background:${pastel[i%5]};display:flex;align-items:center;justify-content:center">${avvIc(x.ad,x.foto)}</div>
         <div style="flex:1;min-width:0"><b>${x.ad}</b><small>${x.sv}</small></div>
         <b style="font-variant-numeric:tabular-nums">${x.net.toFixed(2).replace('.',',')} net</b></div>`).join('')}
       </div>
@@ -829,8 +854,8 @@ async function sinifCiz(){
     const acik=ic.style.display!=='none';
     ic.style.display=acik?'none':'block';b.querySelector('.gOk').textContent=acik?'▾':'▴';
     if(!acik&&!ic.dataset.d){ic.dataset.d=1;
-      const o=await rest('GET','sinif_ogrenciler?select=profiller!sinif_ogrenciler_ogrenci_id_fkey(ad_soyad,telefon)&sinif_id=eq.'+kart.dataset.id).catch(()=>[]);
-      ic.innerHTML=o.length?o.map(x=>`<div class="havuzOge"><div class="avv">${(x.profiller?.ad_soyad||'?').split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+      const o=await rest('GET','sinif_ogrenciler?select=profiller!sinif_ogrenciler_ogrenci_id_fkey(ad_soyad,telefon,foto_yolu)&sinif_id=eq.'+kart.dataset.id).catch(()=>[]);
+      ic.innerHTML=o.length?o.map(x=>`<div class="havuzOge"><div class="avv">${avvIc(x.profiller?.ad_soyad,x.profiller?.foto_yolu)}</div>
         <div style="flex:1"><b style="font-size:13.5px">${x.profiller?.ad_soyad||''}</b><small style="display:block;color:var(--s)">${x.profiller?.telefon||''}</small></div></div>`).join('')
         :'<p class="acik">Bu sınıfta öğrenci yok — Ayarlar > Kullanıcı ekle ile atayın.</p>';}});
 }
@@ -838,12 +863,12 @@ async function sinifCiz(){
 /* ---- Öğrenciler ---- */
 async function ogrencilerCiz(){
   const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
-  const ogr=await rest('GET','profiller?rol=eq.ogrenci&select=id,ad_soyad,telefon&order=ad_soyad');
+  const ogr=await rest('GET','profiller?rol=eq.ogrenci&select=id,ad_soyad,telefon,foto_yolu&order=ad_soyad');
   T.innerHTML=`<div class="cap-baslik">Öğrenciler <span style="font-size:13px;color:var(--s)">(${ogr.length})</span></div>
     <div class="kart"><input id="oAra2" placeholder="Öğrenci ara…"></div>
     <div id="oListe2">${ogr.map((x,i)=>`<div class="kart oSat" data-id="${x.id}" data-ad="${x.ad_soyad.toLocaleLowerCase('tr')}">
       <div class="sira" style="cursor:pointer">
-      <div class="kutu2" style="width:42px;height:42px;border-radius:13px;background:${['#F8DCB4','#C9B9F6','#D7F2E3','#F6C6C0','#E4F222'][i%5]};display:flex;align-items:center;justify-content:center;font-weight:900">${x.ad_soyad.split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
+      <div class="kutu2" style="width:42px;height:42px;border-radius:13px;background:${['#F8DCB4','#C9B9F6','#D7F2E3','#F6C6C0','#E4F222'][i%5]};display:flex;align-items:center;justify-content:center;font-weight:900">${avvIc(x.ad_soyad,x.foto_yolu)}</div>
       <div style="flex:1"><b style="font-size:14.5px">${x.ad_soyad}</b><small style="display:block;color:var(--s)">${x.telefon||''}</small></div>
       <span class="gOk" style="color:var(--s);font-weight:800">▾</span></div>
       <div class="oIc" style="display:none;margin-top:10px"></div></div>`).join('')||'<p class="acik">Öğrenci yok.</p>'}</div>`;
@@ -897,11 +922,39 @@ async function raporCiz(){
 async function ayarCiz(){
   const T=$('tab');
   T.innerHTML=`<div class="cap-baslik">Ayarlar</div>
+  <div class="kart"><h3>Profilim</h3>
+    <div class="sira" style="align-items:center">
+      <div class="avv" id="ayFoto" style="width:64px;height:64px;border-radius:20px;font-size:18px">${avvIc(ad,benimFoto)}</div>
+      <div style="flex:1;min-width:0"><b style="font-size:15px">${ad}</b>
+        <small style="display:block;color:var(--s)">${rol.toUpperCase()}</small></div>
+      <label class="buton gri kucuk" style="width:auto;cursor:pointer">Fotoğraf seç
+        <input type="file" id="ayFotoSec" accept="image/*" style="display:none"></label></div>
+    <div class="acik" id="ayFotoDurum" style="margin-top:6px"></div></div>
   <div class="kart"><h3>Şifre değiştir</h3>
     <div class="sira"><input id="aySif" type="password" placeholder="Yeni şifre (en az 6 karakter)">
     <button class="buton kucuk" id="aySifBtn" style="width:auto">Güncelle</button></div>
     <div class="acik" id="aySifDurum" style="margin-top:6px"></div></div>
   <div id="yKap"></div>`;
+  $('ayFotoSec').onchange=async e=>{
+    const f=e.target.files[0];if(!f)return;
+    $('ayFotoDurum').textContent='Yükleniyor…';
+    try{
+      const img=await new Promise((res,rej)=>{const i=new Image();
+        i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(f);});
+      const c=document.createElement('canvas');const b=400/Math.max(img.width,img.height);
+      c.width=img.width*b;c.height=img.height*b;
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      const blob=await new Promise(res=>c.toBlob(res,'image/jpeg',.85));
+      const y=await fetch(SUPA+'/storage/v1/object/profil-foto/'+uid+'.jpg',{method:'POST',
+        headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'image/jpeg','x-upsert':'true'},body:blob});
+      if(!y.ok)throw new Error((await y.text()).slice(0,80));
+      await rpcGonder('foto_ayarla',{p_yol:uid+'.jpg'});
+      benimFoto=uid+'.jpg';
+      $('ayFoto').innerHTML=avvIc(ad,benimFoto);
+      $('avvUst').innerHTML=avvIc(ad,benimFoto);
+      $('ayFotoDurum').textContent='✓ Fotoğrafınız güncellendi.';
+    }catch(err){$('ayFotoDurum').textContent='Hata: '+err.message;}
+  };
   $('aySifBtn').onclick=async()=>{
     const v=$('aySif').value;if(v.length<6)return $('aySifDurum').textContent='En az 6 karakter.';
     const y=await fetch(SUPA+'/auth/v1/user',{method:'PUT',
