@@ -202,7 +202,7 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 <div class="ust">
   <svg viewBox="0 0 140 116" width="26" aria-hidden="true"><rect x="20" y="28" width="98" height="62" rx="15" fill="none" stroke="#D2402F" stroke-width="12" transform="rotate(-2 69 59)"/><path d="M36 88 l7 17 14-12z" fill="#D2402F"/><polygon points="56,26 90,12 124,26 90,40" fill="#16304F" transform="rotate(-6 90 26)"/></svg>
   <div class="logo">mentor<span>call</span></div>
-  <input id="ustAra" class="yanAra" placeholder="Ara: menü, ekran…" style="display:none;flex:1;max-width:520px;margin:0 18px;border-radius:999px;background:#F4F4F6;border:0;padding:11px 18px">
+  <input id="ustAra" class="yanAra" type="search" name="mcara" autocomplete="off" placeholder="Ara: menü, ekran…" style="display:none;flex:1;max-width:520px;margin:0 18px;border-radius:999px;background:#F4F4F6;border:0;padding:11px 18px">
   <small id="kimlik" style="margin-left:auto">GİRİŞ BEKLENİYOR</small>
   <button id="zil" style="display:none;position:relative;color:var(--m);margin-left:10px;background:var(--k);border:1px solid var(--c);width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center">
     <svg viewBox="0 0 24 24" width="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10.5 20a2 2 0 0 0 3 0"/></svg>
@@ -218,11 +218,11 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
 
 <div class="ortu" id="giris" style="display:flex"><div class="panel girisPanel">
   <img class="logoBuyuk" src="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png" alt="mentorcall — Kişisel Eğitim Danışmanınız" style="width:210px;height:auto">
-  <label>Telefon</label><input id="gTel" value="05000000002" inputmode="tel">
-  <label>Şifre</label><input id="gSif" type="password" value="mentor123">
+  <label>Telefon</label><input id="gTel" value="05000000002" inputmode="tel" autocomplete="username">
+  <label>Şifre</label><input id="gSif" type="password" value="mentor123" autocomplete="current-password">
   <button class="buton" id="gBtn" style="margin-top:14px">Giriş yap</button>
   <div class="acik" id="gDurum" style="margin-top:8px;text-align:center"></div>
-  <div style="text-align:center;color:#C9C5B9;font-size:10px;font-weight:800;margin-top:8px">sürüm v10</div><div class="demoNot">Demo hesaplar — yönetici 05000000001 · öğretmen 05000000002 · öğrenci 05000000011 · şifre mentor123</div>
+  <div style="text-align:center;color:#C9C5B9;font-size:10px;font-weight:800;margin-top:8px">sürüm v11</div><div class="demoNot">Demo hesaplar — yönetici 05000000001 · öğretmen 05000000002 · öğrenci 05000000011 · şifre mentor123</div>
 </div></div>
 
 <div class="ortu" id="sonucOrtu"><div class="panel">
@@ -310,6 +310,7 @@ const resimCache={};
 document.addEventListener('click',e=>{if(e.target.closest('.cikisB'))cikisYap();});
 document.addEventListener('input',e=>{
   if(!e.target.classList.contains('yanAra'))return;
+  if(document.activeElement!==e.target)return;
   const q=e.target.value.toLocaleLowerCase('tr');
   (e.target.closest('.sekme')||document.querySelector('.sekme')||document).querySelectorAll('.sekme button').forEach(b=>
     b.style.display=b.textContent.toLocaleLowerCase('tr').includes(q)?'':'none');
@@ -382,7 +383,7 @@ function personelAna(){
     <button id="tA">${ikon('ayar')}Ayarlar</button>
     <div style="flex:1"></div>
     <button id="cikis" style="color:#8A8FA0">⎋ Çıkış</button>
-    <small style="text-align:center;color:#C2BEB2;font-size:10px;font-weight:800;padding-top:6px">v10</small></div><div id="tab"></div>`;
+    <small style="text-align:center;color:#C2BEB2;font-size:10px;font-weight:800;padding-top:6px">v11</small></div><div id="tab"></div>`;
   const tablar={tGb:genelBakis,tSl:sinavYonet,tK:kocCiz,tSn:sinifCiz,tOg:ogrencilerCiz,tS:sonuclarCiz,tD:duyuruCiz,tR:raporCiz,tA:ayarCiz};
   Object.keys(tablar).forEach(id=>{const b=$(id);if(b)b.onclick=()=>{
     Object.keys(tablar).forEach(x=>{const e=$(x);if(e)e.classList.toggle('on',x===id)});
@@ -625,7 +626,7 @@ async function yonetimCiz(hedefEl){
   T.innerHTML=`<div class="kart"><h3>Kullanıcı ekle</h3>
     <div class="izgara2"><div><label>AD SOYAD</label><input id="uAd"></div>
     <div><label>TELEFON</label><input id="uTel" placeholder="05xxxxxxxxx"></div></div>
-    <div class="izgara2"><div><label>ŞİFRE</label><input id="uSif" value="mentor123"></div>
+    <div class="izgara2"><div><label>ŞİFRE</label><input id="uSif" autocomplete="new-password" value="mentor123"></div>
     <div><label>ROL</label><select id="uRol"><option value="ogrenci">Öğrenci</option><option value="ogretmen">Öğretmen</option><option value="veli">Veli</option><option value="yonetici">Yönetici</option></select></div></div>
     <label>SINIF (isteğe bağlı)</label><select id="uSinif"><option value="">—</option>${sin.map(s=>`<option value="${s.id}">${s.ad}</option>`).join('')}</select>
     <label>VELİSİ OLDUĞU ÖĞRENCİ (veli rolü için)</label><select id="uOgr"><option value="">—</option>${kul.filter(k=>k.rol==='ogrenci').map(k=>`<option value="${k.id}">${k.ad_soyad}</option>`).join('')}</select>
@@ -986,7 +987,7 @@ async function ayarCiz(){
         <input type="file" id="ayFotoSec" accept="image/*" style="display:none"></label></div>
     <div class="acik" id="ayFotoDurum" style="margin-top:6px"></div></div>
   <div class="kart"><h3>Şifre değiştir</h3>
-    <div class="sira"><input id="aySif" type="password" placeholder="Yeni şifre (en az 6 karakter)">
+    <div class="sira"><input id="aySif" type="password" autocomplete="new-password" placeholder="Yeni şifre (en az 6 karakter)">
     <button class="buton kucuk" id="aySifBtn" style="width:auto">Güncelle</button></div>
     <div class="acik" id="aySifDurum" style="margin-top:6px"></div></div>
   <div id="yKap"></div>`;
