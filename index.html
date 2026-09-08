@@ -18,8 +18,8 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .ust{background:#fff;color:var(--m);padding:12px 16px;display:flex;align-items:center;gap:10px;flex:0 0 auto;border-bottom:1px solid var(--c)}
 .logo{font-weight:900;font-size:16px;letter-spacing:.01em;color:var(--m)}.logo span{color:var(--a)}
 .ust small{color:var(--s);font-size:10.5px;font-weight:800;background:var(--k);border:1px solid var(--c);padding:5px 11px;border-radius:99px}
-#govde{flex:1;min-height:0;overflow:auto;padding:14px;width:100%;background:#fff}
-.kart{background:var(--k);border:1px solid var(--c);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 3px 12px rgba(22,48,79,.05)}
+#govde{flex:1;min-height:0;overflow:auto;padding:14px;width:100%;background:#F2EFE6}
+.kart{background:var(--k);border:1px solid #E9E4D6;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 5px 18px rgba(30,36,51,.07)}
 h3{margin:0 0 4px;font-size:16px}
 .acik{color:var(--s);font-size:13px;margin:0 0 10px;line-height:1.5}
 input,select,textarea{width:100%;padding:10px 12px;border-radius:11px;border:1.5px solid var(--c);background:var(--k);font-size:14px;color:var(--t);font-family:inherit}
@@ -120,7 +120,7 @@ display:flex;gap:16px;align-items:center;margin-bottom:12px;box-shadow:0 14px 34
   .yanLogo{display:flex;align-items:center;gap:10px;padding:2px 6px 20px}
   .yanLogo b{font-size:20px;font-weight:900;color:var(--m)}.yanLogo b span{color:var(--a)}
   .sekme .yanAra{display:none!important}
-  #tab{padding:18px 22px;min-width:0}
+  #tab{padding:18px 24px;min-width:0;background:#F2EFE6}
   .sekme button{justify-content:flex-start;min-width:0;font-size:13.5px;padding:12px 12px}
   .rzt{position:static;margin-left:auto}
 }
@@ -293,6 +293,11 @@ async function rpcGonder(yol,govde){
     headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
     body:JSON.stringify(govde)});
   if(!y.ok)throw new Error((await y.text()).slice(0,120));}
+const ekranKorumali=f=>Promise.resolve().then(f).catch(e=>{
+  const t=$('tab');
+  if(t)t.innerHTML='<div class="kart"><p class="acik">⚠️ Bu bölüm yüklenirken sorun oluştu: '+
+    ((e&&e.message)||e)+'</p><button class="buton gri kucuk" style="width:auto" onclick="location.reload()">Yenile</button></div>';
+});
 const resimCache={};
 document.addEventListener('click',e=>{if(e.target.closest('.cikisB'))cikisYap();});
 document.addEventListener('input',e=>{
@@ -372,7 +377,7 @@ function personelAna(){
   const tablar={tGb:genelBakis,tSl:sinavYonet,tK:kocCiz,tSn:sinifCiz,tOg:ogrencilerCiz,tS:sonuclarCiz,tD:duyuruCiz,tR:raporCiz,tA:ayarCiz};
   Object.keys(tablar).forEach(id=>{const b=$(id);if(b)b.onclick=()=>{
     Object.keys(tablar).forEach(x=>{const e=$(x);if(e)e.classList.toggle('on',x===id)});
-    tablar[id]();};});
+    ekranKorumali(tablar[id]);};});
   $('cikis').onclick=cikisYap;
   rozetler();
   genelBakis();
@@ -520,7 +525,7 @@ async function kocCiz(){
 async function kocYukle(){
   const og=$('kOgr').value,t=$('kTarih').value,K=$('kIcerik');
   if(og.startsWith('s:')){
-    K.innerHTML=`<div class="kart"><h3>Sınıfa toplu görev</h3>
+    K.innerHTML=`<div class="kart"><h3>📝 Sınıfa toplu görev</h3>
       <p class="acik">Görev, sınıftaki her öğrenciye ayrı satır olarak açılır; akşam onayı kişi kişi yapılır.</p>
       <div class="izgara2"><div><label>DERS</label><input id="yDers" placeholder="Matematik"></div>
       <div><label>KONU</label><input id="yKonu"></div></div>
@@ -545,21 +550,21 @@ async function kocYukle(){
     rest('GET',`gorevler?ogrenci_id=eq.${og}&tarih=eq.${t}&order=created_at`),
     rest('GET',`gunluk_gozlem?ogrenci_id=eq.${og}&tarih=eq.${t}`)]);
   K.innerHTML=`
-    <div class="kart"><h3>Sabah: görev ekle</h3>
+    <div class="kart" style="border-left:5px solid var(--a)"><h3>📝 Görev ata</h3><p class="acik" style="margin-top:2px">Sabah akışı — bugün için hedef verin</p>
       <div class="izgara2"><div><label>DERS</label><input id="yDers" placeholder="Matematik"></div>
       <div><label>KONU</label><input id="yKonu" placeholder="Üslü Sayılar"></div></div>
       <div class="izgara2"><div><label>TÜR</label><select id="yTur"><option value="soru">Soru çözümü</option><option value="konu">Konu çalışması</option></select></div>
       <div><label>HEDEF</label><div class="izgara2" style="grid-template-columns:1fr 1fr;gap:4px"><input id="yHedef" type="number" value="40">
       <select id="yBirim"><option value="soru">soru</option><option value="dakika">dk</option><option value="yuzde">%</option></select></div></div></div>
-      <button class="buton kucuk" id="yEkle" style="margin-top:8px">Görevi ekle</button></div>
-    <div class="kart"><h3>Akşam: kontrol ve onay</h3>
+      <button class="buton kucuk" id="yEkle" style="margin-top:8px">Görevi ata</button></div>
+    <div class="kart" style="border-left:5px solid var(--dg)"><h3>✅ Akşam onayı</h3><p class="acik" style="margin-top:2px">Yapılanları kontrol edin, onaylayın</p>
       ${gorevler.length?gorevler.map(g=>gorevKart(g,true)).join(''):'<p class="acik">Bu gün için görev yok.</p>'}
     </div>
     <div class="kart"><h3>Günlük gözlem notu <span class="etiket">kurum içi · veliye gitmez</span></h3>
       <label>GÖZLEM</label><textarea id="gzMetin">${gozlem[0]?.gozlem||''}</textarea>
       <label>UYGULANAN TEKNİKLER</label><input id="gzTeknik" value="${(gozlem[0]?.teknikler||'').replace(/"/g,'&quot;')}" placeholder="Pomodoro, soru künyesi…">
       <button class="buton kucuk" id="gzKaydet" style="margin-top:8px">Notu kaydet</button></div>
-    <button class="buton" id="rapor">Veli raporu oluştur</button>`;
+    <button class="buton" id="rapor">📋 Veli raporunu hazırla</button>`;
   $('yEkle').onclick=async()=>{
     if(!$('yDers').value.trim())return alert('Ders girin.');
     await rest('POST','gorevler',{ogrenci_id:og,tarih:t,ders:$('yDers').value.trim(),
@@ -892,8 +897,21 @@ function csvIndir(ad,metin){const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\uFEFF'+metin],{type:'text/csv;charset=utf-8'}));
   a.download=ad;a.click();}
 async function raporCiz(){
-  const T=$('tab');
+  const T=$('tab');T.innerHTML='<div class="kart"><p class="acik">Yükleniyor…</p></div>';
+  const ogrList=await rest('GET','profiller?rol=eq.ogrenci&select=id,ad_soyad&order=ad_soyad').catch(()=>[]);
+  const otuz=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
   T.innerHTML=`<div class="cap-baslik">Raporlar</div>
+  <div class="kart"><h3>Öğrenci geçmişi</h3>
+    <p class="acik">Kim, ne zaman, ne yaptı — sınavlar ve görevler tek zaman çizgisinde.</p>
+    <div class="izgara2">
+      <div><label>ÖĞRENCİ</label><select id="gOgr">${ogrList.map(o=>`<option value="${o.id}">${o.ad_soyad}</option>`).join('')}</select></div>
+      <div class="izgara2" style="grid-template-columns:1fr 1fr;gap:8px">
+        <div><label>BAŞLANGIÇ</label><input id="gBas" type="date" value="${otuz}"></div>
+        <div><label>BİTİŞ</label><input id="gBit" type="date" value="${bugun()}"></div></div></div>
+    <div class="sira" style="margin-top:8px">
+      <button class="buton kucuk" id="gGetir" style="width:auto">Geçmişi getir</button>
+      <button class="buton gri kucuk" id="gCsv" style="width:auto;display:none">CSV indir</button></div>
+    <div id="gAkis" style="margin-top:10px"></div></div>
   <div class="kart"><h3>Dışa aktarım</h3>
     <p class="acik">Veriler Excel'de açılmaya hazır CSV olarak iner (Türkçe ayraçlı).</p>
     <div class="sira" style="flex-wrap:wrap">
@@ -908,6 +926,34 @@ async function raporCiz(){
   $('rGorev').onclick=async()=>{const t=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
     const r=await rest('GET','gorevler?select=tarih,ders,konu,hedef,birim,yapilan,dogru,yanlis,onaylandi,profiller!gorevler_ogrenci_id_fkey(ad_soyad)&tarih=gte.'+t+'&order=tarih.desc&limit=800');
     csvIndir('gorevler.csv','Tarih;Öğrenci;Ders;Konu;Hedef;Yapılan;D;Y;Onay\n'+r.map(x=>[x.tarih,x.profiller?.ad_soyad,x.ders,x.konu||'',x.hedef+' '+x.birim,x.yapilan??'',x.dogru??'',x.yanlis??'',x.onaylandi?'✓':''].join(';')).join('\n'));};
+  $('gGetir').onclick=async()=>{
+    const oid=$('gOgr').value;if(!oid)return;
+    const b1=$('gBas').value,b2=$('gBit').value;
+    $('gAkis').innerHTML='<p class="acik">Yükleniyor…</p>';
+    try{
+      const [sn,gv]=await Promise.all([
+        rest('GET',`sonuclar?ogrenci_id=eq.${oid}&hesaplama=gte.${b1}&hesaplama=lte.${b2}T23:59:59&select=net,dogru,yanlis,bos,hesaplama,sinavlar(ad)&order=hesaplama.desc`),
+        rest('GET',`gorevler?ogrenci_id=eq.${oid}&tarih=gte.${b1}&tarih=lte.${b2}&select=tarih,ders,konu,tur,hedef,birim,yapilan,dogru,yanlis,onaylandi,kanit_yolu&order=tarih.desc`)]);
+      const olay=[...sn.map(x=>({t:x.hesaplama.slice(0,10),ts:x.hesaplama,tip:'sinav',
+          m:`${x.sinavlar?.ad||'Sınav'} çözüldü`,
+          d:`${x.dogru}D ${x.yanlis}Y ${x.bos}B → ${(+x.net).toFixed(2).replace('.',',')} net`})),
+        ...gv.map(x=>({t:x.tarih,ts:x.tarih+'T12:00',tip:'gorev',k:x.kanit_yolu,
+          m:`${x.ders}${x.konu?' · '+x.konu:''} görevi`,
+          d:`hedef ${x.hedef} ${x.birim}${x.yapilan!=null?' · yapılan '+x.yapilan:''}`+
+            `${x.tur==='soru'&&x.dogru!=null?` · ${x.dogru}D/${x.yanlis}Y`:''} · ${x.onaylandi?'onaylı ✓':'onaysız'}`}))]
+        .sort((a,b)=>b.ts.localeCompare(a.ts));
+      window._gAkis=olay;
+      $('gAkis').innerHTML=olay.length?olay.map(o=>`
+        <div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #F0EDE4">
+          <div style="width:38px;height:38px;border-radius:12px;background:${o.tip==='sinav'?'#C9B9F6':'#F8DCB4'};display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:16px">${o.tip==='sinav'?'📄':'🎯'}</div>
+          <div style="flex:1;min-width:0"><b style="font-size:13.5px">${o.m}</b>
+          <small style="display:block;color:var(--s)">${o.t} · ${o.d}${o.k?' · 📎 kanıtlı':''}</small></div></div>`).join('')
+        :'<p class="acik">Bu aralıkta kayıt yok.</p>';
+      $('gCsv').style.display=olay.length?'inline-flex':'none';
+    }catch(e){$('gAkis').innerHTML='<p class="acik">Hata: '+e.message+'</p>';}
+  };
+  $('gCsv').onclick=()=>{const o=window._gAkis||[];
+    csvIndir('ogrenci-gecmisi.csv','Tarih;Tür;Olay;Detay\n'+o.map(x=>[x.t,x.tip==='sinav'?'Sınav':'Görev',x.m,x.d.replace(/;/g,',')].join(';')).join('\n'));};
   try{
     const hft=new Date(Date.now()-7*864e5).toISOString();
     const [sn,gv]=await Promise.all([
@@ -937,23 +983,31 @@ async function ayarCiz(){
   <div id="yKap"></div>`;
   $('ayFotoSec').onchange=async e=>{
     const f=e.target.files[0];if(!f)return;
-    $('ayFotoDurum').textContent='Yükleniyor…';
+    const D=$('ayFotoDurum');
+    if(/heic|heif/i.test(f.type+f.name)){
+      D.textContent='Bu fotoğraf iPhone HEIC formatında — tarayıcı açamıyor. Telefonda Ayarlar > Kamera > Formatlar > "En Uyumlu"yu seçin ya da fotoğrafı WhatsApp\'tan kendinize gönderip oradan kaydedin (JPEG olur).';return;}
+    D.textContent='1/3 Fotoğraf okunuyor…';
     try{
+      const url=await new Promise((res,rej)=>{const r=new FileReader();
+        r.onload=()=>res(r.result);r.onerror=()=>rej(new Error('dosya okunamadı'));r.readAsDataURL(f);});
       const img=await new Promise((res,rej)=>{const i=new Image();
-        i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(f);});
-      const c=document.createElement('canvas');const b=400/Math.max(img.width,img.height);
-      c.width=img.width*b;c.height=img.height*b;
+        i.onload=()=>res(i);i.onerror=()=>rej(new Error('görsel çözümlenemedi — JPEG/PNG deneyin'));i.src=url;});
+      D.textContent='2/3 Küçültülüp yükleniyor…';
+      const c=document.createElement('canvas');const b=Math.min(1,400/Math.max(img.width,img.height));
+      c.width=Math.round(img.width*b);c.height=Math.round(img.height*b);
       c.getContext('2d').drawImage(img,0,0,c.width,c.height);
       const blob=await new Promise(res=>c.toBlob(res,'image/jpeg',.85));
+      if(!blob)throw new Error('görsel dönüştürülemedi');
       const y=await fetch(SUPA+'/storage/v1/object/profil-foto/'+uid+'.jpg',{method:'POST',
         headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'image/jpeg','x-upsert':'true'},body:blob});
-      if(!y.ok)throw new Error((await y.text()).slice(0,80));
+      if(!y.ok)throw new Error('depo: '+(await y.text()).slice(0,90));
+      D.textContent='3/3 Kaydediliyor…';
       await rpcGonder('foto_ayarla',{p_yol:uid+'.jpg'});
       benimFoto=uid+'.jpg';
       $('ayFoto').innerHTML=avvIc(ad,benimFoto);
       $('avvUst').innerHTML=avvIc(ad,benimFoto);
-      $('ayFotoDurum').textContent='✓ Fotoğrafınız güncellendi.';
-    }catch(err){$('ayFotoDurum').textContent='Hata: '+err.message;}
+      D.textContent='✓ Fotoğrafınız güncellendi.';
+    }catch(err){D.textContent='Hata: '+err.message;}
   };
   $('aySifBtn').onclick=async()=>{
     const v=$('aySif').value;if(v.length<6)return $('aySifDurum').textContent='En az 6 karakter.';
@@ -1021,7 +1075,7 @@ function veliAna(){
     <div style="flex:1"></div><button class="cikisB" style="color:#8A8FA0">⎋ Çıkış</button></div><div id="tab"></div>`;
   const tablar={tVo:veliOzet,tVd:oDuyuruCiz};
   Object.keys(tablar).forEach(id=>$(id).onclick=()=>{
-    Object.keys(tablar).forEach(x=>$(x).classList.toggle('on',x===id));tablar[id]();});
+    Object.keys(tablar).forEach(x=>$(x).classList.toggle('on',x===id));ekranKorumali(tablar[id]);});
   veliOzet();
 }
 async function veliOzet(){
@@ -1125,7 +1179,7 @@ function ogrenciAna(){
   const tablar={tBg:bugunum,tSv:sinavListe,tG:gorevListe,tGe:gelisimCiz,tDy:oDuyuruCiz};
   rozetler();
   Object.keys(tablar).forEach(id=>$(id).onclick=()=>{
-    Object.keys(tablar).forEach(x=>$(x).classList.toggle('on',x===id));tablar[id]();});
+    Object.keys(tablar).forEach(x=>$(x).classList.toggle('on',x===id));ekranKorumali(tablar[id]);});
   sinavListe();
 }
 async function sinavListe(){

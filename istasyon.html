@@ -45,7 +45,13 @@ border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;margin-top
 .kutu{cursor:pointer}
 .kutu.secili{border-color:var(--a);box-shadow:0 0 0 2px rgba(34,160,147,.4)}
 .kutu.secili b{background:var(--a)}
-.kutu .tut{position:absolute;right:-8px;bottom:-8px;width:18px;height:18px;border-radius:99px;background:var(--a);border:2.5px solid #fff;cursor:nwse-resize;touch-action:none}
+.kutu .tut{position:absolute;width:17px;height:17px;border-radius:99px;background:var(--a);border:2.5px solid #fff;touch-action:none}
+.tut.t-se{right:-9px;bottom:-9px;cursor:nwse-resize}
+.tut.t-nw{left:-9px;top:-9px;cursor:nwse-resize}
+.tut.t-ne{right:-9px;top:-9px;cursor:nesw-resize}
+.tut.t-sw{left:-9px;bottom:-9px;cursor:nesw-resize}
+.kutu{cursor:move}
+#geriAl:not(:disabled),#ileriAl:not(:disabled){border:2px solid #1E2433;color:#1E2433;font-weight:900;background:#fff}
 .kutu.taslak{border-style:dashed;border-color:var(--a);pointer-events:none}
 .secim{position:absolute;border:2px dashed var(--a);background:rgba(34,160,147,.12);border-radius:4px;pointer-events:none}
 #sahne.elle{cursor:crosshair;touch-action:none}
@@ -364,32 +370,52 @@ function kutuCiz(){
   $('kutuArac').style.display='none';seciliKutu=null;
   (kutular[sayfa]||[]).forEach(k=>{
     const d=document.createElement('div');d.className='kutu';
-    d.style.cssText=`left:${k.x}%;top:${k.y}%;width:${k.w}%;height:${k.h}%`;
-    d.innerHTML=`<b>${k.soru}</b><i class="tut"></i>`;
-    d.onclick=e=>{
-      if(e.target.classList.contains('tut'))return;
+    const yaz=()=>d.style.cssText=`left:${k.x}%;top:${k.y}%;width:${k.w}%;height:${k.h}%`;
+    yaz();
+    d.innerHTML=`<b>${k.soru}</b>`+['nw','ne','sw','se'].map(c=>`<i class="tut t-${c}" data-c="${c}"></i>`).join('');
+    d.addEventListener('click',e=>{
+      if(e.target.classList.contains('tut')||d._tasindi)return;
       document.querySelectorAll('.kutu').forEach(x=>x.classList.remove('secili'));
       d.classList.add('secili');seciliKutu=k;
       $('kutuArac').style.display='flex';
-    };
-    const t=d.querySelector('.tut');
-    t.addEventListener('pointerdown',e=>{
-      e.stopPropagation();e.preventDefault();tarihKaydet();
-      t.setPointerCapture(e.pointerId);
+    });
+    d.addEventListener('pointerdown',e=>{
+      if(e.target.classList.contains('tut'))return;
       const r=$('sahne').getBoundingClientRect();
+      const bx=k.x,by=k.y,px=e.clientX,py=e.clientY;let oynadi=false;
       const hareket=ev=>{
-        k.w=Math.max(4,Math.min(100-k.x,(ev.clientX-r.left)/r.width*100-k.x));
-        k.h=Math.max(2,Math.min(100-k.y,(ev.clientY-r.top)/r.height*100-k.y));
-        d.style.width=k.w+'%';d.style.height=k.h+'%';
+        if(!oynadi&&Math.abs(ev.clientX-px)+Math.abs(ev.clientY-py)<6)return;
+        if(!oynadi){oynadi=true;d._tasindi=true;tarihKaydet();e.preventDefault();}
+        k.x=Math.min(100-k.w,Math.max(0,bx+(ev.clientX-px)/r.width*100));
+        k.y=Math.min(100-k.h,Math.max(0,by+(ev.clientY-py)/r.height*100));yaz();
       };
       const birak=()=>{
-        t.removeEventListener('pointermove',hareket);
-        t.removeEventListener('pointerup',birak);
-        kartTazele(k);
+        document.removeEventListener('pointermove',hareket);
+        document.removeEventListener('pointerup',birak);
+        if(oynadi){kartTazele(k);setTimeout(()=>d._tasindi=false,60);}
       };
-      t.addEventListener('pointermove',hareket);
-      t.addEventListener('pointerup',birak);
+      document.addEventListener('pointermove',hareket);
+      document.addEventListener('pointerup',birak);
     });
+    d.querySelectorAll('.tut').forEach(tt=>tt.addEventListener('pointerdown',e=>{
+      e.stopPropagation();e.preventDefault();tarihKaydet();
+      tt.setPointerCapture(e.pointerId);
+      const r=$('sahne').getBoundingClientRect(),c=tt.dataset.c;
+      const hareket=ev=>{
+        const mx=Math.min(100,Math.max(0,(ev.clientX-r.left)/r.width*100));
+        const my=Math.min(100,Math.max(0,(ev.clientY-r.top)/r.height*100));
+        const sag=k.x+k.w,alt=k.y+k.h;
+        if(c.includes('w')){k.w=Math.max(4,sag-mx);k.x=sag-k.w;}
+        if(c.includes('e')){k.w=Math.max(4,Math.min(100-k.x,mx-k.x));}
+        if(c.includes('n')){k.h=Math.max(2,alt-my);k.y=alt-k.h;}
+        if(c.includes('s')){k.h=Math.max(2,Math.min(100-k.y,my-k.y));}
+        yaz();
+      };
+      const birak=()=>{tt.removeEventListener('pointermove',hareket);
+        tt.removeEventListener('pointerup',birak);kartTazele(k);};
+      tt.addEventListener('pointermove',hareket);
+      tt.addEventListener('pointerup',birak);
+    }));
     $('sahne').appendChild(d);
   });
 }
