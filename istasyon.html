@@ -165,7 +165,7 @@ align-items:center;justify-content:center;font-size:11px;color:#79818F}
     </div>
     <div class="izgara2">
       <div><label>DERS</label><input id="eDers" placeholder="Matematik"></div>
-      <div><label>KONU</label><input id="eKonu" placeholder="Kareköklü Sayılar"></div>
+      <div><label>KONU / KAZANIM</label><input id="eKonu" list="kazanimListe" placeholder="Kareköklü Sayılar"><datalist id="kazanimListe"></datalist></div>
     </div>
     <label>ÖNİZLEME — SORU KARTI</label>
     <div class="onizle" id="eOn"><div class="bos">Yazdıkça burada göreceksiniz.</div></div>
@@ -260,6 +260,9 @@ $('gBtn').onclick=async()=>{
   }catch(e){$('gDurum').textContent='Hata: '+e.message;}
   $('gBtn').disabled=false;
 };
+async function rpcGonder(yol,govde){
+  const y=await fetch(SUPA+'/rest/v1/rpc/'+yol,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(govde||{})});
+  const d=await y.json();if(!y.ok)throw new Error(d.message||JSON.stringify(d));return d;}
 async function rest(metod,yol,govde){
   const y=await fetch(SUPA+'/rest/v1/'+yol,{method:metod,
     headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json',Prefer:'return=representation'},
@@ -284,9 +287,12 @@ $('bulut').onclick=async()=>{
       const zaman=Date.now();
       const gorsel=k.gorsel?await depoYukle(k.gorsel,`g_${zaman}_${i}.jpg`):null;
       const kirpim=k.kirpim?await depoYukle(k.kirpim,`k_${zaman}_${i}.jpg`):null;
+      // konu etiketi → kurum kazanım havuzu (deneme analizleriyle aynı havuz)
+      let kazanim_id=null;
+      if(k.konu&&k.konu.trim()){try{kazanim_id=await rpcGonder('kazanim_bul_veya_ekle',{p_ders:k.ders||'',p_metin:k.konu});}catch(e){}}
       await rest('POST','sorular',{gosterim:k.gosterim,metin:k.metin,siklar:k.siklar,
         dogru_cevap:k.dogru_cevap,gorsel_yolu:gorsel,kirpim_yolu:kirpim,
-        ders:k.ders||null,konu:k.konu||null,zorluk:k.zorluk,kaynak:k.kaynak,
+        ders:k.ders||null,konu:k.konu||null,kazanim_id,zorluk:k.zorluk,kaynak:k.kaynak,
         lisans:k.lisans,olusturan_id:uid});
       k._kayitli=true;ok++;
     }catch(e){$('bulut').textContent='Hata: '+e.message;$('bulut').disabled=false;return;}
@@ -655,6 +661,14 @@ $('eEkle').onclick=()=>{
     zorluk:+$('eZor').value,kaynak:'kurum içi',lisans:'kurum'});
   ['eMetin','eA','eB','eC','eD','eKonu'].forEach(id=>$(id).value='');eOnizle();
 };
+
+/* ---- kazanım otomatik tamamlama ---- */
+let kzZaman=null;
+$('eKonu').oninput=()=>{clearTimeout(kzZaman);kzZaman=setTimeout(async()=>{
+  if(!token)return;const q=$('eKonu').value.trim();if(q.length<2)return;
+  try{const r=await rpcGonder('kazanim_ara',{p_ders:$('eDers').value||null,p_q:q});
+    $('kazanimListe').innerHTML=r.map(k=>`<option value="${k.metin.replace(/"/g,'&quot;')}">`).join('');}catch(e){}
+},250);};
 
 /* ---- havuz ---- */
 function havuzaEkle(k){havuz.push(k);$('hSay').textContent='('+havuz.length+')';$('indir').disabled=false;$('bulut').disabled=false;}

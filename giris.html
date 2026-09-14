@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MENTORCALL — Giriş</title><link rel="icon" href="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="ortak.css">
+<style>body{display:grid;place-items:center;min-height:100vh}.giris-sayfa{margin:0}</style></head><body>
+<div class="kart giris-sayfa" id="giris"><div class="logo"><img class="logo-img" src="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png" alt=""></div>
+  <input id="tel" placeholder="Telefon" autocomplete="username"><input id="sifre" type="password" placeholder="Şifre" autocomplete="current-password">
+  <button class="ana" id="girBtn">Giriş yap</button><p class="kucuk" id="gDurum" style="text-align:center;margin:10px 0 0"></p></div>
+<script src="ortak.js"></script>
+<script>
+(async()=>{if(await oturumYukle())location.replace(SAYFA[rol]||'index.html');})();
+async function gir(){try{$('gDurum').textContent='Giriş yapılıyor…';await girisYap($('tel').value,$('sifre').value);await profilYukle();location.replace(SAYFA[rol]||'index.html');}catch(e){$('gDurum').textContent=e.message;}}
+$('girBtn').onclick=gir;$('sifre').onkeydown=e=>{if(e.key==='Enter')gir();};
+</script></body></html>

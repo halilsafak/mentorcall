@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MENTORCALL — Öğretmen</title>
+<link rel="icon" href="https://www.mentorcall.com.tr/wp-content/uploads/2025/05/mentorcall-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ortak.css">
+</head><body>
+<aside id="menu"></aside>
+<div class="govde">
+  <div class="ust" id="ust">
+    <button class="hamburger" id="hamburger" aria-label="Menü"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    <label class="ara"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><input id="ustAra" placeholder="Öğrenci ara"></label>
+    <div class="sag"><span class="kimlik" id="kimlik">—</span><div class="avatar" id="avatar">?</div></div>
+  </div>
+<main>
+<section id="bPano" class="gizli">
+<div class="pano">
+    <div class="pano-sol">
+      <div class="baslik"><h1 id="selam">👋 Hoş geldin</h1><span class="tarih" id="bugun"></span></div>
+
+      <div class="kapak">
+        <div class="kapak-metin">
+          <h2 id="kapakBaslik">Haftalık programın hazır</h2>
+          <p id="kapakAlt">Deneme sonuçlarına göre hazırlanan çalışma programını incele, eksik kazanımlarını gör ve bu hafta neye odaklanacağını öğren.</p>
+          <button class="ana" id="kapakBtn">Programı aç <span>→</span></button>
+        </div>
+        <svg class="kapak-gorsel" viewBox="0 0 220 150" aria-hidden="true">
+          <defs><linearGradient id="kg1" x1="0" x2="1"><stop offset="0" stop-color="#cfe7f8"/><stop offset="1" stop-color="#e6dcf7"/></linearGradient></defs>
+          <rect x="18" y="18" width="184" height="114" rx="14" fill="url(#kg1)"/>
+          <rect x="34" y="34" width="70" height="8" rx="4" fill="#fff" opacity=".9"/>
+          <rect x="34" y="50" width="46" height="6" rx="3" fill="#fff" opacity=".7"/>
+          <polyline points="36,112 68,92 96,100 128,70 160,78 190,48" fill="none" stroke="#0f1d36" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="128" cy="70" r="5" fill="#fde7b8" stroke="#0f1d36" stroke-width="2"/>
+          <circle cx="190" cy="48" r="5" fill="#d5f0d0" stroke="#0f1d36" stroke-width="2"/>
+          <g transform="translate(150 96)"><rect width="46" height="30" rx="8" fill="#fff"/><path d="M12 15l7 7 15-14" fill="none" stroke="#1e7d46" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <circle cx="24" cy="128" r="10" fill="#fde0e6"/><circle cx="204" cy="20" r="7" fill="#fde7b8"/>
+        </svg>
+      </div>
+
+      <div class="bolum-bas"><h2 id="kartBaslik">Sınıflarım</h2><a data-bolum="bAnaliz" class="link">Tümünü gör ›</a></div>
+      <div class="kart-izgara" id="panoKartlar"></div>
+
+      <div class="bolum-bas"><h2>Deneme panosu</h2><a data-bolum="bKurum" class="link personel">Tümünü gör ›</a></div>
+      <div class="kart tablo-kart">
+        <table><thead><tr><th>Deneme adı</th><th>Yayınevi</th><th>Tarih</th><th>Öğrenci</th><th>Ort. net</th><th>Durum</th><th></th></tr></thead><tbody id="panoDenemeler"></tbody></table>
+      </div>
+    </div>
+
+    <aside class="pano-sag">
+      <div class="ilerleme"><span>Deneme <b id="ilerlemeSay">0</b> / <span id="ilerlemeToplam">60</span></span><div class="cubuk"><i id="ilerlemeCubuk" style="width:0%"></i></div></div>
+      <div class="takvim">
+        <div class="takvim-bas"><button id="takOnce">‹</button><b id="takAd"></b><button id="takSonra">›</button></div>
+        <div class="takvim-gunler"><span>Pt</span><span>Sa</span><span>Ça</span><span>Pe</span><span>Cu</span><span>Ct</span><span>Pz</span></div>
+        <div class="takvim-izgara" id="takIzgara"></div>
+        <div class="takvim-alt"><i class="nokta mavi-n"></i>deneme <i class="nokta sari-n"></i>ödev</div>
+      </div>
+      <div class="bolum-bas"><h2 id="odevBaslik">Ödevler</h2><a href="index.html" class="link">Tümünü gör ›</a></div>
+      <div id="panoOdevler"></div>
+    </aside>
+  </div>
+</section>
+
+<section id="bSinav" class="gizli">
+<div class="baslik"><h1>Sınavlarım</h1></div>
+<div class="kart"><p style="margin:0 0 12px">Sınav oluşturma, soru seçme, atama ve sonuç ekranları şimdilik mevcut uygulamada; bir sonraki adımda bu kabuğa taşınacak.</p><a class="ana" style="display:inline-block;text-decoration:none;padding:8px 16px;border-radius:8px;background:var(--lacivert);color:#fff" href="index.html">Sınav yönetimini aç</a></div>
+</section>
+
+<section id="bOdev" class="gizli">
+<div class="baslik"><h1>Ödevler</h1></div>
+<div class="kart"><p style="margin:0 0 12px">Ödev verme, kanıt kontrolü ve onay ekranları şimdilik mevcut uygulamada; bir sonraki adımda bu kabuğa taşınacak.</p><a class="ana" style="display:inline-block;text-decoration:none;padding:8px 16px;border-radius:8px;background:var(--lacivert);color:#fff" href="index.html">Ödev yönetimini aç</a></div>
+</section>
+
+<section id="bOgrenciler" class="gizli">
+<div class="baslik"><h1>Öğrencilerim</h1><span class="kucuk" id="ogrSay"></span></div>
+<div class="satir" style="margin-bottom:14px"><input id="ogrFiltre" placeholder="Ada göre süz" style="width:260px"><select id="ogrSinifF"><option value="">Tüm sınıflar</option></select></div>
+<div class="ogr-liste" id="ogrListe"></div>
+<div class="kart gizli" id="ogrDetay" style="margin-top:16px"><button class="geri" id="ogrGeri">‹ Listeye dön</button><h2 id="ogrDetayAd"></h2>
+  <div class="sekmeler"><button class="aktif" data-s="profil">Profil</button><button data-s="analiz">Analiz ve karne</button><button data-s="rapor">Rapor</button></div>
+  <div id="ogrDetayIc"></div></div>
+</section>
+
+<section id="bAnaliz" class="gizli">
+<div class="kart gizli" id="sec"><div class="satir"><label>Öğrenci <select id="ogrenciSec"></select></label><span class="kucuk" id="ogrBilgi"></span></div></div>
+
+<div class="gizli" id="analiz">
+  <div class="izgara">
+    <div class="kart"><h2>Deneme gelişimi (net)</h2><canvas id="gNet" height="160"></canvas>
+      <div class="kucuk">Koyu: öğrenci · Açık: kurum ortalaması</div></div>
+    <div class="kart"><h2>Puan ve sıralama</h2><canvas id="gPuan" height="160"></canvas><div id="siraTablo"></div></div>
+  </div>
+  <div class="kart"><h2>Ders bazında net (son deneme ve önceki)</h2><canvas id="gDers" height="180"></canvas></div>
+  <div class="izgara">
+    <div class="kart"><h2>Ders bazında kazanım başarısı (tüm denemeler)</h2><div id="dersOzet"></div></div>
+    <div class="kart"><h2>En zayıf kazanımlar</h2><table><thead><tr><th>Ders</th><th>Kazanım</th><th>S/D/Y/B</th><th>Deneme</th><th>%</th></tr></thead><tbody id="zayif"></tbody></table></div>
+  </div>
+  <div class="kart"><h2>Deneme listesi</h2><table><thead><tr><th>Tarih</th><th>Deneme</th><th>Kitapçık</th><th>D/Y/B</th><th>Net</th><th>Puan</th><th>Sınıf</th><th>Kurum</th><th>İlçe</th><th>İl</th><th>Genel</th></tr></thead><tbody id="denemeListe"></tbody></table></div>
+
+  <div class="kart" id="karneKart">
+    <div class="satir"><h2 style="margin:0">Karne ve haftalık program</h2>
+      <span id="karneDurum" class="etiket gri">—</span>
+      <span style="margin-left:auto" class="satir personel">
+        <label>Hafta <input type="date" id="hafta"></label>
+        <button class="ana" id="uretBtn">Yeni karne üret</button></span></div>
+    <div id="karneIcerik" class="kucuk" style="margin-top:10px">Henüz karne yok.</div>
+    <div class="personel gizli" id="onayAlani" style="margin-top:12px">
+      <textarea id="ogrNot" rows="2" style="width:100%" placeholder="Öğretmen notu (isteğe bağlı)"></textarea>
+      <div class="satir" style="margin-top:8px"><button class="ana" id="yayinlaBtn">Onayla ve yayınla</button><button id="veliKopya">Veli notunu kopyala</button><span id="onayDurum" class="kucuk"></span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="bKurum" class="gizli">
+<div class="kart"><div class="satir"><label>Deneme <select id="kDenemeSec"></select></label><span id="kOzet" class="kucuk"></span></div></div>
+  <div id="kIcerik" class="gizli">
+    <div class="izgara">
+      <div class="kart"><h2>Ders ortalamaları (net)</h2><canvas id="kgDers" height="170"></canvas></div>
+      <div class="kart"><h2>Sınıf kıyası (ortalama net)</h2><canvas id="kgSinif" height="170"></canvas></div>
+    </div>
+    <div class="izgara">
+      <div class="kart"><h2>Net dağılımı</h2><canvas id="kgDagilim" height="170"></canvas></div>
+      <div class="kart"><h2>Kurumun en çok kaçırdığı kazanımlar</h2><table><thead><tr><th>Ders</th><th>Kazanım</th><th>S/D/Y/B</th><th>%</th></tr></thead><tbody id="kZayif"></tbody></table></div>
+    </div>
+    <div class="kart"><h2>Öğrenciler</h2><table><thead><tr><th>#</th><th>Öğrenci</th><th>Sınıf</th><th>Net</th><th>Puan</th><th id="kDersBaslik"></th><th>Kurum</th><th>İl</th><th>Genel</th></tr></thead><tbody id="kOgrenciler"></tbody></table></div>
+  </div>
+</section>
+
+<section id="bAktar" class="gizli">
+<div class="kart gizli" id="yukle">
+  <h2>1. Yayınevi sonuç PDF'ini seç</h2>
+  <div class="satir">
+    <input type="file" id="dosya" accept="application/pdf">
+    <label>Sınav tarihi <input type="date" id="tarih"></label>
+    <label><input type="checkbox" id="uzerine"> Aynı deneme varsa üzerine yaz</label>
+  </div>
+  <div id="durum">PDF seçince otomatik okunur; sonra öğrenci eşleştirmesini kontrol edip aktarırsın.</div>
+</div>
+
+<div class="kart gizli" id="optik">
+  <h2>1b. Alternatif: kurum optik okuyucu .txt (yayınevi PDF'i gelmeden hızlı net)</h2>
+  <div class="satir">
+    <input type="file" id="txtDosya" accept=".txt">
+    <input id="oAd" placeholder="Deneme adı (örn. FORMULA LGS TG)" style="width:220px">
+    <input id="oYayinevi" placeholder="Yayınevi" style="width:120px">
+    <select id="oTur"><option>LGS</option><option>TYT</option><option>AYT</option></select>
+  </div>
+  <div class="satir" style="margin-top:8px">
+    <input id="oDersler" style="width:100%" placeholder="Dersler ve soru sayıları — örn. TUR:Türkçe:20, TAR:Tarih:10, DIN:Din:10, ING:İngilizce:10, MAT:Matematik:20, FEN:Fen:20">
+  </div>
+  <div class="satir" style="margin-top:8px">
+    <input id="oAnahtarA" style="width:49%" placeholder="Cevap anahtarı A kitapçığı (tüm dersler art arda)">
+    <input id="oAnahtarB" style="width:49%" placeholder="Cevap anahtarı B kitapçığı (varsa)">
+  </div>
+  <div class="satir" style="margin-top:8px"><button class="ana" id="optikOku">Oku</button><span id="optikDurum" class="kucuk">Kazanım analizi bu yoldan gelmez; sadece net ve kurum içi sıra hesaplanır.</span></div>
+</div>
+
+<div class="kart gizli" id="onizle">
+  <h2>2. Okunan sonuçlar — <span id="ozet"></span></h2>
+  <table><thead><tr><th>#</th><th>PDF'deki ad</th><th>Sınıf</th><th>Kitapçık</th><th>Puan</th><th>Net</th><th>Sistemdeki öğrenci</th><th>Kontrol</th></tr></thead>
+  <tbody id="satirlar"></tbody></table>
+  <div class="satir" style="margin-top:12px"><button class="ana" id="aktarBtn">Aktar</button><span id="aktarDurum"></span></div>
+</div>
+
+<div class="kart gizli" id="kuyrukKart">
+  <h2>Eşleşmeyen sonuçlar</h2>
+  <table><thead><tr><th>Deneme</th><th>PDF'deki ad</th><th>Sınıf</th><th>Puan</th><th>Öğrenci</th><th></th></tr></thead><tbody id="kuyruk"></tbody></table>
+</div>
+
+<div class="kart gizli" id="listeKart">
+  <h2>Aktarılmış denemeler</h2>
+  <table><thead><tr><th>Yayınevi</th><th>Ad</th><th>Tür</th><th>Tarih</th><th>Katılım (kurum/il/genel)</th><th>Öğrenci</th></tr></thead><tbody id="liste"></tbody></table>
+</div>
+</section>
+
+<section id="bRapor" class="gizli">
+<div class="baslik"><h1>Raporlar</h1><span class="kucuk">Veliye iletmek için PDF</span></div>
+<div class="kart yazdirma-gizle"><div class="satir"><label>Öğrenci <select id="rOgrenci"></select></label>
+  <label>Tür <select id="rTur"><option value="gelisim">Gelişim raporu</option><option value="karne">Karne + program</option><option value="tam">Tam rapor</option></select></label>
+  <button class="ana" id="rOnizle">Önizle</button><button id="rYazdir" disabled>Yazdır / PDF kaydet</button><button id="rKaydet" disabled>Arşive işle</button><span id="rDurum" class="kucuk"></span></div></div>
+<div id="rIcerik"></div>
+<div class="kart yazdirma-gizle" style="margin-top:16px"><h2>Arşiv</h2><table class="kartlas"><thead><tr><th>Tarih</th><th>Öğrenci</th><th>Tür</th><th>Başlık</th></tr></thead><tbody id="rArsiv"></tbody></table></div>
+</section>
+
+<section id="bProfil" class="gizli">
+<div class="baslik"><h1>Profilim</h1></div><div class="kart" id="profilKart"></div>
+<div class="kart"><h2>Şifre</h2><div class="satir"><input type="password" id="yeniSifre" placeholder="Yeni şifre"><button id="sifreBtn">Şifreyi değiştir</button><span id="sifreDurum" class="kucuk"></span></div></div>
+</section>
+
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="ortak.js"></script>
+<script>
+
+const MENU_OGRETMEN=[
+  {id:'bPano',ad:'Pano',ik:'pano',grup:'Genel',mobil:true},
+  {id:'bSinav',ad:'Sınavlarım',ik:'sinav',grup:'Akademik'},
+  {id:'bOdev',ad:'Ödevler',ik:'odev',grup:'Akademik'},
+  {id:'bOgrenciler',ad:'Öğrencilerim',ik:'kisiler',grup:'Akademik',mobil:true},
+  {id:'bAnaliz',ad:'Öğrenci analizi',ik:'analiz',grup:'Akademik'},
+  {id:'bKurum',ad:'Deneme analizi',ik:'cubuk',grup:'Denemeler',mobil:true},
+  {id:'bAktar',ad:'Deneme aktar',ik:'aktar',grup:'Denemeler'},
+  {id:'bRapor',ad:'Raporlar',ik:'rapor',grup:'Denemeler'},
+  {href:'istasyon.html',ad:'Soru istasyonu',ik:'grup',grup:'Araçlar'},
+  {id:'bProfil',ad:'Profilim',ik:'kisi',grup:'Hesap',mobil:true}];
+BOLUM_YUKLE.bPano=panoYukle;
+BOLUM_YUKLE.bKurum=kurumDenemeleriYukle;
+BOLUM_YUKLE.bAktar=async()=>{['yukle','optik','kuyrukKart','listeKart'].forEach(i=>$(i).classList.remove('gizli'));await kuyrukYukle();await listeYukle();};
+BOLUM_YUKLE.bAnaliz=async()=>{$('sec').classList.remove('gizli');};
+BOLUM_YUKLE.bOgrenciler=ogrencilerCiz;
+BOLUM_YUKLE.bRapor=raporBolumu;
+BOLUM_YUKLE.bProfil=async()=>{$('profilKart').innerHTML=profilFormu(BEN);$('profilKaydet').onclick=async()=>{try{await profilKaydet(uid);await profilYukle();kabukKur(MENU_OGRETMEN,'Öğretmen');}catch(e){toast('Hata: '+e.message);}};};
+
+/* öğrenci listesi */
+let SINIFLAR=[];
+async function ogrencilerCiz(){
+  $('ogrDetay').classList.add('gizli');
+  if(!SINIFLAR.length){SINIFLAR=await rest('GET','siniflar?select=id,ad,sinif_ogrenciler(ogrenci_id)&aktif=eq.true&order=ad');
+    $('ogrSinifF').innerHTML='<option value="">Tüm sınıflar</option>'+SINIFLAR.map(s=>`<option value="${s.id}">${kacis(s.ad)}</option>`).join('');}
+  const q=norm($('ogrFiltre').value),sf=$('ogrSinifF').value;
+  const izin=sf?new Set((SINIFLAR.find(s=>s.id===sf)||{sinif_ogrenciler:[]}).sinif_ogrenciler.map(x=>x.ogrenci_id)):null;
+  const l=ogrenciler.filter(o=>(!q||norm(o.ad_soyad).includes(q))&&(!izin||izin.has(o.id)));
+  $('ogrSay').textContent=l.length+' öğrenci';
+  $('ogrListe').innerHTML=l.map(o=>`<div class="ogr" data-id="${o.id}"><div class="avatar">${o.foto_yolu?`<img src="${fotoUrl(o.foto_yolu)}" alt="">`:basHarf(o.ad_soyad)}</div><div><b>${kacis(o.ad_soyad)}</b><span>${o.sinif_seviyesi?o.sinif_seviyesi+'. sınıf':''}${o.telefon?' · '+o.telefon:''}</span></div></div>`).join('')||'<div class="bos">Öğrenci bulunamadı.</div>';
+  $('ogrListe').querySelectorAll('.ogr').forEach(e=>e.onclick=()=>ogrDetayAc(e.dataset.id));
+}
+$('ogrFiltre').oninput=ogrencilerCiz;$('ogrSinifF').onchange=ogrencilerCiz;
+async function ogrDetayAc(id){
+  const p=(await rest('GET','profiller?select=*&id=eq.'+id))[0];
+  $('ogrDetay').classList.remove('gizli');$('ogrDetayAd').textContent=p.ad_soyad;$('ogrDetay').scrollIntoView({behavior:'smooth'});
+  const sek=$('ogrDetay').querySelectorAll('.sekmeler button');
+  const ac=async s=>{sek.forEach(b=>b.classList.toggle('aktif',b.dataset.s===s));
+    if(s==='profil'){$('ogrDetayIc').innerHTML=profilFormu(p);$('profilKaydet').onclick=async()=>{try{await profilKaydet(id);}catch(e){toast('Hata: '+e.message);}};}
+    if(s==='analiz'){ogrenciAc(id);}
+    if(s==='rapor'){bolumAc('bRapor');$('rOgrenci').value=id;}
+  };
+  sek.forEach(b=>b.onclick=()=>ac(b.dataset.s));ac('profil');
+}
+$('ogrGeri').onclick=()=>$('ogrDetay').classList.add('gizli');
+
+/* raporlar */
+let rapor=null;
+async function raporBolumu(){
+  $('rOgrenci').innerHTML=ogrenciler.map(o=>`<option value="${o.id}">${kacis(o.ad_soyad)}</option>`).join('');
+  const a=await rest('GET','raporlar?select=created_at,tur,baslik,profiller!raporlar_ogrenci_id_fkey(ad_soyad)&order=created_at.desc&limit=30');
+  $('rArsiv').innerHTML=a.map(r=>`<tr><td data-b="Tarih">${r.created_at.slice(0,10)}</td><td data-b="Öğrenci">${kacis(r.profiller?.ad_soyad)}</td><td data-b="Tür">${r.tur}</td><td data-b="Başlık">${kacis(r.baslik)}</td></tr>`).join('')||'<tr><td colspan="4" class="kucuk">Arşiv boş.</td></tr>';
+}
+$('rOnizle').onclick=async()=>{try{$('rDurum').textContent='Hazırlanıyor…';rapor=await raporUret($('rOgrenci').value,$('rTur').value);$('rIcerik').innerHTML=rapor.html;$('rYazdir').disabled=false;$('rKaydet').disabled=false;$('rDurum').textContent='';}catch(e){$('rDurum').textContent='Hata: '+e.message;}};
+$('rYazdir').onclick=()=>window.print();
+$('rKaydet').onclick=async()=>{const tur=$('rTur').value;await rest('POST','raporlar',{kurum_id:BEN.kurum_id,ogrenci_id:$('rOgrenci').value,tur:tur==='tam'?'ozel':tur,baslik:$('rTur').selectedOptions[0].textContent+' — '+new Date().toLocaleDateString('tr-TR'),olusturan:uid},'return=minimal');toast('Arşive işlendi');raporBolumu();};
+
+$('sifreBtn').onclick=async()=>{const s=$('yeniSifre').value;if(s.length<6)return $('sifreDurum').textContent='En az 6 karakter';
+  const y=await fetch(SUPA+'/auth/v1/user',{method:'PUT',headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({password:s})});
+  $('sifreDurum').textContent=y.ok?'Şifre değişti':'Değiştirilemedi';};
+
+uygulamaBaslat({roller:['ogretmen','yonetici'],baslik:'Öğretmen',menu:MENU_OGRETMEN,hazirla:ogrenciListesiYukle});
+
+</script>
+</body></html>
