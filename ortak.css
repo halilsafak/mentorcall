@@ -1,6 +1,6 @@
 /* MENTORCALL panel — koyu lacivert menü, açık zemin, beyaz kartlar, pastel vurgular */
-:root{--lacivert:#0f1d36;--lacivert-2:color-mix(in srgb,var(--lacivert) 85%,#fff);--zemin:#f3f5f8;--kart:#fff;--cizgi:#e6e9ef;--metin:#1c2333;--sonuk:#6b7484;
-  --mor:#e6dcf7;--sari:#fde7b8;--mavi:#cfe7f8;--yesil:#d5f0d0;--pembe:#fde0e6;--yesil-koyu:#1e7d46;--sari-koyu:#8a5a00;--kirmizi:#b8321f;--mavi-koyu:#1e5a8a}
+:root{--lacivert:#0c1d33;--lacivert-2:#182c47;--zemin:#f4f6f8;--kart:#fff;--cizgi:#e5e9ef;--metin:#1b2433;--sonuk:#6b7484;
+  --mor:#e4d3ff;--sari:#fde1ab;--mavi:#bae5f4;--yesil:#cef1c0;--pembe:#fdd9e1;--yesil-koyu:#2e7d32;--sari-koyu:#8a5a00;--kirmizi:#b8321f;--mavi-koyu:#2a7fc0}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Poppins,system-ui,sans-serif;background:var(--zemin);color:var(--metin);font-size:13px;line-height:1.5;display:flex;min-height:100vh}
 button,input,select,textarea{font:inherit}
@@ -42,7 +42,7 @@ button{padding:7px 14px;border:1px solid #d5dae3;border-radius:8px;background:#f
 button.ana{background:var(--lacivert);color:#fff;border-color:var(--lacivert)}button:disabled{opacity:.5;cursor:default}
 .satir{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .etiket{display:inline-block;padding:2px 9px;border-radius:6px;font-size:11px;font-weight:500}
-.ok{background:var(--yesil);color:var(--yesil-koyu)}.uyari{background:var(--sari);color:var(--sari-koyu)}.hata{background:var(--pembe);color:var(--kirmizi)}.gri{background:#eef0f4;color:#556}
+.ok{background:#d9f2d1;color:#2e7d32}.uyari{background:#d3f1fb;color:#1f6f95}.hata{background:var(--pembe);color:var(--kirmizi)}.gri{background:#eef0f4;color:#556}
 .gizli{display:none}.kucuk{font-size:12px;color:var(--sonuk)}
 .cubuk{height:8px;background:#eef0f4;border-radius:99px;overflow:hidden}.cubuk i{display:block;height:100%;background:var(--lacivert)}
 #durum{font-size:12.5px;color:#445;margin-top:8px}canvas{max-width:100%}
@@ -53,7 +53,7 @@ button.ana{background:var(--lacivert);color:#fff;border-color:var(--lacivert)}bu
 .pano{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:22px}
 .kapak{background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:26px 28px;display:flex;align-items:center;gap:20px;margin-bottom:22px}
 .kapak-metin{flex:1}.kapak-metin h2{font-size:18px;font-weight:600;margin:0 0 8px}.kapak-metin p{margin:0 0 16px;color:#4a5262;max-width:520px;font-size:12.5px}
-.kapak-metin button span{margin-left:6px}.kapak-gorsel{width:220px;flex:none}
+.kapak-metin button span{margin-left:6px}
 .bolum-bas{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}.bolum-bas h2{font-size:14px;font-weight:600;margin:0}
 .link{font-size:12px;color:var(--mavi-koyu);cursor:pointer;text-decoration:none}
 .kart-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:22px}
